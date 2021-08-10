@@ -1,0 +1,95 @@
+project_desc: Java
+project_name: Java
+project_role: 0
+toc:
+- children:
+  - file: 1.1 Java数据类型有哪几种.md
+    name: 1.1 Java数据类型有哪几种
+  - file: 1.1 String、StringBuffer和StringBuilder的区别.md
+    name: 1.1 String、StringBuffer和StringBuilder的区别
+  - file: 1.2 ArrayList与LinkedList的区别？.md
+    name: 1.2 ArrayList与LinkedList的区别？
+  - file: 1.2 HashMap和ConcurrentHashMap实现原理.md
+    name: 1.2 HashMap和ConcurrentHashMap实现原理
+  - file: 1.3 HashMap、HashTable、ConcurrentHashMap各自的技术原理和使用场景是什么.md
+    name: 1.3 HashMap、HashTable、ConcurrentHashMap各自的技术原理和使用场景是什么
+  - file: 1.3 ArrayList和LinkedList实现原理.md
+    name: 1.3 ArrayList和LinkedList实现原理
+  - file: 1.4 HashMap和HashTable的区别.md
+    name: 1.4 HashMap和HashTable的区别
+  - file: 1.4 深拷贝与浅拷贝.md
+    name: 1.4 深拷贝与浅拷贝
+  file: 1、Java基础.md
+  name: 1、Java基础
+- children:
+  - file: 2.1 Runnable和 Thread的区别？.md
+    name: 2.1 Runnable和 Thread的区别？
+  - file: 2.2 Thread类中的start()和run()方法有什么区别？.md
+    name: 2.2 Thread类中的start()和run()方法有什么区别？
+  - file: 2.3 Java多线程中调用wait()和sleep()方法有什么不同？.md
+    name: 2.3 Java多线程中调用wait()和sleep()方法有什么不同？
+  - file: 2.4 ReentrantLock和Synchronized的区别？.md
+    name: 2.4 ReentrantLock和Synchronized的区别？
+  - file: 2.5 volatile适用于高并发的什么场景？.md
+    name: 2.5 volatile适用于高并发的什么场景？
+  - file: 2.6 多线程join方法用于什么场景？.md
+    name: 2.6 多线程join方法用于什么场景？
+  - file: 2.7 多个线程间如何共享数据？.md
+    name: 2.7 多个线程间如何共享数据？
+  - file: 2.8 线程的状态有哪些，各自的使用场景是什么？.md
+    name: 2.8 线程的状态有哪些，各自的使用场景是什么？
+  - file: 2.9 Java自带哪几种线程池.md
+    name: 2.9 Java自带哪几种线程池
+  - file: 2.18 线程池实现原理.md
+    name: 2.18 线程池实现原理
+  - file: 2.10 Java内存模型.md
+    name: 2.10 Java内存模型
+  - file: 2.11 并发编程的三大特性.md
+    name: 2.11 并发编程的三大特性
+  - file: 2.12 指令重排.md
+    name: 2.12 指令重排
+  - file: 2.13 Volatile原理.md
+    name: 2.13 Volatile原理
+  - file: 2.14 CAS原理.md
+    name: 2.14 CAS原理
+  - file: 2.15 Java的4种引用级别.md
+    name: 2.15 Java的4种引用级别
+  - file: 2.16 Java中的锁.md
+    name: 2.16 Java中的锁
+  - file: 2.17 Synchronized实现原理.md
+    name: 2.17 Synchronized实现原理
+  file: 2、Java多线程.md
+  name: 2、Java多线程
+- children:
+  - file: 3.1 运行时数据区域.md
+    name: 3.1 运行时数据区域
+  - file: 3.2 判断对象是否存活的方法.md
+    name: 3.2 判断对象是否存活的方法
+  - file: 3.3 垃圾收集算法.md
+    name: 3.3 垃圾收集算法
+  - file: 3.4 类的生命周期和加载过程.md
+    name: 3.4 类的生命周期和加载过程
+  - file: 3.5 类加载时机.md
+    name: 3.5 类加载时机
+  - file: 3.6 类加载器的种类.md
+    name: 3.6 类加载器的种类
+  - file: 3.6 类加载器的种类.md
+    name: 3.6 类加载器的种类
+  - file: 3.7 类加载机制的特点.md
+    name: 3.7 类加载机制的特点
+  - file: 3.8 JVM内存结构.md
+    name: 3.8 JVM内存结构
+  - file: 3.9 常见的垃圾收集算法有哪些.md
+    name: 3.9 常见的垃圾收集算法有哪些
+  - file: 3.14 反射机制.md
+    name: 3.14 反射机制
+  - file: 3.10 指针碰撞和空闲列表.md
+    name: 3.10 指针碰撞和空闲列表
+  - file: 3.11 常见的垃圾收集器有哪些.md
+    name: 3.11 常见的垃圾收集器有哪些
+  - file: 3.12 内存溢出与内存泄漏的区别.md
+    name: 3.12 内存溢出与内存泄漏的区别
+  - file: 3.13 常用的JVM启动参数有哪些.md
+    name: 3.13 常用的JVM启动参数有哪些
+  file: 3、JVM.md
+  name: 3、JVM
