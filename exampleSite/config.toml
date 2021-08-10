@@ -2,7 +2,7 @@
 
 baseURL = 'https://school-recruitment.grayson.top/public'
 title = 'Computer Cookbook School Recruitment'
-theme = 'hugo-book'
+theme = 'book'
 
 # Book configuration
 disablePathToLower = true
