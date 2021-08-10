@@ -1,327 +1,62 @@
-# Hugo Book Theme
+<p align='center'>
+<a href="https://github.com/wpwbb510582246/ComputerCookbook-SchoolRecruitment/blob/main/LICENSE"><img alt="GitHub" src="https://img.shields.io/github/license/wpwbb510582246/ComputerCookbook-SchoolRecruitment?label=License"></a>
+<img src="https://img.shields.io/badge/License-CC-000000.svg">
+<img src="https://img.shields.io/badge/language-Java-26C2F0.svg">
+<img src="https://img.shields.io/badge/made%20with-=1-blue.svg">
+<a href="https://github.com/wpwbb510582246/ComputerCookbook-SchoolRecruitment/pulls"><img src="https://img.shields.io/badge/PR-Welcome-brightgreen.svg"></a>
+<img src="https://img.shields.io/github/stars/wpwbb510582246/ComputerCookbook-SchoolRecruitment?style=social">
+<img src="https://visitor-badge.laobi.icu/badge?page_id=wpwbb510582246.ComputerCookbook-SchoolRecruitment">
+<img src="https://img.shields.io/github/downloads/wpwbb510582246/ComputerCookbook-SchoolRecruitment/total">
+<img src="https://img.shields.io/bitbucket/issues/wpwbb510582246/ComputerCookbook-SchoolRecruitment">
+<a href="https://www.grayson.top"><img src="https://img.shields.io/badge/Blog-Grayson-80d4f9.svg?style=flat"></a>
+<a href="https://unsplash.com/@graysonwp"><img src="https://img.shields.io/badge/@Grayson-yellow.svg">
+</p>
 
-[![Hugo](https://img.shields.io/badge/hugo-0.68-blue.svg)](https://gohugo.io)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-![Build with Hugo](https://github.com/alex-shpak/hugo-book/workflows/Build%20with%20Hugo/badge.svg)
 
-### [Hugo](https://gohugo.io) documentation theme as simple as plain book
 
-![Screenshot](https://github.com/alex-shpak/hugo-book/blob/master/images/screenshot.png)
+![Book Cover](https://school-recruitment.grayson.top/public/assets/images/book-cover.png)
 
-- [Features](#features)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Menu](#menu)
-- [Blog](#blog)
-- [Configuration](#configuration)
-- [Shortcodes](#shortcodes)
-- [Versioning](#versioning)
-- [Contributing](#contributing)
 
-## Features
 
-- Clean simple design
-- Light and Mobile-Friendly
-- Multi-language support
-- Customisable
-- Zero initial configuration
-- Handy shortcodes
-- Comments support
-- Simple blog and taxonomy
-- Primary features work without JavaScript
-- Dark Mode
+## 为什么会写这个开源书
 
-## Requirements
+笔者是今年三月份开始准备实习的，在准备的过程中从开源的社区学到了很多东西，比如知道了很多大佬的博客（[Halfrost's Field | 冰霜之地](https://halfrost.com)），构建了自己的知识库（[Grayson's Notebook](https://notebook.grayson.top)）。因此想把这些知识沉淀下来，回馈社区，一方面不仅可以加深自己对这些知识的理解，另一方面也可以和其他小伙伴一起交流学习、共同进步。
 
-- Hugo 0.68 or higher
-- Hugo extended version, read more [here](https://gohugo.io/news/0.48-relnotes/)
+## 什么是Cookbook
 
-## Installation
+“直译的话就是烹饪书，教你各种食谱美食的书。经常看[O’Reilly](https://www.oreilly.com/products/books-videos.html)技术书的同学对这个名词会很熟悉。一般动手操作，实践类的书都会有这个名字。” - 摘自[LeetCode Cookbook](https://books.halfrost.com/leetcode)。
 
-Navigate to your hugo project root and run:
+## 关于书的封面
 
-```
-git submodule add https://github.com/alex-shpak/hugo-book themes/book
-```
+封面顶部英文的寓意为“天道酬勤，厚积薄发”。“[大多数人都高估了他们一天能做的事情，却低估了他们一年能做的事情](https://github.com/wolverinn/Waking-Up)”。只有我们脚踏实地，不断积累，才能在机会到来之时从容应对。
 
-Then run hugo (or set `theme = "book"`/`theme: book` in configuration file)
+封面图片上的动物是一只蜥蜴在树上“谨慎”前行，一边用尾巴勾着后面的树枝，一遍用四肢抓住前面的枝干探着头不断前行，只有“步步为营”，做好我们现在做的每一件事，才能更加从容地不断前行。
 
-```
-hugo server --minify --theme book
-```
+封面标题的寓意为“计算机校招之路”，表示本书主要适用于参加实习校招后端开发相关岗位的同学使用。
 
-### Creating site from scratch
+封面主题的颜色为绿色，这是成功的颜色，希望本书能祝大家一臂之力，马到成功。
 
-Below is an example on how to create a new site from scratch:
+## 致谢
 
-```sh
-hugo new site mydocs; cd mydocs
-git init
-git submodule add https://github.com/alex-shpak/hugo-book themes/book
-cp -R themes/book/exampleSite/content .
-```
+本书内容大部分来源于博客、开源社区，然后根据笔者的理解整理而成，在这里把主要的来源列举出来，以表示对作者的感谢：
 
-```sh
-hugo server --minify --theme book
-```
+- 本书的灵感以及排版来源于[LeetCode Cookbook](https://books.halfrost.com/leetcode)，电子版基于[Hugo](https://gohugo.io)的[Book](https://themes.gohugo.io/themes/hugo-book)主题，封面图片使用[O RLY Cover Generator](https://dev.to/rly)生成。
+- 算法部分的题目主要来源于[LeetCode中国](https://leetcode-cn.com)，刷题优先级主要根据[CodeTop企业题库](https://codetop.cc)，题解部分来源于[LeetCode中国](https://leetcode-cn.com)、[📖labuladong 的算法小抄](https://labuladong.gitbook.io/algo)。
+- 计算机基础和数据库中的内容主要来源于[Waking-Up](https://github.com/wolverinn/Waking-Up)、[【面试题】技术面试题汇总 🔥](https://imageslr.com/2020/07/08/tech-interview.html)，综合题目主要来源于[Overseas Rabbit | 海外兔](https://osjobs.net)
+- 其他的还包括[美团技术团队](https://tech.meituan.com)、[博客园](https://www.cnblogs.com)、[掘金](https://juejin.cn)、[InfoQ](https://www.infoq.cn)、[微信公众号](https://weixin.sogou.com)等。
 
-## Menu
+## 目标读者
 
-### File tree menu (default)
+准备参加计算机后端开发相关实习或校招的本科生和研究生。
 
-By default, the theme will render pages from the `content/docs` section as a menu in a tree structure.  
-You can set `title` and `weight` in the front matter of pages to adjust the order and titles in the menu.
+## 使用说明
 
-### Leaf bundle menu
+- 本电子书的左上角有搜索栏，可以迅速帮你找到你想看的章节和题号。
+- 本电子书的每页都接入了Gitalk，每一页的最下方都有评论框可以评论，如果没有显示出来，请检查自己的网络。
+- 本电子书适用于想对知识点做深入理解的同学，然后根据自己的理解去归纳总结以应对面试，不太适用于想直接通过背的方式直接去参加面试的同学，因为[面试官很喜欢在一道题上持续深入的追问，这很容易把浅尝辄止的候选人筛出去](https://imageslr.com/2021/autumn-recruit.html)。[我们应当扎实掌握每一个知识点，而不是以覆盖更多面试题为目标。重质不重量，重深度不重广度，逐步构建个人知识体系](https://imageslr.com/2021/autumn-recruit.html)。
 
-You can also use leaf bundle and the content of its `index.md` file as menu.  
-Given you have the following file structure:
+## 互动与勘误
 
-```
-├── content
-│   ├── docs
-│   │   ├── page-one.md
-│   │   └── page-two.md
-│   └── posts
-│       ├── post-one.md
-│       └── post-two.md
-```
+- 如果书中文章有所遗漏，或者您有更好的答案或题目，欢迎点击所在页面下边的edit按钮进行评论和互动，或者通过[i@grayson.top](mailto:i@grayson.top)与笔者取得联系，感谢您的支持与帮助。
 
-Create a file `content/menu/index.md` with the content:
-
-```md
-+++
-headless = true
-+++
-
-- [Book Example]({{< relref "/docs/" >}})
-  - [Page One]({{< relref "/docs/page-one" >}})
-  - [Page Two]({{< relref "/docs/page-two" >}})
-- [Blog]({{< relref "/posts" >}})
-```
-
-And Enable it by setting `BookMenuBundle: /menu` in Site configuration.
-
-- [Example menu](https://github.com/alex-shpak/hugo-book/blob/master/exampleSite/content/menu/index.md)
-- [Example config file](https://github.com/alex-shpak/hugo-book/blob/master/exampleSite/config.yaml)
-- [Leaf bundles](https://gohugo.io/content-management/page-bundles/)
-
-## Blog
-
-A simple blog is supported in the section `posts`.  
-A blog is not the primary usecase of this theme, so it has only minimal features.
-
-## Configuration
-
-### Site Configuration
-
-There are a few configuration options that you can add to your `config.toml` file.  
-You can also see the `yaml` example [here](https://github.com/alex-shpak/hugo-book/blob/master/exampleSite/config.yaml).
-
-```toml
-# (Optional) Set Google Analytics if you use it to track your website.
-# Always put it on the top of the configuration file, otherwise it won't work
-googleAnalytics = "UA-XXXXXXXXX-X"
-
-# (Optional) If you provide a Disqus shortname, comments will be enabled on
-# all pages.
-disqusShortname = "my-site"
-
-# (Optional) Set this to true if you use capital letters in file names
-disablePathToLower = true
-
-# (Optional) Set this to true to enable 'Last Modified by' date and git author
-#  information on 'doc' type pages.
-enableGitInfo = true
-
-# (Optional) Theme is intended for documentation use, therefore it doesn't render taxonomy.
-# You can remove related files with config below
-disableKinds = ['taxonomy', 'taxonomyTerm']
-
-[params]
-  # (Optional, default light) Sets color theme: light, dark or auto.
-  # Theme 'auto' switches between dark and light modes based on browser/os preferences
-  BookTheme = 'light'
-
-  # (Optional, default true) Controls table of contents visibility on right side of pages.
-  # Start and end levels can be controlled with markup.tableOfContents setting.
-  # You can also specify this parameter per page in front matter.
-  BookToC = true
-
-  # (Optional, default none) Set the path to a logo for the book. If the logo is
-  # /static/logo.png then the path would be 'logo.png'
-  BookLogo = 'logo.png'
-
-  # (Optional, default none) Set leaf bundle to render as side menu
-  # When not specified file structure and weights will be used
-  BookMenuBundle = '/menu'
-
-  # (Optional, default docs) Specify section of content to render as menu
-  # You can also set value to "*" to render all sections to menu
-  BookSection = 'docs'
-
-  # Set source repository location.
-  # Used for 'Last Modified' and 'Edit this page' links.
-  BookRepo = 'https://github.com/alex-shpak/hugo-book'
-  
-  # Specifies commit portion of the link to the page's last modified commit hash for 'doc' page
-  # type.
-  # Required if 'BookRepo' param is set.
-  # Value used to construct a URL consisting of BookRepo/BookCommitPath/<commit-hash>
-  # Github uses 'commit', Bitbucket uses 'commits'
-  BookCommitPath = 'commit'
-
-  # Enable 'Edit this page' links for 'doc' page type.
-  # Disabled by default. Uncomment to enable. Requires 'BookRepo' param.
-  # Path must point to the site directory.
-  BookEditPath = 'edit/master/exampleSite'
-
-  # (Optional, default January 2, 2006) Configure the date format used on the pages
-  # - In git information
-  # - In blog posts
-  BookDateFormat = 'Jan 2, 2006'
-
-  # (Optional, default true) Enables search function with flexsearch,
-  # Index is built on fly, therefore it might slowdown your website.
-  # Configuration for indexing can be adjusted in i18n folder per language.
-  BookSearch = true
-
-  # (Optional, default true) Enables comments template on pages
-  # By default partials/docs/comments.html includes Disqus template
-  # See https://gohugo.io/content-management/comments/#configure-disqus
-  # Can be overwritten by same param in page frontmatter
-  BookComments = true
-
-  # /!\ This is an experimental feature, might be removed or changed at any time
-  # (Optional, experimental, default false) Enables portable links and link checks in markdown pages.
-  # Portable links meant to work with text editors and let you write markdown without {{< relref >}} shortcode
-  # Theme will print warning if page referenced in markdown does not exists.
-  BookPortableLinks = true
-
-  # /!\ This is an experimental feature, might be removed or changed at any time
-  # (Optional, experimental, default false) Enables service worker that caches visited pages and resources for offline use.
-  BookServiceWorker = true
-```
-
-### Multi-Language Support
-
-Theme supports Hugo's [multilingual mode](https://gohugo.io/content-management/multilingual/), just follow configuration guide there. You can also tweak search indexing configuration per language in `i18n` folder.
-
-### Page Configuration
-
-You can specify additional params in the front matter of individual pages:
-
-```toml
-# Set type to 'docs' if you want to render page outside of configured section or if you render section other than 'docs'
-type = 'docs'
-
-# Set page weight to re-arrange items in file-tree menu (if BookMenuBundle not set)
-weight = 10
-
-# (Optional) Set to 'true' to mark page as flat section in file-tree menu (if BookMenuBundle not set)
-bookFlatSection = false
-
-# (Optional) Set to hide nested sections or pages at that level. Works only with file-tree menu mode
-bookCollapseSection = true
-
-# (Optional) Set true to hide page or section from side menu (if BookMenuBundle not set)
-bookHidden = false
-
-# (Optional) Set 'false' to hide ToC from page
-bookToC = true
-
-# (Optional) If you have enabled BookComments for the site, you can disable it for specific pages.
-bookComments = true
-
-# (Optional) Set to 'false' to exclude page from search index.
-bookSearchExclude = true
-```
-
-### Partials
-
-There are few empty partials you can override in `layouts/partials/`
-
-| Partial                                            | Placement                                   |
-| -------------------------------------------------- | ------------------------------------------- |
-| `layouts/partials/docs/inject/head.html`           | Before closing `<head>` tag                 |
-| `layouts/partials/docs/inject/body.html`           | Before closing `<body>` tag                 |
-| `layouts/partials/docs/inject/footer.html`         | After page footer content                   |
-| `layouts/partials/docs/inject/menu-before.html`    | At the beginning of `<nav>` menu block      |
-| `layouts/partials/docs/inject/menu-after.html`     | At the end of `<nav>` menu block            |
-| `layouts/partials/docs/inject/content-before.html` | Before page content                         |
-| `layouts/partials/docs/inject/content-after.html`  | After page content                          |
-| `layouts/partials/docs/inject/toc-before.html`     | At the beginning of table of contents block |
-| `layouts/partials/docs/inject/toc-after.html`      | At the end of table of contents block       |
-
-### Extra Customisation
-
-| File                     | Description                                                                           |
-| ------------------------ | ------------------------------------------------------------------------------------- |
-| `static/favicon.png`     | Override default favicon                                                              |
-| `assets/_custom.scss`    | Customise or override scss styles                                                     |
-| `assets/_variables.scss` | Override default SCSS variables                                                       |
-| `assets/_fonts.scss`     | Replace default font with custom fonts (e.g. local files or remote like google fonts) |
-| `assets/mermaid.json`    | Replace Mermaid initialization config                                                 |
-
-### Plugins
-
-There are a few features implemented as plugable `scss` styles. Usually these are features that don't make it to the core but can still be useful.
-
-| Plugin                            | Description                                                 |
-| --------------------------------- | ----------------------------------------------------------- |
-| `assets/plugins/_numbered.scss`   | Makes headings in markdown numbered, e.g. `1.1`, `1.2`      |
-| `assets/plugins/_scrollbars.scss` | Overrides scrollbar styles to look similar across platforms |
-
-To enable plugins, add `@import "plugins/{name}";` to `assets/_custom.scss` in your website root.
-
-### Hugo Internal Templates
-
-There are a few hugo templates inserted in `<head>`
-
-- [Google Analytics](https://gohugo.io/templates/internal/#google-analytics)
-- [Open Graph](https://gohugo.io/templates/internal/#open-graph)
-
-To disable Open Graph inclusion you can create your own empty file `\layouts\_internal\opengraph.html`.
-In fact almost empty not quite empty because an empty file looks like absent for HUGO. For example:
-```
-<!-- -->
-```
-
-## Shortcodes
-
-- [Buttons](https://hugo-book-demo.netlify.app/docs/shortcodes/buttons/)
-- [Columns](https://hugo-book-demo.netlify.app/docs/shortcodes/columns/)
-- [Details](https://hugo-book-demo.netlify.app/docs/shortcodes/details/)
-- [Hints](https://hugo-book-demo.netlify.app/docs/shortcodes/hints/)
-- [KaTeX](https://hugo-book-demo.netlify.app/docs/shortcodes/katex/)
-- [Mermaid](https://hugo-book-demo.netlify.app/docs/shortcodes/mermaid/)
-- [Tabs](https://hugo-book-demo.netlify.app/docs/shortcodes/tabs/)
-
-By default, Goldmark trims unsafe outputs which might prevent some shortcodes from rendering. It is recommended to set `markup.goldmark.renderer.unsafe=true` if you encounter problems.
-
-```toml
-[markup.goldmark.renderer]
-  unsafe = true
-```
-
-If you are using `config.yaml` or `config.json`, consult the [configuration markup](https://gohugo.io/getting-started/configuration-markup/)
-
-## Versioning
-
-This theme follows a simple incremental versioning. e.g. `v1`, `v2` and so on. There might be breaking changes between versions.
-
-If you want lower maintenance, use one of the released versions. If you want to live on the bleeding edge of changes, you can use the `master` branch and update your website when needed.
-
-## Contributing
-
-### [Extra credits to contributors](https://github.com/alex-shpak/hugo-book/graphs/contributors)
-
-Contributions are welcome and I will review and consider pull requests.  
-Primary goals are:
-
-- Keep it simple.
-- Keep minimal (or zero) default configuration.
-- Avoid interference with user-defined layouts.
-- Avoid using JS if it can be solved by CSS.
-
-Feel free to open issues if you find missing configuration or customisation options.
+本作品采用[知识署名-非商业性使用-禁止演绎 （BY-NC-ND） 4.0 国际许可协议](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode.zh-Hans)进行许可。

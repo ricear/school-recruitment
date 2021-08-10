@@ -36,13 +36,13 @@ bookToc: false
 本书内容大部分来源于博客、开源社区，然后根据笔者的理解整理而成，在这里把主要的来源列举出来，以表示对作者的感谢：
 
 - 本书的灵感以及排版来源于[LeetCode Cookbook](https://books.halfrost.com/leetcode)，电子版基于[Hugo](https://gohugo.io)的[Book](https://themes.gohugo.io/themes/hugo-book)主题，封面图片使用[O RLY Cover Generator](https://dev.to/rly)生成。
-- 算法部分的题目主要来源于[LeetCode中国](https://leetcode-cn.com)，题解部分来源于[LeetCode中国](https://leetcode-cn.com)、[📖labuladong 的算法小抄](https://labuladong.gitbook.io/algo)。
-- 计算机基础和数据库中的内容主要来源于[Waking-Up](https://github.com/wolverinn/Waking-Up)、[【面试题】技术面试题汇总 🔥](https://imageslr.com/2020/07/08/tech-interview.html)。
+- 算法部分的题目主要来源于[LeetCode中国](https://leetcode-cn.com)，刷题优先级主要根据[CodeTop企业题库](https://codetop.cc)，题解部分来源于[LeetCode中国](https://leetcode-cn.com)、[📖labuladong 的算法小抄](https://labuladong.gitbook.io/algo)。
+- 计算机基础和数据库中的内容主要来源于[Waking-Up](https://github.com/wolverinn/Waking-Up)、[【面试题】技术面试题汇总 🔥](https://imageslr.com/2020/07/08/tech-interview.html)，综合题目主要来源于[Overseas Rabbit | 海外兔](https://osjobs.net)
 - 其他的还包括[美团技术团队](https://tech.meituan.com)、[博客园](https://www.cnblogs.com)、[掘金](https://juejin.cn)、[InfoQ](https://www.infoq.cn)、[微信公众号](https://weixin.sogou.com)等。
 
 <--->
 
-![Book Cover](./assets/images/book-cover.png)
+![Book Cover](https://school-recruitment.grayson.top/public/assets/images/book-cover.png)
 
 {{< /columns >}}
 
