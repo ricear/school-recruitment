@@ -14,7 +14,7 @@
 
 
 
-![Book Cover](https://school-recruitment.grayson.top/public/assets/images/book-cover.png)
+![Book Cover](./exampleSite/content/assets/images/book-cover.png)
 
 
 
