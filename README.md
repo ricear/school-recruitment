@@ -14,7 +14,9 @@
 
 
 
-![Book Cover](./exampleSite/content/assets/images/book-cover.png)
+<p align='center'>
+  <img src="./exampleSite/content/assets/images/book-cover.png">
+</p>
 
 
 
