@@ -1,6 +1,6 @@
 # hugo server --minify --themesDir ... --baseURL=http://localhost:1313/
 
-baseURL = 'https://school-recruitment.netlify.app/public/'
+baseURL = 'https://books.grayson.top/recruitment/'
 title = 'Computer Cookbook School Recruitment'
 theme = 'book'
 
