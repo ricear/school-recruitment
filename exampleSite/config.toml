@@ -1,8 +1,8 @@
 # hugo server --minify --themesDir ... --baseURL=http://localhost:1313/
 
-baseURL = 'https://books.grayson.top/public/'
+baseURL = 'https://school-recruitment.grayson.top/public'
 title = 'Computer Cookbook School Recruitment'
-theme = 'book'
+theme = 'hugo-book'
 
 # Book configuration
 disablePathToLower = true
@@ -119,8 +119,8 @@ enableGitInfo = true
   BookTranslatedOnly = false
 
   [params.gitalk] 
-    clientID = "7e66272c3f86fa8926dd" # Your client ID
-    clientSecret = "1138f119eef13518dac2a19d9bb93e09019d538b" # Your client secret
+    clientID = "9e7c78a42e08edf0c9f9" # Your client ID
+    clientSecret = "443826ecf77c94f824c1e4bfba1dbb20ca9abc6a" # Your client secret
     repo = "S2" # The repo to store comments
     owner = "wpwbb510582246" # Your GitHub ID
     admin= "wpwbb510582246" # Required. Github repository owner and collaborators. (Users who having write access to this repository)
