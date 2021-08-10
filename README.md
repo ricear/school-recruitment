@@ -12,13 +12,11 @@
 <a href="https://unsplash.com/@graysonwp"><img src="https://img.shields.io/badge/Unsplash-Grayson-success.svg"></a>
 </p>
 
-
-
+<br>
 <p align='center'>
   <img src="./exampleSite/content/assets/images/book-cover.png">
 </p>
-
-
+<br>
 
 ## 为什么会写这个开源书
 
