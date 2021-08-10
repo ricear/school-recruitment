@@ -1,0 +1,81 @@
+project_desc: Database
+project_name: Database
+project_role: 0
+toc:
+- children:
+  - file: 1.1 事务的概念和特性.md
+    name: 1.1 事务的概念和特性
+  - file: 1.2 锁.md
+    name: 1.2 锁
+  - file: 1.3 锁协议.md
+    name: 1.3 锁协议
+  - file: 1.4 事务日志.md
+    name: 1.4 事务日志
+  - file: 1.5 MVCC实现原理.md
+    name: 1.5 MVCC实现原理
+  - children:
+    - file: 1.6.1 三范式.md
+      name: 1.6.1 三范式
+    - file: 1.6.2 多表连接方式.md
+      name: 1.6.2 多表连接方式
+    - file: 1.6.3 存储过程.md
+      name: 1.6.3 存储过程
+    - file: 1.6.4 DELETE、TRUNCATE和DROP的区别.md
+      name: 1.6.4 DELETE、TRUNCATE和DROP的区别
+    - file: 1.6.5 触发器.md
+      name: 1.6.5 触发器
+    - file: 1.6.6 视图.md
+      name: 1.6.6 视图
+    file: 1.6 基础知识.md
+    name: 1.6 基础知识
+  file: 1、数据库基础.md
+  name: 1、数据库基础
+- children:
+  - file: 2.1 索引.md
+    name: 2.1 索引
+  - file: 2.2 B 树、B+树索引算法原理.md
+    name: 2.2 B 树、B+树索引算法原理
+  - file: 2.3 索引组织表.md
+    name: 2.3 索引组织表
+  - file: 2.4 InnoDB和MyISAM的区别.md
+    name: 2.4 InnoDB和MyISAM的区别
+  - file: 2.5 Checkpoint技术.md
+    name: 2.5 Checkpoint技术
+  - file: 2.6 宕机恢复原理.md
+    name: 2.6 宕机恢复原理
+  - file: 2.7 数据库优化.md
+    name: 2.7 数据库优化
+  - file: 2.8 分库分表.md
+    name: 2.8 分库分表
+  - file: 2.9 一致性哈希算法.md
+    name: 2.9 一致性哈希算法
+  - file: 2.10 主从复制.md
+    name: 2.10 主从复制
+  file: 2、MySQL.md
+  name: 2、MySQL
+- children:
+  - children:
+    - file: 3.1.1 Redis为什么这么快.md
+      name: 3.1.1 Redis为什么这么快
+    - file: 3.1.2 Redis数据类型.md
+      name: 3.1.2 Redis数据类型
+    - file: 3.1.3 持久化机制.md
+      name: 3.1.3 持久化机制
+    - file: 3.1.4 过期机制和内存淘汰策略.md
+      name: 3.1.4 过期机制和内存淘汰策略
+    file: 3.1 概述.md
+    name: 3.1 概述
+  - file: 3.2 线程模型.md
+    name: 3.2 线程模型
+  - children:
+    - file: 3.3.1 Redis实现分布式锁.md
+      name: 3.3.1 Redis实现分布式锁
+    file: 3.3 分布式问题.md
+    name: 3.3 分布式问题
+  - children:
+    - file: 3.4.1 缓存穿透、缓存击穿、缓存雪崩.md
+      name: 3.4.1 缓存穿透、缓存击穿、缓存雪崩
+    file: 3.4 缓存异常.md
+    name: 3.4 缓存异常
+  file: 3、Redis.md
+  name: 3、Redis
