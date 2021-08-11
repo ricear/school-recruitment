@@ -10,8 +10,10 @@ cd ${BASE_DIR}
 echo "1. 生成静态文件"
 cd ${BASE_DIR}/exampleSite
 hugo --themesDir ../themes -b https://books.grayson.top/school-recruitment
+git add -A ./
+git commit -a -m 自动提交
+git push origin main
 cd ${BASE_DIR}
 
 echo "2. 服务器更新文件"
-scp -r ${BASE_DIR}/exampleSite/public root@cloudserver://usr/local/projects/ComputerCookbook-SchoolRecruitment/exampleSite/
-ssh root@cloudserver "cd /usr/local/projects/ComputerCookbook-SchoolRecruitment;git add -A ./;git commit -a -m 自动备份;git push origin;rm -rf /www/wwwroot/books.grayson.top/school-recruitment.bak;mv /www/wwwroot/books.grayson.top/school-recruitment /www/wwwroot/books.grayson.top/school-recruitment.bak;cp -R exampleSite/public /www/wwwroot/books.grayson.top/school-recruitment"
+ssh root@cloudserver "cd /usr/local/projects/ComputerCookbook-SchoolRecruitment;git pull;rm -rf /www/wwwroot/books.grayson.top/school-recruitment.bak;mv /www/wwwroot/books.grayson.top/school-recruitment /www/wwwroot/books.grayson.top/school-recruitment.bak;cp -R exampleSite/public /www/wwwroot/books.grayson.top/school-recruitment"
