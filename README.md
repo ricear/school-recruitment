@@ -6,8 +6,8 @@
 <a href="https://github.com/wpwbb510582246/ComputerCookbook-SchoolRecruitment/pulls"><img src="https://img.shields.io/badge/PR-Welcome-brightgreen.svg"></a>
 <img src="https://img.shields.io/github/stars/wpwbb510582246/ComputerCookbook-SchoolRecruitment?style=social">
 <img src="https://visitor-badge.laobi.icu/badge?page_id=wpwbb510582246.ComputerCookbook-SchoolRecruitment">
-<img src="https://img.shields.io/github/downloads/wpwbb510582246/ComputerCookbook-SchoolRecruitment/total">
-<img src="https://img.shields.io/bitbucket/issues/wpwbb510582246/ComputerCookbook-SchoolRecruitment">
+<img src="https://img.shields.io/github/v/release/wpwbb510582246/ComputerCookbook-SchoolRecruitment">
+<img src="https://img.shields.io/github/repo-size/wpwbb510582246/ComputerCookbook-SchoolRecruitment">
 <a href="https://www.grayson.top"><img src="https://img.shields.io/badge/Blog-Grayson-80d4f9.svg?style=flat"></a>
 <a href="https://unsplash.com/@graysonwp"><img src="https://img.shields.io/badge/Unsplash-Grayson-success.svg"></a>
 </p>
