@@ -4,12 +4,10 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="运行时数据区域 #  JVM 运行时数据区域主要有 程序计数器、 Java 虚拟机栈 、本地方法栈、堆、方法区 、运行时常量池 六个区域。
-![]../../media/202105//1621914617.836086.png)
-1 程序计数器（Program Counter Register） #   由于 JVM 同时可以处理多个线程，所以就涉及到一些线程调度，当 CPU 暂停运行线程把时间片让给另一个线程的时候，我们需要保存这个线程被暂停执行前的一些现场状态，需要记录当前执行到哪一行字节码了，所以具备保存现场的功能。 每条线程都有自己的PC 寄存器，在任意时刻虚拟机只会执行一个方法，如果执行的方法不是 Native 方法，PC 寄存器则保存指向当前执行字节码的指令地址；如果执行的是 Native 方法，则 PC 寄存器为空。   If that method is not native, the pc register contains the address of the Java Virtual Machine instruction currently being executed. If the method currently being executed by the thread is native, the value of the Java Virtual Machine&rsquo;s pc register is undefined.">
+ 1 程序计数器（Program Counter Register） #   由于 JVM 同时可以处理多个线程，所以就涉及到一些线程调度，当 CPU 暂停运行线程把时间片让给另一个线程的时候，我们需要保存这个线程被暂停执行前的一些现场状态，需要记录当前执行到哪一行字节码了，所以具备保存现场的功能。 每条线程都有自己的PC 寄存器，在任意时刻虚拟机只会执行一个方法，如果执行的方法不是 Native 方法，PC 寄存器则保存指向当前执行字节码的指令地址；如果执行的是 Native 方法，则 PC 寄存器为空。   If that method is not native, the pc register contains the address of the Java Virtual Machine instruction currently being executed. If the method currently being executed by the thread is native, the value of the Java Virtual Machine&rsquo;s pc register is undefined.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
 <meta property="og:description" content="运行时数据区域 #  JVM 运行时数据区域主要有 程序计数器、 Java 虚拟机栈 、本地方法栈、堆、方法区 、运行时常量池 六个区域。
-![]../../media/202105//1621914617.836086.png)
-1 程序计数器（Program Counter Register） #   由于 JVM 同时可以处理多个线程，所以就涉及到一些线程调度，当 CPU 暂停运行线程把时间片让给另一个线程的时候，我们需要保存这个线程被暂停执行前的一些现场状态，需要记录当前执行到哪一行字节码了，所以具备保存现场的功能。 每条线程都有自己的PC 寄存器，在任意时刻虚拟机只会执行一个方法，如果执行的方法不是 Native 方法，PC 寄存器则保存指向当前执行字节码的指令地址；如果执行的是 Native 方法，则 PC 寄存器为空。   If that method is not native, the pc register contains the address of the Java Virtual Machine instruction currently being executed. If the method currently being executed by the thread is native, the value of the Java Virtual Machine&rsquo;s pc register is undefined." />
+ 1 程序计数器（Program Counter Register） #   由于 JVM 同时可以处理多个线程，所以就涉及到一些线程调度，当 CPU 暂停运行线程把时间片让给另一个线程的时候，我们需要保存这个线程被暂停执行前的一些现场状态，需要记录当前执行到哪一行字节码了，所以具备保存现场的功能。 每条线程都有自己的PC 寄存器，在任意时刻虚拟机只会执行一个方法，如果执行的方法不是 Native 方法，PC 寄存器则保存指向当前执行字节码的指令地址；如果执行的是 Native 方法，则 PC 寄存器为空。   If that method is not native, the pc register contains the address of the Java Virtual Machine instruction currently being executed. If the method currently being executed by the thread is native, the value of the Java Virtual Machine&rsquo;s pc register is undefined." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.1-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F/" /><meta property="article:section" content="docs" />
 
@@ -20,7 +18,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.1bc398404d6e9eec8ffa32b7de2bb82b89efd0a8a92c5a540e9f38e9bb5b4a5b.js" integrity="sha256-G8OYQE1unuyP&#43;jK33iu4K4nv0KipLFpUDp846btbSls=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.aea6d96f0a2607e0554a26a0e35b009f9b612c62f43fa70f1c24c528cd1ae7b3.js" integrity="sha256-rqbZbwomB&#43;BVSiag41sAn5thLGL0P6cPHCTFKM0a57M=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -2709,7 +2707,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.1-Runnable%E5%92%8C-Thread%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.1 Runnable和 Thread的区别</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.1-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7/" class="">2.1 并发编程的三大特性</a>
   
 
         </li>
@@ -2722,7 +2720,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.2-Thread%E7%B1%BB%E4%B8%AD%E7%9A%84start%E5%92%8Crun%E6%96%B9%E6%B3%95%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB/" class="">2.2 Thread类中的start()和run()方法有什么区别</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.2-%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92/" class="">2.2 指令重排</a>
   
 
         </li>
@@ -2735,7 +2733,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.3-Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E8%B0%83%E7%94%A8wait%E5%92%8Csleep%E6%96%B9%E6%B3%95%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C/" class="">2.3 Java多线程中调用wait()和sleep()方法有什么不同</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.3-Volatile%E5%8E%9F%E7%90%86/" class="">2.3 Volatile原理</a>
   
 
         </li>
@@ -2748,7 +2746,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.4-ReentrantLock%E5%92%8CSynchronized%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.4 Reentrant Lock和 Synchronized的区别</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.4-CAS%E5%8E%9F%E7%90%86/" class="">2.4 Cas原理</a>
   
 
         </li>
@@ -2761,7 +2759,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.5-volatile%E9%80%82%E7%94%A8%E4%BA%8E%E9%AB%98%E5%B9%B6%E5%8F%91%E7%9A%84%E4%BB%80%E4%B9%88%E5%9C%BA%E6%99%AF/" class="">2.5 Volatile适用于高并发的什么场景</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.5-Java%E7%9A%844%E7%A7%8D%E5%BC%95%E7%94%A8%E7%BA%A7%E5%88%AB/" class="">2.5 Java的4种引用级别</a>
   
 
         </li>
@@ -2774,7 +2772,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.6-%E5%A4%9A%E7%BA%BF%E7%A8%8Bjoin%E6%96%B9%E6%B3%95%E7%94%A8%E4%BA%8E%E4%BB%80%E4%B9%88%E5%9C%BA%E6%99%AF/" class="">2.6 多线程join方法用于什么场景</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.6-Java%E4%B8%AD%E7%9A%84%E9%94%81/" class="">2.6 Java中的锁</a>
   
 
         </li>
@@ -2787,7 +2785,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.7-%E5%A4%9A%E4%B8%AA%E7%BA%BF%E7%A8%8B%E9%97%B4%E5%A6%82%E4%BD%95%E5%85%B1%E4%BA%AB%E6%95%B0%E6%8D%AE/" class="">2.7 多个线程间如何共享数据</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.7-Synchronized%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.7 Synchronized实现原理</a>
   
 
         </li>
@@ -2800,137 +2798,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.8-%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81%E6%9C%89%E5%93%AA%E4%BA%9B%E5%90%84%E8%87%AA%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E6%98%AF%E4%BB%80%E4%B9%88/" class="">2.8 线程的状态有哪些，各自的使用场景是什么</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-Java%E8%87%AA%E5%B8%A6%E5%93%AA%E5%87%A0%E7%A7%8D%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="">2.9 Java自带哪几种线程池</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.10-Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" class="">2.10 Java内存模型</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.11-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7/" class="">2.11 并发编程的三大特性</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.12-%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92/" class="">2.12 指令重排</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.13-Volatile%E5%8E%9F%E7%90%86/" class="">2.13 Volatile原理</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.14-CAS%E5%8E%9F%E7%90%86/" class="">2.14 Cas原理</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.15-Java%E7%9A%844%E7%A7%8D%E5%BC%95%E7%94%A8%E7%BA%A7%E5%88%AB/" class="">2.15 Java的4种引用级别</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.16-Java%E4%B8%AD%E7%9A%84%E9%94%81/" class="">2.16 Java中的锁</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.17-Synchronized%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.17 Synchronized实现原理</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.18-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.18 线程池实现原理</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.8-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.8 线程池实现原理</a>
   
 
         </li>
@@ -3289,7 +3157,8 @@ https://github.com/alex-shpak/hugo-book
   <a class="anchor" href="#%e8%bf%90%e8%a1%8c%e6%97%b6%e6%95%b0%e6%8d%ae%e5%8c%ba%e5%9f%9f">#</a>
 </h1>
 <p>JVM 运行时数据区域主要有 <code>程序计数器</code>、 <code>Java 虚拟机栈 </code>、<code>本地方法栈</code>、<code>堆</code>、<code>方法区</code> 、<code>运行时常量池</code> 六个区域。</p>
-<p>![]../../media/202105//1621914617.836086.png)</p>
+<p>
+  <img src="../../media/202105//1621914617.836086.png" alt="" /></p>
 <h2 id="1-程序计数器program-counter-register">
   1 程序计数器（Program Counter Register）
   <a class="anchor" href="#1-%e7%a8%8b%e5%ba%8f%e8%ae%a1%e6%95%b0%e5%99%a8program-counter-register">#</a>
@@ -3301,7 +3170,8 @@ https://github.com/alex-shpak/hugo-book
 <blockquote>
 <p>If that method is not <code>native</code>, the <code>pc</code> register contains the address of the Java Virtual Machine instruction currently being executed. If the method currently being executed by the thread is <code>native</code>, the value of the Java Virtual Machine&rsquo;s <code>pc</code> register is undefined.</p>
 </blockquote>
-<p>![]../../media/202105//1621914617.837962.png)</p>
+<p>
+  <img src="../../media/202105//1621914617.837962.png" alt="" /></p>
 <h2 id="2-java-虚拟机栈java-virtual-machine-stacks">
   2 Java 虚拟机栈（Java Virtual Machine Stacks）
   <a class="anchor" href="#2-java-%e8%99%9a%e6%8b%9f%e6%9c%ba%e6%a0%88java-virtual-machine-stacks">#</a>
@@ -3311,7 +3181,8 @@ https://github.com/alex-shpak/hugo-book
 <li><strong>每一个被线程执行的方法，为该栈中的栈帧</strong>，即每一个方法对应一个栈帧。</li>
 <li><strong>调用一个方法，就会向栈中压入一个栈帧；一个方法调用完成，就会把该栈帧从栈中弹出。</strong></li>
 </ol>
-<p>![]../../media/202105//1621914617.839298.png)</p>
+<p>
+  <img src="../../media/202105//1621914617.839298.png" alt="" /></p>
 <h2 id="3-本地方法栈native-method-stacks">
   3 本地方法栈（Native Method Stacks）
   <a class="anchor" href="#3-%e6%9c%ac%e5%9c%b0%e6%96%b9%e6%b3%95%e6%a0%88native-method-stacks">#</a>
@@ -3319,7 +3190,8 @@ https://github.com/alex-shpak/hugo-book
 <ol>
 <li>如果当前线程执行的方法是<strong>Native</strong>类型的，这些方法就会在本地方法栈中执行。</li>
 </ol>
-<p>![]../../media/202105//1621914617.8405614.png)</p>
+<p>
+  <img src="../../media/202105//1621914617.8405614.png" alt="" /></p>
 <h2 id="4-堆heap">
   4 堆（Heap）
   <a class="anchor" href="#4-%e5%a0%86heap">#</a>
@@ -3329,7 +3201,8 @@ https://github.com/alex-shpak/hugo-book
 <li>在虚拟机启动时就根据相关堆参数创建堆，他也是垃圾收集器工作的主要区域。</li>
 <li>堆内存的<strong>对象不会被显式的回收</strong>，而是由垃圾收集器回收。</li>
 </ol>
-<p>![]../../media/202105//1621914617.8418453.png)</p>
+<p>
+  <img src="../../media/202105//1621914617.8418453.png" alt="" /></p>
 <h2 id="5-方法区method-area">
   5 方法区（Method Area）
   <a class="anchor" href="#5-%e6%96%b9%e6%b3%95%e5%8c%bamethod-area">#</a>
@@ -3339,7 +3212,8 @@ https://github.com/alex-shpak/hugo-book
 <li>方法区主要用于存储已被虚拟机加载的<strong>类信息</strong>、<strong>常量</strong>、<strong>静态变量</strong>、<strong>即时编译器编译后的代码</strong>等数据。</li>
 <li>方法区可以是固定大小的，也可以根据计算的需求进行扩展。</li>
 </ol>
-<p>![]../../media/202105//1621914617.8437815.png)</p>
+<p>
+  <img src="../../media/202105//1621914617.8437815.png" alt="" /></p>
 <h2 id="6-运行时常量池run-time-constant-pool">
   6 运行时常量池（Run-Time Constant Pool）
   <a class="anchor" href="#6-%e8%bf%90%e8%a1%8c%e6%97%b6%e5%b8%b8%e9%87%8f%e6%b1%a0run-time-constant-pool">#</a>
@@ -3349,7 +3223,8 @@ https://github.com/alex-shpak/hugo-book
 <li>它包含几种类型的常量，从<strong>编译时已知的数值常量</strong>到<strong>必须在运行时解析的方法和字段引用</strong>。</li>
 <li>每个运行时常量池都是从 Java 虚拟机的<strong>方法区</strong>中分配，在创建类或接口时，如果构建运行时常量池所需的内存超过了 Java 虚拟机的<strong>方法区</strong>所能提供的内存，则 Java 虚拟机将抛出 <code>OutOfMemoryError</code>。</li>
 </ol>
-<p>![]../../media/202105//1621914617.8457618.png)</p>
+<p>
+  <img src="../../media/202105//1621914617.8457618.png" alt="" /></p>
 <h2 id="7-参考文献">
   7 参考文献
   <a class="anchor" href="#7-%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae">#</a>

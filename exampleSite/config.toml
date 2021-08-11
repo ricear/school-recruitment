@@ -1,4 +1,4 @@
-# hugo server --minify --themesDir ../themes --bind=0.0.0.0 --baseURL=http://180.215.197.157:1313/
+# hugo server --minify --themesDir ../themes --bind=0.0.0.0 --baseURL=http://localhost:1313/
 
 baseURL = 'https://books.grayson.top/school-recruitment'
 title = 'Computer Cookbook School Recruitment'

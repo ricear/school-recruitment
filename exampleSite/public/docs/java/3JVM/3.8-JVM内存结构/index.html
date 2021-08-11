@@ -4,24 +4,18 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="JVM内存结构 #  1 概述 #  JVM 内部使用Java 内存模型，在逻辑上将内存划分为线程栈（Thread Stacks）和堆内存（Heap）两个部分，如下图所示：
-![4pajs.jpg (1148×816)]../../media/202105//1621914622.9091363.png)
-1.1 线程栈 #  JVM 中，每个正在运行的线程，都有自己的线程栈。
+ 1.1 线程栈 #  JVM 中，每个正在运行的线程，都有自己的线程栈。
  线程栈包含了当前正在执行的方法链或调用链上的所有方法的状态信息， 所以线程栈又被称为方法栈或调用栈。 线程栈里面保存了调用链上正在执行的所有方法中的局部变量：  每个线程都只能访问自己的线程栈。 每个线程都不能访问其他线程的局部变量。   即使两个线程正在执行完全相同的代码，但每个线程都会在自己的线程栈内创建对应代码中声明的局部变量，所以每个线程都有一份自己的局部变量副本：  所有原生类型的局部变量都存储在线程栈中，因此对其他线程是不可见的。 线程可以将一个原生变量值的副本传给另一个线程，但不能共享原生局部变量本身。    1.2 堆内存 #  堆内存又称为共享堆，堆中的所有对象，可以被所有线程访问，只要他们能拿到对象的引用地址：
  如果一个线程可以访问某个对象时，也就可以访问该对象的成员变量。 如果两个线程同时调用某个对象的同一个方法，则他们都可以访问到这个对象的成员变量，但每个线程的局部变量副本是独立的。  虽然各个线程自己使用的局部变量都在自己的栈上，但是大家可以共享堆上的对象，各个不同线程访问同一个对象实例的基础类型的成员变量，会给每个线程一个变量的副本。
-![6j9fe.jpg (1688×1078)]../../media/202105//1621914622.9118786.png)
-1.3 总结 #   如果是原生数据类型的局部变量，那么他的内容就全部保留在线程栈中。 如果是对象引用，在对象的引用地址保存在栈中，而实际的对象内容保存在堆中。 对象的成员变量与对象本身一起存储在堆上，不管成员变量的类型是原生数值，还是对象引用。 类的静态变量则和类定义一样都保存在堆中。  总结一下：
- 原始数据类型的局部变量和对象引用地址在栈上。 对象、对象成员与类定义、静态变量在堆上。  ![ksq1n.jpg (1728×1098)]../../media/202105//1621914622.9144847.png)
-2 线程栈 #  ![6yhj7.jpg (1450×986)]../../media/202105//1621914622.9165661.png)">
+ 1.3 总结 #   如果是原生数据类型的局部变量，那么他的内容就全部保留在线程栈中。 如果是对象引用，在对象的引用地址保存在栈中，而实际的对象内容保存在堆中。 对象的成员变量与对象本身一起存储在堆上，不管成员变量的类型是原生数值，还是对象引用。 类的静态变量则和类定义一样都保存在堆中。  总结一下：
+ 原始数据类型的局部变量和对象引用地址在栈上。 对象、对象成员与类定义、静态变量在堆上。   2 线程栈 #    每启动一个线程，JVM 就会在栈空间分配对应的线程栈。 线程栈也叫做Java 方法栈，如果使用了JNI（Java Native Interface）方法，则会分配一个单独的本地方法栈（Native Stack）。 线程执行过程中，一般会有多个方法组成调用栈（Stack Trace），比如 A 调用 B，B 调用 C&hellip;&hellip;。每执行到一个方法，就会创建对应的栈帧（Frame）。  栈帧是一个逻辑上的概念，具体的大小在一个方法完成后基本上就能确定。 比如返回值需要有一个空间存放；每个局部变量都需要对应的地址空间；此外还有给指令使用的操作数栈；以及Class 指针（标识这个栈帧对应的是哪个类的方法，指向非堆里面的 Class 对象）。     3 堆 #    堆内存是所有线程共用的内存空间，理论上大家都可以访问。 逻辑上的 Java 堆划分为堆（Heap）和堆外（Non-Heap）两个部分：  3.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
 <meta property="og:description" content="JVM内存结构 #  1 概述 #  JVM 内部使用Java 内存模型，在逻辑上将内存划分为线程栈（Thread Stacks）和堆内存（Heap）两个部分，如下图所示：
-![4pajs.jpg (1148×816)]../../media/202105//1621914622.9091363.png)
-1.1 线程栈 #  JVM 中，每个正在运行的线程，都有自己的线程栈。
+ 1.1 线程栈 #  JVM 中，每个正在运行的线程，都有自己的线程栈。
  线程栈包含了当前正在执行的方法链或调用链上的所有方法的状态信息， 所以线程栈又被称为方法栈或调用栈。 线程栈里面保存了调用链上正在执行的所有方法中的局部变量：  每个线程都只能访问自己的线程栈。 每个线程都不能访问其他线程的局部变量。   即使两个线程正在执行完全相同的代码，但每个线程都会在自己的线程栈内创建对应代码中声明的局部变量，所以每个线程都有一份自己的局部变量副本：  所有原生类型的局部变量都存储在线程栈中，因此对其他线程是不可见的。 线程可以将一个原生变量值的副本传给另一个线程，但不能共享原生局部变量本身。    1.2 堆内存 #  堆内存又称为共享堆，堆中的所有对象，可以被所有线程访问，只要他们能拿到对象的引用地址：
  如果一个线程可以访问某个对象时，也就可以访问该对象的成员变量。 如果两个线程同时调用某个对象的同一个方法，则他们都可以访问到这个对象的成员变量，但每个线程的局部变量副本是独立的。  虽然各个线程自己使用的局部变量都在自己的栈上，但是大家可以共享堆上的对象，各个不同线程访问同一个对象实例的基础类型的成员变量，会给每个线程一个变量的副本。
-![6j9fe.jpg (1688×1078)]../../media/202105//1621914622.9118786.png)
-1.3 总结 #   如果是原生数据类型的局部变量，那么他的内容就全部保留在线程栈中。 如果是对象引用，在对象的引用地址保存在栈中，而实际的对象内容保存在堆中。 对象的成员变量与对象本身一起存储在堆上，不管成员变量的类型是原生数值，还是对象引用。 类的静态变量则和类定义一样都保存在堆中。  总结一下：
- 原始数据类型的局部变量和对象引用地址在栈上。 对象、对象成员与类定义、静态变量在堆上。  ![ksq1n.jpg (1728×1098)]../../media/202105//1621914622.9144847.png)
-2 线程栈 #  ![6yhj7.jpg (1450×986)]../../media/202105//1621914622.9165661.png)" />
+ 1.3 总结 #   如果是原生数据类型的局部变量，那么他的内容就全部保留在线程栈中。 如果是对象引用，在对象的引用地址保存在栈中，而实际的对象内容保存在堆中。 对象的成员变量与对象本身一起存储在堆上，不管成员变量的类型是原生数值，还是对象引用。 类的静态变量则和类定义一样都保存在堆中。  总结一下：
+ 原始数据类型的局部变量和对象引用地址在栈上。 对象、对象成员与类定义、静态变量在堆上。   2 线程栈 #    每启动一个线程，JVM 就会在栈空间分配对应的线程栈。 线程栈也叫做Java 方法栈，如果使用了JNI（Java Native Interface）方法，则会分配一个单独的本地方法栈（Native Stack）。 线程执行过程中，一般会有多个方法组成调用栈（Stack Trace），比如 A 调用 B，B 调用 C&hellip;&hellip;。每执行到一个方法，就会创建对应的栈帧（Frame）。  栈帧是一个逻辑上的概念，具体的大小在一个方法完成后基本上就能确定。 比如返回值需要有一个空间存放；每个局部变量都需要对应的地址空间；此外还有给指令使用的操作数栈；以及Class 指针（标识这个栈帧对应的是哪个类的方法，指向非堆里面的 Class 对象）。     3 堆 #    堆内存是所有线程共用的内存空间，理论上大家都可以访问。 逻辑上的 Java 堆划分为堆（Heap）和堆外（Non-Heap）两个部分：  3." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.8-JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" /><meta property="article:section" content="docs" />
 
@@ -32,7 +26,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.1bc398404d6e9eec8ffa32b7de2bb82b89efd0a8a92c5a540e9f38e9bb5b4a5b.js" integrity="sha256-G8OYQE1unuyP&#43;jK33iu4K4nv0KipLFpUDp846btbSls=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.aea6d96f0a2607e0554a26a0e35b009f9b612c62f43fa70f1c24c528cd1ae7b3.js" integrity="sha256-rqbZbwomB&#43;BVSiag41sAn5thLGL0P6cPHCTFKM0a57M=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -2721,7 +2715,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.1-Runnable%E5%92%8C-Thread%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.1 Runnable和 Thread的区别</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.1-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7/" class="">2.1 并发编程的三大特性</a>
   
 
         </li>
@@ -2734,7 +2728,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.2-Thread%E7%B1%BB%E4%B8%AD%E7%9A%84start%E5%92%8Crun%E6%96%B9%E6%B3%95%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB/" class="">2.2 Thread类中的start()和run()方法有什么区别</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.2-%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92/" class="">2.2 指令重排</a>
   
 
         </li>
@@ -2747,7 +2741,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.3-Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E8%B0%83%E7%94%A8wait%E5%92%8Csleep%E6%96%B9%E6%B3%95%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C/" class="">2.3 Java多线程中调用wait()和sleep()方法有什么不同</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.3-Volatile%E5%8E%9F%E7%90%86/" class="">2.3 Volatile原理</a>
   
 
         </li>
@@ -2760,7 +2754,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.4-ReentrantLock%E5%92%8CSynchronized%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.4 Reentrant Lock和 Synchronized的区别</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.4-CAS%E5%8E%9F%E7%90%86/" class="">2.4 Cas原理</a>
   
 
         </li>
@@ -2773,7 +2767,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.5-volatile%E9%80%82%E7%94%A8%E4%BA%8E%E9%AB%98%E5%B9%B6%E5%8F%91%E7%9A%84%E4%BB%80%E4%B9%88%E5%9C%BA%E6%99%AF/" class="">2.5 Volatile适用于高并发的什么场景</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.5-Java%E7%9A%844%E7%A7%8D%E5%BC%95%E7%94%A8%E7%BA%A7%E5%88%AB/" class="">2.5 Java的4种引用级别</a>
   
 
         </li>
@@ -2786,7 +2780,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.6-%E5%A4%9A%E7%BA%BF%E7%A8%8Bjoin%E6%96%B9%E6%B3%95%E7%94%A8%E4%BA%8E%E4%BB%80%E4%B9%88%E5%9C%BA%E6%99%AF/" class="">2.6 多线程join方法用于什么场景</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.6-Java%E4%B8%AD%E7%9A%84%E9%94%81/" class="">2.6 Java中的锁</a>
   
 
         </li>
@@ -2799,7 +2793,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.7-%E5%A4%9A%E4%B8%AA%E7%BA%BF%E7%A8%8B%E9%97%B4%E5%A6%82%E4%BD%95%E5%85%B1%E4%BA%AB%E6%95%B0%E6%8D%AE/" class="">2.7 多个线程间如何共享数据</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.7-Synchronized%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.7 Synchronized实现原理</a>
   
 
         </li>
@@ -2812,137 +2806,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.8-%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81%E6%9C%89%E5%93%AA%E4%BA%9B%E5%90%84%E8%87%AA%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E6%98%AF%E4%BB%80%E4%B9%88/" class="">2.8 线程的状态有哪些，各自的使用场景是什么</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-Java%E8%87%AA%E5%B8%A6%E5%93%AA%E5%87%A0%E7%A7%8D%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="">2.9 Java自带哪几种线程池</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.10-Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" class="">2.10 Java内存模型</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.11-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7/" class="">2.11 并发编程的三大特性</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.12-%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92/" class="">2.12 指令重排</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.13-Volatile%E5%8E%9F%E7%90%86/" class="">2.13 Volatile原理</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.14-CAS%E5%8E%9F%E7%90%86/" class="">2.14 Cas原理</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.15-Java%E7%9A%844%E7%A7%8D%E5%BC%95%E7%94%A8%E7%BA%A7%E5%88%AB/" class="">2.15 Java的4种引用级别</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.16-Java%E4%B8%AD%E7%9A%84%E9%94%81/" class="">2.16 Java中的锁</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.17-Synchronized%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.17 Synchronized实现原理</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.18-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.18 线程池实现原理</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.8-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.8 线程池实现原理</a>
   
 
         </li>
@@ -3327,7 +3191,8 @@ https://github.com/alex-shpak/hugo-book
   <a class="anchor" href="#1-%e6%a6%82%e8%bf%b0">#</a>
 </h2>
 <p>JVM 内部使用<strong>Java 内存模型</strong>，在逻辑上将内存划分为<strong>线程栈</strong>（Thread Stacks）和<strong>堆内存</strong>（Heap）两个部分，如下图所示：</p>
-<p>![4pajs.jpg (1148×816)]../../media/202105//1621914622.9091363.png)</p>
+<p>
+  <img src="../../media/202105//1621914622.9091363.png" alt="4pajs.jpg (1148×816)" /></p>
 <h3 id="11-线程栈">
   1.1 线程栈
   <a class="anchor" href="#11-%e7%ba%bf%e7%a8%8b%e6%a0%88">#</a>
@@ -3358,7 +3223,8 @@ https://github.com/alex-shpak/hugo-book
 <li>如果两个线程<strong>同时调用某个对象的同一个方法</strong>，则他们<strong>都可以访问到这个对象的成员变量</strong>，但<strong>每个线程的局部变量副本是独立的</strong>。</li>
 </ul>
 <p><strong>虽然各个线程自己使用的局部变量都在自己的栈上，但是大家可以共享堆上的对象，各个不同线程访问同一个对象实例的基础类型的成员变量，会给每个线程一个变量的副本。</strong></p>
-<p>![6j9fe.jpg (1688×1078)]../../media/202105//1621914622.9118786.png)</p>
+<p>
+  <img src="../../media/202105//1621914622.9118786.png" alt="6j9fe.jpg (1688×1078)" /></p>
 <h3 id="13-总结">
   1.3 总结
   <a class="anchor" href="#13-%e6%80%bb%e7%bb%93">#</a>
@@ -3374,12 +3240,14 @@ https://github.com/alex-shpak/hugo-book
 <li><strong>原始数据类型的局部变量和对象引用地址在栈上。</strong></li>
 <li><strong>对象、对象成员与类定义、静态变量在堆上。</strong></li>
 </ol>
-<p>![ksq1n.jpg (1728×1098)]../../media/202105//1621914622.9144847.png)</p>
+<p>
+  <img src="../../media/202105//1621914622.9144847.png" alt="ksq1n.jpg (1728×1098)" /></p>
 <h2 id="2-线程栈">
   2 线程栈
   <a class="anchor" href="#2-%e7%ba%bf%e7%a8%8b%e6%a0%88">#</a>
 </h2>
-<p>![6yhj7.jpg (1450×986)]../../media/202105//1621914622.9165661.png)</p>
+<p>
+  <img src="../../media/202105//1621914622.9165661.png" alt="6yhj7.jpg (1450×986)" /></p>
 <ul>
 <li>每启动一个线程，JVM 就会在栈空间分配对应的<strong>线程栈</strong>。</li>
 <li>线程栈也叫做<strong>Java 方法栈</strong>，如果使用了<strong>JNI</strong>（Java Native Interface）方法，则会分配一个单独的<strong>本地方法栈</strong>（Native Stack）。</li>
@@ -3390,12 +3258,14 @@ https://github.com/alex-shpak/hugo-book
 </ul>
 </li>
 </ul>
-<p>![ze6dq.jpg (1448×844)]../../media/202105//1621914622.9184902.png)</p>
+<p>
+  <img src="../../media/202105//1621914622.9184902.png" alt="ze6dq.jpg (1448×844)" /></p>
 <h2 id="3-堆">
   3 堆
   <a class="anchor" href="#3-%e5%a0%86">#</a>
 </h2>
-<p>![u0xac.jpg (1474×1010)]../../media/202105//1621914622.9199617.png)</p>
+<p>
+  <img src="../../media/202105//1621914622.9199617.png" alt="u0xac.jpg (1474×1010)" /></p>
 <ol>
 <li>堆内存是所有线程共用的内存空间，理论上大家都可以访问。</li>
 <li>逻辑上的 Java 堆划分为<code>堆</code>（Heap）和<code>堆外</code>（Non-Heap）两个部分：</li>
@@ -3449,7 +3319,8 @@ https://github.com/alex-shpak/hugo-book
 </ol>
 </li>
 </ol>
-<p>![c5e75250-322d-11ea-b6b0-159b6a0308ab (1652×784)]../../media/202105//1621914622.9213243.png)</p>
+<p>
+  <img src="../../media/202105//1621914622.9213243.png" alt="c5e75250-322d-11ea-b6b0-159b6a0308ab (1652×784)" /></p>
 <h4 id="312-老年代">
   3.1.2 老年代
   <a class="anchor" href="#312-%e8%80%81%e5%b9%b4%e4%bb%a3">#</a>
