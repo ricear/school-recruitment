@@ -1,0 +1,4365 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Java中的锁 #  1 公平锁和非公平锁 #  1.1 基本概念 #  1.1.1 公平锁 #  1.1.1.1 含义 #  公平锁是指多个线程按照申请锁的顺序去获得锁，线程会直接进入队列去排队，永远都是队列里面的第一位才能得到锁。
+1.1.1.2 优缺点 #  1.1.1.2.1 优点 #   所有的线程都能得到资源，不会饿死在队列中。  1.1.1.2.2 缺点 #   吞吐量会下降很多，队列里面除了第一个线程，其他的线程都会阻塞，CPU唤醒阻塞线程的开销会很大。  1.1.2 非公平锁 #  1.1.2.1 含义 #   非公平锁是指多个线程区获取锁的时候，会直接去尝试，获取不到，再去进入等待队列，如果能获取到，则直接获取锁。 ReentrantLock默认是非公平锁， 如果要使用公平锁，可以使用ReentrantLock lock = new ReentrantLock(true);  ![]../../media/202105//1621914616.920087.png)
+1.1.2.2 优缺点 #  1.1.2.2.1 优点 #   可以减少 CPU 唤醒线程的开销，整体的吞吐效率会高点，CPU 也不必去唤醒所有线程，会减少唤醒线程的数量。  1.">
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
+<meta property="og:description" content="Java中的锁 #  1 公平锁和非公平锁 #  1.1 基本概念 #  1.1.1 公平锁 #  1.1.1.1 含义 #  公平锁是指多个线程按照申请锁的顺序去获得锁，线程会直接进入队列去排队，永远都是队列里面的第一位才能得到锁。
+1.1.1.2 优缺点 #  1.1.1.2.1 优点 #   所有的线程都能得到资源，不会饿死在队列中。  1.1.1.2.2 缺点 #   吞吐量会下降很多，队列里面除了第一个线程，其他的线程都会阻塞，CPU唤醒阻塞线程的开销会很大。  1.1.2 非公平锁 #  1.1.2.1 含义 #   非公平锁是指多个线程区获取锁的时候，会直接去尝试，获取不到，再去进入等待队列，如果能获取到，则直接获取锁。 ReentrantLock默认是非公平锁， 如果要使用公平锁，可以使用ReentrantLock lock = new ReentrantLock(true);  ![]../../media/202105//1621914616.920087.png)
+1.1.2.2 优缺点 #  1.1.2.2.1 优点 #   可以减少 CPU 唤醒线程的开销，整体的吞吐效率会高点，CPU 也不必去唤醒所有线程，会减少唤醒线程的数量。  1." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.16-Java%E4%B8%AD%E7%9A%84%E9%94%81/" /><meta property="article:section" content="docs" />
+
+
+
+<title>2.16 Java中的锁 | Computer Cookbook School Recruitment</title>
+<link rel="manifest" href="/school-recruitment/manifest.json">
+<link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
+  <script defer src="/school-recruitment/flexsearch.min.js"></script>
+  <script defer src="/school-recruitment/en.search.min.1bc398404d6e9eec8ffa32b7de2bb82b89efd0a8a92c5a540e9f38e9bb5b4a5b.js" integrity="sha256-G8OYQE1unuyP&#43;jK33iu4K4nv0KipLFpUDp846btbSls=" crossorigin="anonymous"></script>
+
+  <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a href="/school-recruitment/"><span>Computer Cookbook School Recruitment</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="https://www.grayson.top" target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/wpwbb510582246" target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-353f7a5578fa41dbc42c73ea30fe2255" class="toggle"  />
+    <label for="section-353f7a5578fa41dbc42c73ea30fe2255" class="flex justify-between">
+      <a role="button" class="">第一章 算法</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e0c159ebe8e8b165cd558008fb5f5074" class="toggle"  />
+    <label for="section-e0c159ebe8e8b165cd558008fb5f5074" class="flex justify-between">
+      <a role="button" class="">1、算法框架</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a9fe725cb6a0f216530b1ac2b85e3b7a" class="toggle"  />
+    <label for="section-a9fe725cb6a0f216530b1ac2b85e3b7a" class="flex justify-between">
+      <a role="button" class="">1.1 动态规划</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.1-%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97/" class="">1.1.1 斐波那契数列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E5%87%91%E9%9B%B6%E9%92%B1%E9%97%AE%E9%A2%98/" class="">1.1.2 凑零钱问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.3-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="">1.1.3 贪心算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.4-%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/" class="">1.1.4 最长递增子序列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.5-%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB/" class="">1.1.5 编辑距离</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.6-%E9%AB%98%E6%A5%BC%E6%89%94%E9%B8%A1%E8%9B%8B/" class="">1.1.6 高楼扔鸡蛋</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.7-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E5%BA%8F%E5%88%97/" class="">1.1.7 最长回文子序列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.8-%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%92%8C/" class="">1.1.8 最大子序和</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8/" class="">1.1.9 买卖股票</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.10-%E6%9C%80%E9%95%BF%E9%87%8D%E5%A4%8D%E5%AD%90%E6%95%B0%E7%BB%84/" class="">1.1.10 最长重复子数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.11-%E6%9C%80%E9%95%BF%E6%9C%89%E6%95%88%E6%8B%AC%E5%8F%B7/" class="">1.1.11 最长有效括号</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e36081c41f3a4d8d8355cae83c46c9b8" class="toggle"  />
+    <label for="section-e36081c41f3a4d8d8355cae83c46c9b8" class="flex justify-between">
+      <a role="button" class="">1.2 二分查找</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/1.2.1-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E6%A1%86%E6%9E%B6/" class="">1.2.1 二分查找框架</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/1.2.2-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">1.2.2 搜索旋转排序数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/1.2.3-%E5%A6%82%E4%BD%95%E8%BF%90%E7%94%A8%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95/" class="">1.2.3 如何运用二分查找算法</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2ac9691c4865fdec0880b3cb638bc594" class="toggle"  />
+    <label for="section-2ac9691c4865fdec0880b3cb638bc594" class="flex justify-between">
+      <a role="button" class="">1.3 数据结构</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.1-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/" class="">1.3.1 反转链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.2-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACk%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0/" class="">1.3.2 数组中的第k个最大元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.3-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/" class="">1.3.3 二叉树的最近公共祖先</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6c6359aa6ff642b64a85093d9888f8ad" class="toggle"  />
+    <label for="section-6c6359aa6ff642b64a85093d9888f8ad" class="flex justify-between">
+      <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.4-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" class="">1.4 排序算法</a>
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9b9f975ded87a304ee48569c44f19492" class="toggle"  />
+    <label for="section-9b9f975ded87a304ee48569c44f19492" class="flex justify-between">
+      <a role="button" class="">1.5 二叉树</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.1-%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86/" class="">1.5.1 二叉树遍历</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.2-%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/" class="">1.5.2 岛屿问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.3-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" class="">1.5.3 平衡二叉树</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.4-%E4%BA%8C%E5%8F%89%E6%A0%91%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98/" class="">1.5.4 二叉树路径问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.5-%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/" class="">1.5.5 构造二叉树</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-4571e95d0021653ce2d27ee4b0838ca0" class="toggle"  />
+    <label for="section-4571e95d0021653ce2d27ee4b0838ca0" class="flex justify-between">
+      <a role="button" class="">1.6 回溯算法</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.1-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E8%A7%A3%E9%A2%98%E6%A1%86%E6%9E%B6/" class="">1.6.1 回溯算法解题框架</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-%E5%85%A8%E6%8E%92%E5%88%97/" class="">1.6.2 全排列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.3-N%E7%9A%87%E5%90%8E/" class="">1.6.3 N皇后</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-8b579ed4452b6a8d2017a24343689b5c" class="toggle"  />
+    <label for="section-8b579ed4452b6a8d2017a24343689b5c" class="flex justify-between">
+      <a role="button" class="">2、高频面试题</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5a653711e83b11abc9ab6143b1a9fd64" class="toggle"  />
+    <label for="section-5a653711e83b11abc9ab6143b1a9fd64" class="flex justify-between">
+      <a role="button" class="">2.1 数学</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.1-%E5%BF%AB%E9%80%9F%E6%A8%A1%E5%B9%82%E7%AE%97%E6%B3%95/" class="">2.1.1 快速模幂算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.2-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/" class="">2.1.2 搜索二维矩阵</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.3-%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/" class="">2.1.3 螺旋矩阵</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.4-x-%E7%9A%84%E5%B9%B3%E6%96%B9%E6%A0%B9/" class="">2.1.4 X 的平方根</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5c279474332677699cd0b53888bd51ba" class="toggle"  />
+    <label for="section-5c279474332677699cd0b53888bd51ba" class="flex justify-between">
+      <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" class="">2.2 二分查找</a>
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e057e8659d2f838952397ed15d20f46c" class="toggle"  />
+    <label for="section-e057e8659d2f838952397ed15d20f46c" class="flex justify-between">
+      <a role="button" class="">2.3 数组</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.1-%E5%88%A0%E9%99%A4%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E9%A1%B9/" class="">2.3.1 删除有序数组中的重复项</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.2-%E6%89%BE%E5%87%BA%E6%95%B0%E7%BB%84%E6%B8%B8%E6%88%8F%E7%9A%84%E8%B5%A2%E5%AE%B6/" class="">2.3.2 找出数组游戏的赢家</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.4-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%B6%88%E5%A4%B1%E7%9A%84%E5%85%83%E7%B4%A0/" class="">2.3.4 如何寻找消失的元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.5-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E7%BC%BA%E5%A4%B1%E5%92%8C%E9%87%8D%E5%A4%8D%E7%9A%84%E5%85%83%E7%B4%A0/" class="">2.3.5 如何寻找缺失和重复的元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.6-%E6%9C%80%E5%A4%A7%E6%95%B0/" class="">2.3.6 最大数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.7-%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/" class="">2.3.7 二维数组中的查找</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.8-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/" class="">2.3.8 两数之和</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.9-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" class="">2.3.9 三数之和</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">2.3.10 合并两个有序数组</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b0bb9f9be9775f7e7856b63f7c5be80e" class="toggle"  />
+    <label for="section-b0bb9f9be9775f7e7856b63f7c5be80e" class="flex justify-between">
+      <a role="button" class="">2.4 字符串</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.1-%E6%9E%84%E9%80%A0-K-%E4%B8%AA%E5%9B%9E%E6%96%87%E5%AD%97%E7%AC%A6%E4%B8%B2/" class="">2.4.1 构造 K 个回文字符串</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.2-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%9C%80%E5%9B%9E%E4%B8%B2/" class="">2.4.2 如何寻找最 回 串</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.3-%E5%A6%82%E4%BD%95%E5%88%A4%E5%AE%9A%E6%8B%AC%E5%8F%B7%E7%9A%84%E5%90%88%E6%B3%95%E6%80%A7/" class="">2.4.3 如何判定括号的合法性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.4-%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E6%8D%A2%E6%95%B4%E6%95%B0-atoi/" class="">2.4.4 字符串转换整数 (Atoi)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.5-%E9%95%BF%E5%BA%A6%E4%B8%BA3%E7%9A%84%E4%B8%8D%E5%90%8C%E5%9B%9E%E6%96%87%E5%AD%90%E5%BA%8F%E5%88%97/" class="">2.4.5 长度为3的不同回文子序列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.6-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/" class="">2.4.6 无重复字符的最长子串</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.7-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E5%8A%A0/" class="">2.4.7 字符串相加</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.8-%E7%BF%BB%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%87%8C%E7%9A%84%E5%8D%95%E8%AF%8D/" class="">2.4.8 翻转字符串里的单词</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c2cc4653d849ecb4e8d0df9162693740" class="toggle"  />
+    <label for="section-c2cc4653d849ecb4e8d0df9162693740" class="flex justify-between">
+      <a role="button" class="">2.5 链表</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.1-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8-II/" class="">2.5.1 环形链表 Ii</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.2-%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E5%88%A4%E6%96%AD%E5%9B%9E%E6%96%87%E9%93%BE%E8%A1%A8/" class="">2.5.2 如何高效判断回文链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.3-K-%E4%B8%AA%E4%B8%80%E7%BB%84%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" class="">2.5.3 K 个一组翻转链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.4-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/" class="">2.5.4 相交链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.5-%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E8%8A%82%E7%82%B9/" class="">2.5.5 链表中倒数第k个节点</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.6-%E5%90%88%E5%B9%B6K%E4%B8%AA%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/" class="">2.5.6 合并 K个升序链表</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-95a636b3d00f4ce42d96beeef34d9742" class="toggle"  />
+    <label for="section-95a636b3d00f4ce42d96beeef34d9742" class="flex justify-between">
+      <a role="button" class="">2.6 二叉树</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.1-%E5%9C%A8%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E5%88%86%E9%85%8D%E7%A1%AC%E5%B8%81/" class="">2.6.1 在二叉树中分配硬币</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.2-%E5%B0%86%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E8%BD%AC%E6%8D%A2%E4%B8%BA%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/" class="">2.6.2 将有序数组转换为二叉搜索树</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.4-%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91/" class="">2.6.4 重建二叉树</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.5-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E8%B7%AF%E5%BE%84%E5%92%8C/" class="">2.6.5 二叉树中的最大路径和</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2dca4a28932da6fd2ab80d6adf86f380" class="toggle"  />
+    <label for="section-2dca4a28932da6fd2ab80d6adf86f380" class="flex justify-between">
+      <a role="button" class="">2.7 队列</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.7-%E9%98%9F%E5%88%97/2.7.1-%E7%94%A8%E6%A0%88%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97/" class="">2.7.1 用栈实现队列</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9868fca37e026543bb4220219b385440" class="toggle"  />
+    <label for="section-9868fca37e026543bb4220219b385440" class="flex justify-between">
+      <a role="button" class="">2.8 动态规划</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.8-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/2.8.1-%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E8%A7%A3%E5%86%B3%E6%8E%A5%E9%9B%A8%E6%B0%B4%E9%97%AE%E9%A2%98/" class="">2.8.1 如何高效解决接雨水问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.8-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/2.8.2-%E6%9C%80%E5%B0%91%E4%BE%A7%E8%B7%B3%E6%AC%A1%E6%95%B0/" class="">2.8.2 最少侧跳次数</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2b868ec58580c16b57b76d0e583b5ec9" class="toggle"  />
+    <label for="section-2b868ec58580c16b57b76d0e583b5ec9" class="flex justify-between">
+      <a role="button" class="">2.9 设计</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.9-%E8%AE%BE%E8%AE%A1/2.9.1-%E5%AE%9E%E7%8E%B0-Trie-%E5%89%8D%E7%BC%80%E6%A0%91/" class="">2.9.1 实现 Trie (前缀树)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.9-%E8%AE%BE%E8%AE%A1/2.9.2-LRU-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/" class="">2.9.2 Lru 缓存机制</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0922907dd56f7a4a192db7338c0e7143" class="toggle"  />
+    <label for="section-0922907dd56f7a4a192db7338c0e7143" class="flex justify-between">
+      <a role="button" class="">第二章 计算机基础</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e090ea075956ea0a88f3be27eb8b8174" class="toggle"  />
+    <label for="section-e090ea075956ea0a88f3be27eb8b8174" class="flex justify-between">
+      <a role="button" class="">1、计算机网络</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-043e7911fd2d67fbc52b823c1516a0d8" class="toggle"  />
+    <label for="section-043e7911fd2d67fbc52b823c1516a0d8" class="flex justify-between">
+      <a role="button" class="">1.1 传输层： Tcp和 UDP</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.1-%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B/" class="">1.1.1 三次握手</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.2-%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/" class="">1.1.2 四次挥手</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.3-%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/" class="">1.1.3 流量控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.5-%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/" class="">1.1.5 拥塞控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.6-TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.1.6 Tcp和 Udp的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.7-TCP%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7/" class="">1.1.7 Tcp如何保证传输的可靠性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.8-TCP%E9%95%BF%E8%BF%9E%E6%8E%A5%E5%92%8C%E7%9F%AD%E8%BF%9E%E6%8E%A5/" class="">1.1.8 Tcp长连接和短连接</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c1e479729a89ea5ddbe8dd67b5f3ed4e" class="toggle"  />
+    <label for="section-c1e479729a89ea5ddbe8dd67b5f3ed4e" class="flex justify-between">
+      <a role="button" class="">1.2 应用层：HTTP和HTTPS</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.1-HTTP%E5%92%8CHTTPS%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.2.1 Http和 HTTP S的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.2-GET%E5%92%8CPOST%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.2.2 Get和 Post的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.3-Session%E4%B8%8ECookie%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.2.3 Session与 Cookie的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.4-%E4%BB%8E%E8%BE%93%E5%85%A5%E7%BD%91%E5%9D%80%E5%88%B0%E8%8E%B7%E5%BE%97%E9%A1%B5%E9%9D%A2%E7%9A%84%E8%BF%87%E7%A8%8B%E8%B6%8A%E8%AF%A6%E7%BB%86%E8%B6%8A%E5%A5%BD/" class="">1.2.4 从输入网址到获得页面的过程（越详细越好）</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.5-HTTP%E8%AF%B7%E6%B1%82%E6%9C%89%E5%93%AA%E4%BA%9B%E5%B8%B8%E8%A7%81%E7%9A%84%E7%8A%B6%E6%80%81%E7%A0%81/" class="">1.2.5 Http请求有哪些常见的状态码</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.6-%E4%BB%80%E4%B9%88%E6%98%AFRIP%E7%AE%97%E6%B3%95%E6%98%AF%E4%BB%80%E4%B9%88/" class="">1.2.6 什么是 Rip，算法是什么</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.7-HTTP1.0HTTP1.1%E5%92%8CHTTP2.0%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB/" class="">1.2.7 Http1.0、 Http1.1和 Http2.0的主要区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.8-DNS/" class="">1.2.8 DNS</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.9-HTTPS%E5%8A%A0%E5%AF%86%E5%92%8C%E8%AE%A4%E8%AF%81%E8%BF%87%E7%A8%8B/" class="">1.2.9 HTTP S加密和认证过程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.10-%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB/" class="">1.2.10 常见网络攻击</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.11-REST/" class="">1.2.11 Rest</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.3-%E8%AE%A1%E7%AE%97%E5%85%B6%E7%BD%91%E7%BB%9C%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" class="">1.3 计算其网络体系结构</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9a70073e95afd0aa2b7107f6cb77a3ce" class="toggle"  />
+    <label for="section-9a70073e95afd0aa2b7107f6cb77a3ce" class="flex justify-between">
+      <a role="button" class="">1.4 网络层协议</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.1-IP%E5%9C%B0%E5%9D%80%E7%9A%84%E5%88%86%E7%B1%BB/" class="">1.4.1 Ip地址的分类</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.2-%E5%88%92%E5%88%86%E5%AD%90%E7%BD%91/" class="">1.4.2 划分子网</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.3-%E4%BB%80%E4%B9%88%E6%98%AFARP%E5%8D%8F%E8%AE%AE/" class="">1.4.3 什么是 Arp协议</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.4-NAT%E5%8D%8F%E8%AE%AE/" class="">1.4.4 Nat协议</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-09f7d8995bc26810475d1c56597a312e" class="toggle"  />
+    <label for="section-09f7d8995bc26810475d1c56597a312e" class="flex justify-between">
+      <a role="button" class="">2、操作系统</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2f767bf946d6dc8ddeda6b6435471e5b" class="toggle"  />
+    <label for="section-2f767bf946d6dc8ddeda6b6435471e5b" class="flex justify-between">
+      <a role="button" class="">2.1 进程和线程</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.1.1 进程和线程的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.2-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" class="">2.1.2 进程间通信方式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.3-%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98/" class="">2.1.3 进程同步问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.4-%E8%BF%9B%E7%A8%8B%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E7%8A%B6%E6%80%81/" class="">2.1.4 进程有哪几种状态</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.5-%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5/" class="">2.1.5 进程调度策略</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.6-%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B/" class="">2.1.6 僵尸进程和孤儿进程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.7-%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/" class="">2.1.7 线程同步</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.8-%E5%8D%8F%E7%A8%8B/" class="">2.1.8 协程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.9-%E5%BC%82%E5%B8%B8%E6%8E%A7%E5%88%B6%E6%B5%81/" class="">2.1.9 异常控制流</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.10-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" class="">2.1.10 Io多路复用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.11-%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/" class="">2.1.11 用户态和内核态</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.2-%E6%AD%BB%E9%94%81/" class="">2.2 死锁</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b2b1a78994c9898abed1b08fef134abd" class="toggle"  />
+    <label for="section-b2b1a78994c9898abed1b08fef134abd" class="flex justify-between">
+      <a role="button" class="">2.3 内存管理</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.1-%E5%88%86%E9%A1%B5%E5%92%8C%E5%88%86%E6%AE%B5/" class="">2.3.1 分页和分段</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.2-%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/" class="">2.3.2 虚拟内存</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.3-%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95/" class="">2.3.3 页面置换算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.4-%E5%B1%80%E9%83%A8%E6%80%A7%E5%8E%9F%E7%90%86/" class="">2.3.4 局部性原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.5-%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA/" class="">2.3.5 缓冲区溢出</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.4-%E7%A3%81%E7%9B%98%E8%B0%83%E5%BA%A6/" class="">2.4 磁盘调度</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e28cc33fe5745d14abf4a0147d0624a5" class="toggle"  />
+    <label for="section-e28cc33fe5745d14abf4a0147d0624a5" class="flex justify-between">
+      <a role="button" class="">第三章 数据库</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6fd3cab540793410b1ce567d790deadc" class="toggle"  />
+    <label for="section-6fd3cab540793410b1ce567d790deadc" class="flex justify-between">
+      <a role="button" class="">1、数据库基础</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.1-%E4%BA%8B%E5%8A%A1%E7%9A%84%E6%A6%82%E5%BF%B5%E5%92%8C%E7%89%B9%E6%80%A7/" class="">1.1 事务的概念和特性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.2-%E9%94%81/" class="">1.2 锁</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.3-%E9%94%81%E5%8D%8F%E8%AE%AE/" class="">1.3 锁协议</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.4-%E4%BA%8B%E5%8A%A1%E6%97%A5%E5%BF%97/" class="">1.4 事务日志</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.5-MVCC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">1.5 Mvcc实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-12290256fbd76ac6014c39648c5827fe" class="toggle"  />
+    <label for="section-12290256fbd76ac6014c39648c5827fe" class="flex justify-between">
+      <a role="button" class="">1.6 基础知识</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.1-%E4%B8%89%E8%8C%83%E5%BC%8F/" class="">1.6.1 三范式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.2-%E5%A4%9A%E8%A1%A8%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F/" class="">1.6.2 多表连接方式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.3-%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" class="">1.6.3 存储过程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.4-DELETETRUNCATE%E5%92%8CDROP%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.6.4 Delete、 Truncate和 Drop的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.5-%E8%A7%A6%E5%8F%91%E5%99%A8/" class="">1.6.5 触发器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.6-%E8%A7%86%E5%9B%BE/" class="">1.6.6 视图</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d1b14978df09adfe15777e58b9b435ec" class="toggle"  />
+    <label for="section-d1b14978df09adfe15777e58b9b435ec" class="flex justify-between">
+      <a role="button" class="">2、 My SQL</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.1-%E7%B4%A2%E5%BC%95/" class="">2.1 索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.2-B-%E6%A0%91B&#43;%E6%A0%91%E7%B4%A2%E5%BC%95%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/" class="">2.2 B 树、 B 树索引算法原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.3-%E7%B4%A2%E5%BC%95%E7%BB%84%E7%BB%87%E8%A1%A8/" class="">2.3 索引组织表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.4-InnoDB%E5%92%8CMyISAM%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.4 Inno Db和 My Isam的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.5-Checkpoint%E6%8A%80%E6%9C%AF/" class="">2.5 Checkpoint技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.6-%E5%AE%95%E6%9C%BA%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%90%86/" class="">2.6 宕机恢复原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.7-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%98%E5%8C%96/" class="">2.7 数据库优化</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.8-%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/" class="">2.8 分库分表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.9-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/" class="">2.9 一致性哈希算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.10-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" class="">2.10 主从复制</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-53f351d3e26dfa58c34e937b76a0c4ce" class="toggle"  />
+    <label for="section-53f351d3e26dfa58c34e937b76a0c4ce" class="flex justify-between">
+      <a role="button" class="">3、 Redis</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-356f36d039b40fdb10be19d36f2f2793" class="toggle"  />
+    <label for="section-356f36d039b40fdb10be19d36f2f2793" class="flex justify-between">
+      <a role="button" class="">3.1 概述</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.1-Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BF%AB/" class="">3.1.1 Redis为什么这么快</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.2-Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="">3.1.2 Redis数据类型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.3-%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6/" class="">3.1.3 持久化机制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.4-%E8%BF%87%E6%9C%9F%E6%9C%BA%E5%88%B6%E5%92%8C%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" class="">3.1.4 过期机制和内存淘汰策略</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.2-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" class="">3.2 线程模型</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-4731e97839509d5614da88af39acf326" class="toggle"  />
+    <label for="section-4731e97839509d5614da88af39acf326" class="flex justify-between">
+      <a role="button" class="">3.3 分布式问题</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.3-%E5%88%86%E5%B8%83%E5%BC%8F%E9%97%AE%E9%A2%98/3.3.1-Redis%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="">3.3.1 Redis实现分布式锁</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-555105a060edfd5dfac44ac6d49d31e5" class="toggle"  />
+    <label for="section-555105a060edfd5dfac44ac6d49d31e5" class="flex justify-between">
+      <a role="button" class="">3.4 缓存异常</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.4-%E7%BC%93%E5%AD%98%E5%BC%82%E5%B8%B8/3.4.1-%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/" class="">3.4.1 缓存穿透、缓存击穿、缓存雪崩</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f0d841e400bf38796a65a65ef72b420e" class="toggle"  />
+    <label for="section-f0d841e400bf38796a65a65ef72b420e" class="flex justify-between">
+      <a role="button" class="">第四章 设计模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/1%E6%A6%82%E8%BF%B0/" class="">1、概述</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e796a2fc1bf6b4e9454f5a191dd15040" class="toggle"  />
+    <label for="section-e796a2fc1bf6b4e9454f5a191dd15040" class="flex justify-between">
+      <a role="button" class="">2、创建型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/2%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/2.1-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="">2.1 单例模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/2%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/2.2-%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" class="">2.2 工厂模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/2%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/2.3-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="">2.3 代理模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-eca69da21de5b0cd25d8421dec09a327" class="toggle" checked />
+    <label for="section-eca69da21de5b0cd25d8421dec09a327" class="flex justify-between">
+      <a role="button" class="">第五章 Java</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a64d861c08691e8f06f1178d4d28cf04" class="toggle"  />
+    <label for="section-a64d861c08691e8f06f1178d4d28cf04" class="flex justify-between">
+      <a role="button" class="">1、 Java基础</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.1-StringStringBuffer%E5%92%8CStringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.1 String、 String Buffer和 String Builder的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.2-HashMap%E5%92%8CConcurrentHashMap%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">1.2 Hash Map和 Concurrent Hash Map实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.3-ArrayList%E5%92%8CLinkedList%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">1.3 Array List和 Linked List实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.4-%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="">1.4 深拷贝与浅拷贝</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-21d6c85d1bc3cd657a462ac4b09f9d02" class="toggle" checked />
+    <label for="section-21d6c85d1bc3cd657a462ac4b09f9d02" class="flex justify-between">
+      <a role="button" class="">2、 Java多线程</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.1-Runnable%E5%92%8C-Thread%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.1 Runnable和 Thread的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.2-Thread%E7%B1%BB%E4%B8%AD%E7%9A%84start%E5%92%8Crun%E6%96%B9%E6%B3%95%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB/" class="">2.2 Thread类中的start()和run()方法有什么区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.3-Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E8%B0%83%E7%94%A8wait%E5%92%8Csleep%E6%96%B9%E6%B3%95%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C/" class="">2.3 Java多线程中调用wait()和sleep()方法有什么不同</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.4-ReentrantLock%E5%92%8CSynchronized%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.4 Reentrant Lock和 Synchronized的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.5-volatile%E9%80%82%E7%94%A8%E4%BA%8E%E9%AB%98%E5%B9%B6%E5%8F%91%E7%9A%84%E4%BB%80%E4%B9%88%E5%9C%BA%E6%99%AF/" class="">2.5 Volatile适用于高并发的什么场景</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.6-%E5%A4%9A%E7%BA%BF%E7%A8%8Bjoin%E6%96%B9%E6%B3%95%E7%94%A8%E4%BA%8E%E4%BB%80%E4%B9%88%E5%9C%BA%E6%99%AF/" class="">2.6 多线程join方法用于什么场景</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.7-%E5%A4%9A%E4%B8%AA%E7%BA%BF%E7%A8%8B%E9%97%B4%E5%A6%82%E4%BD%95%E5%85%B1%E4%BA%AB%E6%95%B0%E6%8D%AE/" class="">2.7 多个线程间如何共享数据</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.8-%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81%E6%9C%89%E5%93%AA%E4%BA%9B%E5%90%84%E8%87%AA%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E6%98%AF%E4%BB%80%E4%B9%88/" class="">2.8 线程的状态有哪些，各自的使用场景是什么</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-Java%E8%87%AA%E5%B8%A6%E5%93%AA%E5%87%A0%E7%A7%8D%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="">2.9 Java自带哪几种线程池</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.10-Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" class="">2.10 Java内存模型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.11-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7/" class="">2.11 并发编程的三大特性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.12-%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92/" class="">2.12 指令重排</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.13-Volatile%E5%8E%9F%E7%90%86/" class="">2.13 Volatile原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.14-CAS%E5%8E%9F%E7%90%86/" class="">2.14 Cas原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.15-Java%E7%9A%844%E7%A7%8D%E5%BC%95%E7%94%A8%E7%BA%A7%E5%88%AB/" class="">2.15 Java的4种引用级别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.16-Java%E4%B8%AD%E7%9A%84%E9%94%81/" class=" active">2.16 Java中的锁</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.17-Synchronized%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.17 Synchronized实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.18-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.18 线程池实现原理</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-65e183c484720f91ba3d1676e1ed5a16" class="toggle"  />
+    <label for="section-65e183c484720f91ba3d1676e1ed5a16" class="flex justify-between">
+      <a role="button" class="">3、JVM</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.1-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F/" class="">3.1 运行时数据区域</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.2-%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E5%AD%98%E6%B4%BB%E7%9A%84%E6%96%B9%E6%B3%95/" class="">3.2 判断对象是否存活的方法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.3-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95/" class="">3.3 垃圾收集算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.4-%E7%B1%BB%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%92%8C%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/" class="">3.4 类的生命周期和加载过程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.5-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%97%B6%E6%9C%BA/" class="">3.5 类加载时机</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.6-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E7%9A%84%E7%A7%8D%E7%B1%BB/" class="">3.6 类加载器的种类</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.7-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E7%9A%84%E7%89%B9%E7%82%B9/" class="">3.7 类加载机制的特点</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.8-JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" class="">3.8 Jvm内存结构</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.9-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95%E6%9C%89%E5%93%AA%E4%BA%9B/" class="">3.9 常见的垃圾收集算法有哪些</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.10-%E6%8C%87%E9%92%88%E7%A2%B0%E6%92%9E%E5%92%8C%E7%A9%BA%E9%97%B2%E5%88%97%E8%A1%A8/" class="">3.10 指针碰撞和空闲列表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.11-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E6%9C%89%E5%93%AA%E4%BA%9B/" class="">3.11 常见的垃圾收集器有哪些</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.12-%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E4%B8%8E%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">3.12 内存溢出与内存泄漏的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.13-%E5%B8%B8%E7%94%A8%E7%9A%84JVM%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E6%9C%89%E5%93%AA%E4%BA%9B/" class="">3.13 常用的 Jvm启动参数有哪些</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.14-%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/" class="">3.14 反射机制</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="toggle"  />
+    <label for="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="flex justify-between">
+      <a role="button" class="">第六章 Spring全家桶</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.1-%E6%A6%82%E8%BF%B0/" class="">1.1 概述</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.2-Spring-IOC/" class="">1.2 Spring Ioc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.3-Spring-AOP/" class="">1.3 Spring Aop</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/school-recruitment/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>2.16 Java中的锁</strong>
+
+  <label for="toc-control">
+    
+    <img src="/school-recruitment/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#java中的锁">Java中的锁</a>
+      <ul>
+        <li><a href="#1-公平锁和非公平锁">1 公平锁和非公平锁</a>
+          <ul>
+            <li><a href="#11-基本概念">1.1 基本概念</a>
+              <ul>
+                <li><a href="#111-公平锁">1.1.1 公平锁</a>
+                  <ul>
+                    <li><a href="#1111-含义">1.1.1.1 含义</a></li>
+                    <li><a href="#1112-优缺点">1.1.1.2 优缺点</a>
+                      <ul>
+                        <li><a href="#11121-优点">1.1.1.2.1 优点</a></li>
+                        <li><a href="#11122-缺点">1.1.1.2.2 缺点</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#112-非公平锁">1.1.2 非公平锁</a>
+                  <ul>
+                    <li><a href="#1121-含义">1.1.2.1 含义</a></li>
+                    <li><a href="#1122-优缺点">1.1.2.2 优缺点</a>
+                      <ul>
+                        <li><a href="#11221-优点">1.1.2.2.1 优点</a></li>
+                        <li><a href="#11222-缺点">1.1.2.2.2 缺点</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#12-具体实例">1.2 具体实例</a></li>
+            <li><a href="#13-源码分析">1.3 源码分析</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-可重入锁与非可重入锁">2 可重入锁与非可重入锁</a>
+          <ul>
+            <li><a href="#21-基本概念">2.1 基本概念</a>
+              <ul>
+                <li><a href="#211-可重入锁">2.1.1 可重入锁</a>
+                  <ul>
+                    <li><a href="#2111-含义">2.1.1.1 含义</a></li>
+                    <li><a href="#2112-实例">2.1.1.2 实例</a></li>
+                    <li><a href="#2113-优缺点">2.1.1.3 优缺点</a>
+                      <ul>
+                        <li><a href="#21131-优点">2.1.1.3.1 优点</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#212-非可重入锁">2.1.2 非可重入锁</a>
+                  <ul>
+                    <li><a href="#2121-含义">2.1.2.1 含义</a></li>
+                    <li><a href="#2122-实例">2.1.2.2 实例</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#22-实例分析">2.2 实例分析</a>
+              <ul>
+                <li><a href="#221-可重入锁">2.2.1 可重入锁</a></li>
+                <li><a href="#222-非可重入锁">2.2.2 非可重入锁</a></li>
+              </ul>
+            </li>
+            <li><a href="#23-源码分析">2.3 源码分析</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-乐观锁与悲观锁">3 乐观锁与悲观锁</a>
+          <ul>
+            <li><a href="#31-基本概念">3.1 基本概念</a></li>
+            <li><a href="#32-实例分析">3.2 实例分析</a></li>
+            <li><a href="#33-源码分析">3.3 源码分析</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-独占锁与共享锁">4 独占锁与共享锁</a>
+          <ul>
+            <li><a href="#41-基本概念">4.1 基本概念</a>
+              <ul>
+                <li><a href="#411-独占锁">4.1.1 独占锁</a></li>
+                <li><a href="#412-共享锁">4.1.2 共享锁</a></li>
+              </ul>
+            </li>
+            <li><a href="#42-源码分析">4.2 源码分析</a></li>
+          </ul>
+        </li>
+        <li><a href="#5-自旋锁与适应性自旋锁">5 自旋锁与适应性自旋锁</a>
+          <ul>
+            <li><a href="#51-基本概念">5.1 基本概念</a>
+              <ul>
+                <li><a href="#511-自旋锁">5.1.1 自旋锁</a>
+                  <ul>
+                    <li><a href="#5111-含义">5.1.1.1 含义</a></li>
+                    <li><a href="#5112-优缺点">5.1.1.2 优缺点</a>
+                      <ul>
+                        <li><a href="#51121-缺点">5.1.1.2.1 缺点</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#512-适应性自旋锁">5.1.2 适应性自旋锁</a>
+                  <ul>
+                    <li><a href="#5121-含义">5.1.2.1 含义</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#52-源码分析">5.2 源码分析</a></li>
+          </ul>
+        </li>
+        <li><a href="#6-无锁偏向锁轻量级锁重量级锁">6 无锁、偏向锁、轻量级锁、重量级锁</a>
+          <ul>
+            <li><a href="#61-前言">6.1 前言</a></li>
+            <li><a href="#62-分类">6.2 分类</a>
+              <ul>
+                <li><a href="#621-无锁">6.2.1 无锁</a></li>
+                <li><a href="#622-偏向锁">6.2.2 偏向锁</a>
+                  <ul>
+                    <li><a href="#6221-为什么要引入偏向锁">6.2.2.1 为什么要引入偏向锁</a></li>
+                    <li><a href="#6222-含义">6.2.2.2 含义</a></li>
+                    <li><a href="#6223-原理">6.2.2.3 原理</a>
+                      <ul>
+                        <li><a href="#62231-获得偏向锁">6.2.2.3.1 获得偏向锁</a></li>
+                        <li><a href="#62232-撤销偏向锁">6.2.2.3.2 撤销偏向锁</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#623-轻量级锁">6.2.3 轻量级锁</a>
+                  <ul>
+                    <li><a href="#6231-含义">6.2.3.1 含义</a></li>
+                    <li><a href="#6232-原理">6.2.3.2 原理</a>
+                      <ul>
+                        <li><a href="#62321-获得轻量级锁">6.2.3.2.1 获得轻量级锁</a></li>
+                        <li><a href="#62322-释放轻量级锁">6.2.3.2.2 释放轻量级锁</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#6233-相关问题">6.2.3.3 相关问题</a>
+                      <ul>
+                        <li><a href="#62331-为什么升级为轻量级锁时要把对象头里的-mark-word-复制到线程栈的-lock-record-中呢">6.2.3.3.1 为什么升级为轻量级锁时要把对象头里的 Mark Word 复制到线程栈的 Lock Record 中呢</a></li>
+                        <li><a href="#62332-为什么会尝试-cas-不成功以及什么情况下会不成功">6.2.3.3.2 为什么会尝试 CAS 不成功，以及什么情况下会不成功</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#624-重量级锁">6.2.4 重量级锁</a>
+                  <ul>
+                    <li><a href="#6241-含义">6.2.4.1 含义</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#63-转换">6.3 转换</a></li>
+            <li><a href="#64-选择">6.4 选择</a></li>
+          </ul>
+        </li>
+        <li><a href="#参考文献">参考文献</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="java中的锁">
+  Java中的锁
+  <a class="anchor" href="#java%e4%b8%ad%e7%9a%84%e9%94%81">#</a>
+</h1>
+<h2 id="1-公平锁和非公平锁">
+  1 公平锁和非公平锁
+  <a class="anchor" href="#1-%e5%85%ac%e5%b9%b3%e9%94%81%e5%92%8c%e9%9d%9e%e5%85%ac%e5%b9%b3%e9%94%81">#</a>
+</h2>
+<h3 id="11-基本概念">
+  1.1 基本概念
+  <a class="anchor" href="#11-%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5">#</a>
+</h3>
+<h4 id="111-公平锁">
+  1.1.1 公平锁
+  <a class="anchor" href="#111-%e5%85%ac%e5%b9%b3%e9%94%81">#</a>
+</h4>
+<h5 id="1111-含义">
+  1.1.1.1 含义
+  <a class="anchor" href="#1111-%e5%90%ab%e4%b9%89">#</a>
+</h5>
+<p>公平锁是指<strong>多个线程按照申请锁的顺序去获得锁，线程会直接进入队列去排队，永远都是队列里面的第一位才能得到锁</strong>。</p>
+<h5 id="1112-优缺点">
+  1.1.1.2 优缺点
+  <a class="anchor" href="#1112-%e4%bc%98%e7%bc%ba%e7%82%b9">#</a>
+</h5>
+<h6 id="11121-优点">
+  1.1.1.2.1 优点
+  <a class="anchor" href="#11121-%e4%bc%98%e7%82%b9">#</a>
+</h6>
+<ol>
+<li>所有的线程都能得到资源，不会饿死在队列中。</li>
+</ol>
+<h6 id="11122-缺点">
+  1.1.1.2.2 缺点
+  <a class="anchor" href="#11122-%e7%bc%ba%e7%82%b9">#</a>
+</h6>
+<ol>
+<li><strong>吞吐量会下降很多</strong>，队列里面除了第一个线程，其他的线程都会阻塞，<code>CPU</code><strong>唤醒阻塞线程的开销会很大</strong>。</li>
+</ol>
+<h4 id="112-非公平锁">
+  1.1.2 非公平锁
+  <a class="anchor" href="#112-%e9%9d%9e%e5%85%ac%e5%b9%b3%e9%94%81">#</a>
+</h4>
+<h5 id="1121-含义">
+  1.1.2.1 含义
+  <a class="anchor" href="#1121-%e5%90%ab%e4%b9%89">#</a>
+</h5>
+<ol>
+<li>非公平锁是指<strong>多个线程区获取锁的时候，会直接去尝试，获取不到，再去进入等待队列，如果能获取到，则直接获取锁</strong>。</li>
+<li><code>ReentrantLock</code><strong>默认是非公平锁</strong>， 如果要使用公平锁，可以使用<code>ReentrantLock lock = new ReentrantLock(true);</code></li>
+</ol>
+<p>![]../../media/202105//1621914616.920087.png)</p>
+<h5 id="1122-优缺点">
+  1.1.2.2 优缺点
+  <a class="anchor" href="#1122-%e4%bc%98%e7%bc%ba%e7%82%b9">#</a>
+</h5>
+<h6 id="11221-优点">
+  1.1.2.2.1 优点
+  <a class="anchor" href="#11221-%e4%bc%98%e7%82%b9">#</a>
+</h6>
+<ol>
+<li>可以<strong>减少 <code>CPU</code> 唤醒线程的开销</strong>，<strong>整体的吞吐效率会高点</strong>，<code>CPU</code> 也不必去唤醒所有线程，会减少唤醒线程的数量。</li>
+</ol>
+<h6 id="11222-缺点">
+  1.1.2.2.2 缺点
+  <a class="anchor" href="#11222-%e7%bc%ba%e7%82%b9">#</a>
+</h6>
+<ol>
+<li>可能导致<strong>队列中的线程一直获取不到锁或者长时间获取不到锁导致饿死</strong>。</li>
+</ol>
+<h3 id="12-具体实例">
+  1.2 具体实例
+  <a class="anchor" href="#12-%e5%85%b7%e4%bd%93%e5%ae%9e%e4%be%8b">#</a>
+</h3>
+<p>![]../../media/202105//1621914616.9237013.png)</p>
+<h3 id="13-源码分析">
+  1.3 源码分析
+  <a class="anchor" href="#13-%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90">#</a>
+</h3>
+<p>下面以 <code>ReentrantLock</code> 为例。</p>
+<ol>
+<li><code>ReentrantLock</code> 有一个内部类<code>Sync</code>，他继承自<code>AbstractQueuedSynchronizer</code>。</li>
+<li><code>Sync</code> 又有两个子类<code>FairSync</code> 和<code>NoFairSync</code>，分别对应<strong>公平锁</strong>和<strong>非公平锁</strong>。</li>
+</ol>
+<p>![]../../media/202105//1621914616.9263947.png)</p>
+<ol start="3">
+<li>公平锁和非公平锁中获取锁的具体实现如下：</li>
+</ol>
+<p>![]../../media/202105//1621914616.9280918.png)</p>
+<p>分析以上代码，可知：</p>
+<ul>
+<li><strong>公平锁</strong>就是在获取锁之前会先判断<strong>等待队列是否为空</strong>或者<strong>自己是否位于队列头部</strong>，该条件通过才能继续获取锁。</li>
+<li><strong>若释放锁的时候没有新的线程来获取锁</strong>，则<strong>非公平锁等于公平锁</strong>。</li>
+<li>若<strong>释放锁的时候正好有一个线程来获取锁</strong>，而此时位于<strong>队列头部的线程还没有被唤醒</strong>（因为线程上下文切换是需要不少开销的），此时<strong>后来的线程则优先获得锁</strong>，成功打破公平，称为非公平锁。</li>
+<li>对于<strong>非公平锁</strong>，<strong>只要线程进入了等待队列</strong>，<strong>队列里面依然是 <code>FIFO</code> 的原则</strong>，跟公平锁的顺序是一样的，因为<strong>公平锁和非公平锁的 <code>release()</code> 部分是共用 <code>AQS</code> 的代码</strong>。</li>
+</ul>
+<p>![]../../media/202105//1621914616.9310026.png)</p>
+<h2 id="2-可重入锁与非可重入锁">
+  2 可重入锁与非可重入锁
+  <a class="anchor" href="#2-%e5%8f%af%e9%87%8d%e5%85%a5%e9%94%81%e4%b8%8e%e9%9d%9e%e5%8f%af%e9%87%8d%e5%85%a5%e9%94%81">#</a>
+</h2>
+<h3 id="21-基本概念">
+  2.1 基本概念
+  <a class="anchor" href="#21-%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5">#</a>
+</h3>
+<h4 id="211-可重入锁">
+  2.1.1 可重入锁
+  <a class="anchor" href="#211-%e5%8f%af%e9%87%8d%e5%85%a5%e9%94%81">#</a>
+</h4>
+<h5 id="2111-含义">
+  2.1.1.1 含义
+  <a class="anchor" href="#2111-%e5%90%ab%e4%b9%89">#</a>
+</h5>
+<ol>
+<li>可重入锁<strong>又名递归锁，是指在同一个线程在外层方法获取锁的时候，再进入该线程的内层方法会自动获取锁（前提锁对象得是同一个对象或者 <code>class</code>），不会因为之前已经获取过还没释放而阻塞</strong>。</li>
+<li><code>Java</code> 中<code>ReentrantLock</code> 和<code>Synchronized</code> 都是可重入锁。</li>
+</ol>
+<h5 id="2112-实例">
+  2.1.1.2 实例
+  <a class="anchor" href="#2112-%e5%ae%9e%e4%be%8b">#</a>
+</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Widget</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doSomething</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;方法 1 执行...&#34;</span><span style="color:#f92672">);</span>
+        doOthers<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doOthers</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;方法 2 执行...&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ol>
+<li>在上面的代码中，类中的两个方法都是被内置锁<code>synchronized</code> 修饰的，<code>doSomething()</code> 方法中调用<code>doOthers()</code> 方法。</li>
+<li>因为<strong>内置锁是可重入的</strong>，所以<strong>同一个线程在调用 <code>doOthers()</code> 时可以直接获得当前对象的锁，进入 <code>doOthers()</code> 进行操作</strong>。</li>
+<li>如果是一个<strong>不可重入锁</strong>，那么<strong>当前线程在调用 <code>doOthers()</code> 之前需要将执行 <code>doSomething()</code> 时获取当前对象的锁释放掉，实际上该对象锁已被当前线程所持有，且无法释放，所以此时会出现死锁</strong>。</li>
+</ol>
+<h5 id="2113-优缺点">
+  2.1.1.3 优缺点
+  <a class="anchor" href="#2113-%e4%bc%98%e7%bc%ba%e7%82%b9">#</a>
+</h5>
+<h6 id="21131-优点">
+  2.1.1.3.1 优点
+  <a class="anchor" href="#21131-%e4%bc%98%e7%82%b9">#</a>
+</h6>
+<ol>
+<li><strong>可以在一定程度上避免死锁。</strong></li>
+</ol>
+<h4 id="212-非可重入锁">
+  2.1.2 非可重入锁
+  <a class="anchor" href="#212-%e9%9d%9e%e5%8f%af%e9%87%8d%e5%85%a5%e9%94%81">#</a>
+</h4>
+<h5 id="2121-含义">
+  2.1.2.1 含义
+  <a class="anchor" href="#2121-%e5%90%ab%e4%b9%89">#</a>
+</h5>
+<ol>
+<li>非可重入锁<strong>是指如果当前线程执行某个方法已经获取了该锁，那么在方法中尝试再次获取该锁时，就会因为获取不到而被阻塞</strong>。</li>
+</ol>
+<h5 id="2122-实例">
+  2.1.2.2 实例
+  <a class="anchor" href="#2122-%e5%ae%9e%e4%be%8b">#</a>
+</h5>
+<p>![]../../media/202105//1621914616.9331753.png)</p>
+<p>当线程执行 <code>print()</code> 方法时首先获取 <code>lock</code>，接下来执行 <code>doAdd()</code> 方法时就无法执行 <code>doAdd()</code> 中的逻辑，<strong>必须先释放锁</strong>。</p>
+<h3 id="22-实例分析">
+  2.2 实例分析
+  <a class="anchor" href="#22-%e5%ae%9e%e4%be%8b%e5%88%86%e6%9e%90">#</a>
+</h3>
+<h4 id="221-可重入锁">
+  2.2.1 可重入锁
+  <a class="anchor" href="#221-%e5%8f%af%e9%87%8d%e5%85%a5%e9%94%81">#</a>
+</h4>
+<ol>
+<li>当有很多人在排队打水，此时<strong>管理员允许锁和同一个人的多个水桶绑定</strong>。</li>
+<li>这个人用<strong>多个水桶</strong>打水时，<strong>第一个水桶和锁绑定并打完水之后</strong>，<strong>第二个水桶也可以直接和锁绑定并开始打水</strong>，<strong>所有的水桶打完水之后</strong>，打水人才会将锁还给管理员。</li>
+<li>这个人的<strong>所有打水流程都能够成功执行</strong>，<strong>后续等待的人也能够打到水</strong>，这就是<strong>可重入锁</strong>。</li>
+</ol>
+<p>![]../../media/202105//1621914616.9356186.png)</p>
+<h4 id="222-非可重入锁">
+  2.2.2 非可重入锁
+  <a class="anchor" href="#222-%e9%9d%9e%e5%8f%af%e9%87%8d%e5%85%a5%e9%94%81">#</a>
+</h4>
+<ol>
+<li>如果是<strong>非可重入锁</strong>的话，此时管理员<strong>只允许锁和同一个人的一个水桶绑定</strong>。</li>
+<li>第一个水桶和锁绑定打完水之后并<strong>不会释放锁</strong>，导致<strong>第二个水桶不能和锁绑定</strong>，也<strong>无法打水</strong>。</li>
+<li>因此当前线程就会出现<strong>死锁</strong>，<strong>整个等待队列中的所有线程都无法被唤醒</strong>。</li>
+</ol>
+<p>![]../../media/202105//1621914616.9376152.png)</p>
+<h3 id="23-源码分析">
+  2.3 源码分析
+  <a class="anchor" href="#23-%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90">#</a>
+</h3>
+<ol>
+<li>
+<p>首先 <code>ReentrantLock</code> 和 <code>NonReentrantLock</code> 都继承父类 <code>AQS</code>，其父类 <code>AQS</code> 中维护了一个同步状态 <code>status</code> 来<strong>计数重入次数</strong>，<code>status</code><strong>初始值为 0</strong>。</p>
+</li>
+<li>
+<p><strong>获取锁</strong>时：</p>
+<ol>
+<li><strong>可重入锁先尝试获取并更新 <code>status</code> 值</strong>：
+<ol>
+<li>如果<code>status == 0</code>，表示<strong>没有其他线程在执行同步代码</strong>，则<strong>把 <code>status</code> 置为 1</strong>，<strong>当前线程开始执行</strong>。</li>
+<li>如果<code>status != 0</code>，则判断<strong>当前线程是否是获取到这个锁的线程</strong>，如果是的话，执行<code>status + 1</code>，且<strong>当前线程可以再次获取锁</strong>。</li>
+</ol>
+</li>
+<li><strong>非可重入锁直接去获取并尝试更新当前 <code>status</code> 的值：</strong>
+<ol>
+<li>如果<code>status != 0</code>，则会<strong>导致其获取锁失败</strong>，<strong>当前线程阻塞</strong>。</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>释放锁</strong>时：</p>
+<ol>
+<li><strong>可重入锁同样先获取当前 <code>status</code> 的值，<strong>在</strong>当前线程是持有锁</strong>的前提下，如果<code>status - 1 == 0</code>，则表示<strong>当前线程所有重复获取锁的操作都已经执行完毕</strong>，然后<strong>该线程才会真正释放锁</strong>。</li>
+<li><strong>非可重入锁则是在确定当前线程是持有锁的线程之后，直接将 <code>status</code> 置为 0，将锁释放</strong>。</li>
+</ol>
+</li>
+</ol>
+<p>![]../../media/202105//1621914616.9396784.png)</p>
+<h2 id="3-乐观锁与悲观锁">
+  3 乐观锁与悲观锁
+  <a class="anchor" href="#3-%e4%b9%90%e8%a7%82%e9%94%81%e4%b8%8e%e6%82%b2%e8%a7%82%e9%94%81">#</a>
+</h2>
+<h3 id="31-基本概念">
+  3.1 基本概念
+  <a class="anchor" href="#31-%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5">#</a>
+</h3>
+<ol>
+<li>乐观锁与悲观锁是一种<strong>广义上的概念</strong>，体现了<strong>看待线程同步的不同角度</strong>。</li>
+<li>对于同一个数据的并发操作：
+<ol>
+<li><strong>悲观锁</strong>认为自己在<strong>使用数据的时候一定有别的线程来修改数据</strong>，因此在获取数据的时候会<strong>先加锁</strong>，<strong>确保数据不会被别的线程修改</strong>，<code>Java</code> 中<code>synchronized</code> 和<code>lock</code> 的实现类都是悲观锁。</li>
+<li><strong>乐观锁</strong>认为自己在<strong>使用数据时不会有别的线程修改数据</strong>，所以<strong>不会添加锁</strong>，只是在<strong>更新数据的时候去判断之前有没有别的线程更新了这个数据</strong>：
+<ol>
+<li>如果这个数据<strong>没有被更新</strong>，当前线程<strong>将自己修改的数据成功写入</strong>。</li>
+<li>如果数据<strong>已经被其他线程更新</strong>，则<strong>根据不同的实现方式执行不同的操作</strong>（例如<strong>报错</strong>或者<strong>自动重试</strong>）。</li>
+</ol>
+</li>
+<li><strong>乐观锁</strong>在<code>Java</code> 中是通过使用<strong>无锁编程</strong>来实现，最常采用的是<code>CAS</code> 算法，<code>Java</code> 原子类中的递增操作就是通过<code>CAS</code> 自旋实现的。</li>
+</ol>
+</li>
+<li>乐观锁和悲观锁的使用场景如下：
+<ol>
+<li><strong>悲观锁</strong>适合<strong>写操作多</strong>的场景，<strong>先加锁可以保证写操作时数据正确</strong>。</li>
+<li><strong>乐观锁</strong>适合<strong>读操作多</strong>的场景，<strong>不加锁的特点能够使其读操作的性能大幅提升</strong>。</li>
+</ol>
+</li>
+</ol>
+<h3 id="32-实例分析">
+  3.2 实例分析
+  <a class="anchor" href="#32-%e5%ae%9e%e4%be%8b%e5%88%86%e6%9e%90">#</a>
+</h3>
+<p>乐观锁和悲观锁获取同步资源数据的过程如下：</p>
+<p>![]../../media/202105//1621914616.9425926.png)</p>
+<h3 id="33-源码分析">
+  3.3 源码分析
+  <a class="anchor" href="#33-%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90">#</a>
+</h3>
+<p>乐观锁和悲观锁的调用方式示例如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// ------------------------- 悲观锁的调用方式 -------------------------
+</span><span style="color:#75715e">// synchronized
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">testMethod</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+	<span style="color:#75715e">// 操作同步资源
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+<span style="color:#75715e">// ReentrantLock
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span> ReentrantLock lock <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReentrantLock<span style="color:#f92672">();</span> <span style="color:#75715e">// 需要保证多个线程使用的是同一个锁
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">modifyPublicResources</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+	lock<span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">();</span>
+	<span style="color:#75715e">// 操作同步资源
+</span><span style="color:#75715e"></span>	lock<span style="color:#f92672">.</span><span style="color:#a6e22e">unlock</span><span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">// ------------------------- 乐观锁的调用方式 -------------------------
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span> AtomicInteger atomicInteger <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> AtomicInteger<span style="color:#f92672">();</span>  <span style="color:#75715e">// 需要保证多个线程使用的是同一个 AtomicInteger
+</span><span style="color:#75715e"></span>atomicInteger<span style="color:#f92672">.</span><span style="color:#a6e22e">incrementAndGet</span><span style="color:#f92672">();</span> <span style="color:#75715e">//执行自增 1
+</span></code></pre></div><p>通过调用方式示例，我们可以发现<strong>悲观锁</strong>基本都是在<strong>显式的锁定之后再操作同步资源</strong>，而<strong>乐观锁</strong>则<strong>直接去操作同步资源</strong>，而<strong>乐观锁</strong>之所以能够做到<strong>不锁定同步资源也可以正确的实现线程同步</strong>，主要是因为<strong>乐观锁主要采用 <code>CAS</code> 来实现，具体可参见
+  <a href="http://notebook.grayson.top/project-1/doc-292">2.14 CAS 原理</a>。</strong></p>
+<h2 id="4-独占锁与共享锁">
+  4 独占锁与共享锁
+  <a class="anchor" href="#4-%e7%8b%ac%e5%8d%a0%e9%94%81%e4%b8%8e%e5%85%b1%e4%ba%ab%e9%94%81">#</a>
+</h2>
+<h3 id="41-基本概念">
+  4.1 基本概念
+  <a class="anchor" href="#41-%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5">#</a>
+</h3>
+<h4 id="411-独占锁">
+  4.1.1 独占锁
+  <a class="anchor" href="#411-%e7%8b%ac%e5%8d%a0%e9%94%81">#</a>
+</h4>
+<ol>
+<li>独占锁也叫<strong>排他锁，是指该锁一次只能被一个线程所持有</strong>。</li>
+<li>如果线程<code>T</code> 对数据<code>A</code><strong>加上排他锁后</strong>，则<strong>其他线程不能再对 <code>A</code> 加任何类型的锁</strong>。</li>
+<li>获得独占锁的线程<strong>即能读数据，又能修改数据</strong>。</li>
+<li><code>JDK</code> 中的<code>synchronized</code> 和<code>JUC</code> 中的<code>Lock</code> 的实现类就是独占锁。</li>
+</ol>
+<h4 id="412-共享锁">
+  4.1.2 共享锁
+  <a class="anchor" href="#412-%e5%85%b1%e4%ba%ab%e9%94%81">#</a>
+</h4>
+<ol>
+<li>共享锁是指<strong>该锁可被多个线程所持有</strong>。</li>
+<li>如果线程<code>T</code> 对数据<code>A</code><strong>加上共享锁后</strong>，则其他线程<strong>只能</strong>对<code>A</code><strong>再加共享锁</strong>，<strong>不能加排他锁</strong>。</li>
+<li>获得共享锁的线程<strong>只能读数据，不能修改数据</strong>。</li>
+</ol>
+<h3 id="42-源码分析">
+  4.2 源码分析
+  <a class="anchor" href="#42-%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90">#</a>
+</h3>
+<p>![]../../media/202105//1621914616.9448943.png)</p>
+<ol>
+<li>
+<p><code>ReentrantReadWriteLock</code> 有两把锁，分别是 <code>ReadLock</code> 和 <code>WriteLock</code>。</p>
+</li>
+<li>
+<p><code>ReadLock</code> 和 <code>WriteLock</code> 的主体都是 <code>Sync</code>，它是 <code>AQS</code> 的一个子类，但读锁和写锁的加锁方式不一样：<strong>读锁是共享锁</strong>，<strong>写锁是独占锁</strong>。</p>
+</li>
+<li>
+<p>读写、写读、写写的过程互斥，因为<strong>读锁和写锁是分离的</strong>，所以 <code>ReentrantReadWriteLock</code> 的并发性比一般的互斥锁有了很大提升。</p>
+</li>
+<li>
+<p><code>AQS</code> 中有一个 <code>state</code> 字段（<code>int</code> 类型，32 位），该字段用来描述<strong>有多少线程持有锁</strong>：</p>
+<ol>
+<li>在<strong>独占锁</strong>中，这个值通常是 0 或者 1（如果是重入锁的话<code>state</code> 就是<strong>重入的次数</strong>）。</li>
+<li>在<strong>共享锁</strong>中，<code>state</code> 就是<strong>持有锁的数量</strong>。</li>
+<li>但是在<code>ReentrantReadWriteLock</code> 中有读、写两把锁，所以需要在一个整形变量<code>state</code> 上分别描述读锁和写锁的状态，于是将<code>state</code> 变量按位切割分成了两个部分，<strong>高 16 位表示读锁状态，低 16 位表示写锁状态</strong>。![]../../media/202105//1621914616.9469712.png)</li>
+</ol>
+</li>
+<li>
+<p><strong>获取写锁</strong>的源码及过程如下图：</p>
+<p>![]../../media/202105//1621914616.9487813.png)</p>
+<p>![]../../media/202105//1621914616.9527805.png)</p>
+<ul>
+<li><code>tryAcquire()</code> 除了重入条件（当前线程为<strong>获取了写锁的线程</strong>）之外，<strong>增加了一个读锁是否存在的判断</strong>，<strong>如果存在读锁，则写锁不能获取</strong>，原因在于<strong>必须确保写锁的操作对读锁可见</strong>，<strong>如果允许读锁在已被获取的情况下对写锁的获取，那么正在运行的其他线程就无法感知到当前写线程的操作</strong>。</li>
+<li>因此，<strong>只有等其他读线程都释放了读锁，写锁才能被当前线程获取</strong>，而<strong>写锁一旦被获取，则其他读写线程的后续访问均被阻塞</strong>。</li>
+<li>写锁的释放与<code>ReentrantLock</code> 的释放过程基本类似，<strong>每次释放均减少写状态</strong>，当<strong>写状态为 0 时，表示写锁已被释放</strong>，然后等待的读写线程才能够继续访问读写锁，同时<strong>前次写线程的修改对后续的读写线程可见</strong>。</li>
+</ul>
+</li>
+<li>
+<p><strong>获取读锁</strong>的源码如下图所示：</p>
+<p>![]../../media/202105//1621914616.955394.png)</p>
+<ol>
+<li>在<code>tryAcquireShared</code> 方法中，如果<strong>其他线程已经获取了写锁，则当前线程获取读锁失败，进入等待状态</strong>。</li>
+<li>如果<strong>当前线程获取了写锁</strong>或者<strong>写锁未被获取</strong>，则<strong>当前线程增加读状态，成功获取读锁</strong>。</li>
+<li>所以读写锁才能实现<strong>读读的过程共享</strong>，而<strong>读写、写读、写写的过程互斥</strong>。</li>
+</ol>
+</li>
+</ol>
+<h2 id="5-自旋锁与适应性自旋锁">
+  5 自旋锁与适应性自旋锁
+  <a class="anchor" href="#5-%e8%87%aa%e6%97%8b%e9%94%81%e4%b8%8e%e9%80%82%e5%ba%94%e6%80%a7%e8%87%aa%e6%97%8b%e9%94%81">#</a>
+</h2>
+<h3 id="51-基本概念">
+  5.1 基本概念
+  <a class="anchor" href="#51-%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5">#</a>
+</h3>
+<h4 id="511-自旋锁">
+  5.1.1 自旋锁
+  <a class="anchor" href="#511-%e8%87%aa%e6%97%8b%e9%94%81">#</a>
+</h4>
+<h5 id="5111-含义">
+  5.1.1.1 含义
+  <a class="anchor" href="#5111-%e5%90%ab%e4%b9%89">#</a>
+</h5>
+<ol>
+<li><strong>阻塞或唤醒一个 <code>Java</code> 线程需要操作系统切换 <code>CPU</code> 状态来完成</strong>，这种状态转换需要<strong>耗费处理器时间</strong>，如果<strong>同步代码块中的内容过于简单</strong>，<strong>状态转换消耗的时间可能比用户代码执行的时间还要长</strong>。</li>
+<li>在许多场景中，<strong>同步资源的锁定时间很短</strong>，<strong>为了这一小段时间去切换线程，线程挂起和恢复现场的花费可能会让系统得不偿失</strong>，如果物理机器有多个处理器，能够让两个或两个以上的线程同时并行执行，我们就可以<strong>让后面那个请求锁的线程不放弃 <code>CPU</code> 的执行时间，看看持有锁的线程是否很快就会释放锁</strong>。</li>
+<li>而为了让当前线程“稍等一下”，我们就需要让当前线程进行<strong>自旋</strong>，如果在<strong>自旋完成后前面锁定同步资源的线程已经释放了锁，那么当前线程就可以不必阻塞而是直接获取同步资源，从而避免切换线程的开销，这就是自旋锁</strong>。</li>
+</ol>
+<p>![]../../media/202105//1621914616.957492.png)</p>
+<h5 id="5112-优缺点">
+  5.1.1.2 优缺点
+  <a class="anchor" href="#5112-%e4%bc%98%e7%bc%ba%e7%82%b9">#</a>
+</h5>
+<h6 id="51121-缺点">
+  5.1.1.2.1 缺点
+  <a class="anchor" href="#51121-%e7%bc%ba%e7%82%b9">#</a>
+</h6>
+<ol>
+<li>自旋锁本身是由缺点的，它本身不能代替阻塞。</li>
+<li><strong>自旋等待虽然避免了线程切换的开销，但他要占用处理器时间。</strong></li>
+<li>如果<strong>锁被占用的时间很短</strong>，<strong>自旋等待的效果就会非常好</strong>，反之，如果<strong>锁被占用的时间很长</strong>，那么自<strong>旋的线程只会白浪费处理器资源</strong>。</li>
+<li>所以，<strong>自旋等待的时间必须要有一定的限度</strong>，如果自旋超过了限定次数（默认是 10 次，可以使用<code>-XX:PreBlockSpin</code> 来更改）没有成功获得锁，就应当挂起线程。</li>
+</ol>
+<h4 id="512-适应性自旋锁">
+  5.1.2 适应性自旋锁
+  <a class="anchor" href="#512-%e9%80%82%e5%ba%94%e6%80%a7%e8%87%aa%e6%97%8b%e9%94%81">#</a>
+</h4>
+<h5 id="5121-含义">
+  5.1.2.1 含义
+  <a class="anchor" href="#5121-%e5%90%ab%e4%b9%89">#</a>
+</h5>
+<ol>
+<li>自适应意味着<strong>自旋的时间不再固定</strong>，而是<strong>由前一次在同一个锁上的自旋时间及锁的拥有者的状态来决定</strong>。</li>
+<li>如果在<strong>同一个锁对象</strong>上，<strong>自旋等待刚刚成功获得过锁</strong>，并且<strong>持有锁的线程正在运行中</strong>，那么虚拟机就会认为<strong>这次自旋也有可能再次成功</strong>，进而他将<strong>允许自旋等待持续相对更长的时间</strong>。</li>
+<li>如果对于某个锁，<strong>自旋很少成功获得过</strong>，那在以后尝试获取这个锁时，将可能<strong>省略掉自旋过程</strong>，<strong>直接阻塞线程</strong>，<strong>避免浪费处理器资源</strong>。</li>
+</ol>
+<h3 id="52-源码分析">
+  5.2 源码分析
+  <a class="anchor" href="#52-%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90">#</a>
+</h3>
+<ol>
+<li>自旋锁的实现原理同样也是<code>CAS</code>，<code>AtomicInteger</code> 中调用<code>Unsafe</code> 进行自增操作中的<code>do-while</code> 就是一个自旋操作，<strong>如果修改数值失败，则通过循环来执行自旋，直至修改成功</strong>。</li>
+</ol>
+<p>![]../../media/202105//1621914616.9592867.png)</p>
+<h2 id="6-无锁偏向锁轻量级锁重量级锁">
+  6 无锁、偏向锁、轻量级锁、重量级锁
+  <a class="anchor" href="#6-%e6%97%a0%e9%94%81%e5%81%8f%e5%90%91%e9%94%81%e8%bd%bb%e9%87%8f%e7%ba%a7%e9%94%81%e9%87%8d%e9%87%8f%e7%ba%a7%e9%94%81">#</a>
+</h2>
+<h3 id="61-前言">
+  6.1 前言
+  <a class="anchor" href="#61-%e5%89%8d%e8%a8%80">#</a>
+</h3>
+<ol>
+<li>这四种锁是指<strong>锁的状态</strong>，<strong>专门针对</strong>
+  <a href="https://notebook.grayson.top/project-34/doc-815">Synchronized</a>的。</li>
+<li>目前锁一共有四种状态，级别从低到高依次是<strong>无锁</strong>、<strong>偏向锁</strong>、<strong>轻量级锁</strong>、<strong>重量级锁</strong>，<strong>锁状态只能升级</strong>，<strong>不能降级</strong>。</li>
+<li>四种锁对应
+  <a href="https://notebook.grayson.top/project-34/doc-815/#3-1-Java-%E5%AF%B9%E8%B1%A1%E5%A4%B4">Mark Word</a>的内容如下：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>锁状态</th>
+<th>存储内容</th>
+<th>标志位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无锁</td>
+<td>对象的 hashCode、对象分代年龄、是否是偏向锁（0）</td>
+<td>01</td>
+</tr>
+<tr>
+<td>偏向锁</td>
+<td>偏向线程 ID、偏向时间戳、对象分代年龄、是否是偏向锁（1）</td>
+<td>01</td>
+</tr>
+<tr>
+<td>轻量级锁</td>
+<td>指向栈中锁记录的指针</td>
+<td>00</td>
+</tr>
+<tr>
+<td>重量级锁</td>
+<td>指向互斥量（重量级锁）的指针</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-分类">
+  6.2 分类
+  <a class="anchor" href="#62-%e5%88%86%e7%b1%bb">#</a>
+</h3>
+<h4 id="621-无锁">
+  6.2.1 无锁
+  <a class="anchor" href="#621-%e6%97%a0%e9%94%81">#</a>
+</h4>
+<ol>
+<li><strong>无锁没有对资源进行锁定</strong>，<strong>所有的线程都能访问并修改同一个资源</strong>，<strong>但同时只有一个线程能修改成功</strong>。</li>
+<li>无锁的特点就是<strong>修改操作在循环内进行</strong>，<strong>线程会不断的尝试修改共享资源</strong>：
+<ol>
+<li><strong>如果没有冲突就修改成功并退出</strong>，<strong>否则就会继续循环尝试</strong>。</li>
+<li><strong>如果有多个线程修改同一个值</strong>，<strong>必定会有一个线程能修改成功</strong>，<strong>而其他修改失败的线程会不断尝试直到修改成功</strong>。</li>
+</ol>
+</li>
+<li><strong>无锁无法全面替代有锁</strong>，<strong>但无锁在某些场合下的性能是非常高的</strong>。</li>
+<li><strong>
+  <a href="https://notebook.grayson.top/project-34/doc-529">CAS</a>原理及应用即是无锁的体现</strong>。</li>
+</ol>
+<h4 id="622-偏向锁">
+  6.2.2 偏向锁
+  <a class="anchor" href="#622-%e5%81%8f%e5%90%91%e9%94%81">#</a>
+</h4>
+<h5 id="6221-为什么要引入偏向锁">
+  6.2.2.1 为什么要引入偏向锁
+  <a class="anchor" href="#6221-%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e5%bc%95%e5%85%a5%e5%81%8f%e5%90%91%e9%94%81">#</a>
+</h5>
+<ol>
+<li>因为 HotSpot 作者经过研究实践发现，<strong>在大多数情况下</strong>，<strong>锁不仅不存在多线程竞争</strong>，<strong>而且总是由同一线程多次获得</strong>。</li>
+<li><strong>为了让线程获得锁的代价更低</strong>，<strong>引进了偏向锁</strong>，<strong>主要目的是在没有多线程竞争的情况下尽量减少不必要的轻量级锁执行路径</strong>，<strong>因为轻量级锁的加锁解锁操作是需要依赖多次 CAS 原子指令的</strong>，<strong>而偏向锁只需要在置换线程 ID 的时候依赖一次 CAS 原子指令</strong>。</li>
+</ol>
+<h5 id="6222-含义">
+  6.2.2.2 含义
+  <a class="anchor" href="#6222-%e5%90%ab%e4%b9%89">#</a>
+</h5>
+<ol>
+<li>偏向锁是指<strong>一段同步代码一直被一个线程所访问</strong>，<strong>那么该线程会自动获取锁</strong>，<strong>降低获取锁的代价</strong>。</li>
+<li><strong>偏向锁是在单线程执行代码块时使用的机制</strong>，<strong>如果在多线程并发的环境下</strong>（即线程 A 尚未执行完同步代码块，线程 B 发起了申请锁的申请），<strong>则一定会转化为轻量级锁或者重量级锁</strong>。</li>
+</ol>
+<h5 id="6223-原理">
+  6.2.2.3 原理
+  <a class="anchor" href="#6223-%e5%8e%9f%e7%90%86">#</a>
+</h5>
+<h6 id="62231-获得偏向锁">
+  6.2.2.3.1 获得偏向锁
+  <a class="anchor" href="#62231-%e8%8e%b7%e5%be%97%e5%81%8f%e5%90%91%e9%94%81">#</a>
+</h6>
+<p>当<strong>一个线程访问同步块并获取锁</strong>时，会<strong>在
+  <a href="https://notebook.grayson.top/project-34/doc-815/#3-1-Java-%E5%AF%B9%E8%B1%A1%E5%A4%B4">对象头</a>和栈帧中的锁记录里存储锁偏向的线程 ID</strong>，<strong>以后进入和退出同步块时不需要花费 CAS 操作来争夺锁资源</strong>，<strong>只需要检查是否为偏向锁</strong>、<strong>锁标识以及线程 ID 即可</strong>，处理流程如下：</p>
+<ol>
+<li><strong>检查 Mark Word 是否为偏向锁</strong>、<strong>锁标识位是否为 01</strong>：
+<ol>
+<li><strong>如果为可偏向状态</strong>，则<strong>检查线程 ID 是否为当前线程 ID</strong>：
+<ol>
+<li>如果<strong>是</strong>，则<strong>执行同步代码块</strong>。</li>
+<li>如果<strong>不是</strong>，则<strong>通过 CAS 操作竞争锁</strong>：
+<ol>
+<li>如果<strong>竞争成功</strong>，则<strong>将 Mark Word 的线程 ID 替换为当前线程 ID</strong>。</li>
+<li>如果<strong>竞争失败</strong>，说明<strong>当前存在多线程竞争的情况</strong>，<strong>当到达全局安全点</strong>（在这个时间点上没有正在执行的代码），<strong>获得偏向锁的线程被挂起</strong>，<strong>偏向锁升级为轻量级锁</strong>，然后<strong>被锁在安全点的线程继续往下执行同步代码块</strong>。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h6 id="62232-撤销偏向锁">
+  6.2.2.3.2 撤销偏向锁
+  <a class="anchor" href="#62232-%e6%92%a4%e9%94%80%e5%81%8f%e5%90%91%e9%94%81">#</a>
+</h6>
+<p><strong>偏向锁的释放采用了一种只有竞争才会释放锁的机制</strong>，<strong>线程是不会主动去释放偏向锁</strong>，<strong>需要等待其他线程来竞争</strong>，同时，<strong>偏向锁的撤销需要等待全局安全点</strong>，处理流程如下：</p>
+<ol>
+<li><strong>暂停拥有偏向锁的线程</strong>。</li>
+<li><strong>判断锁对象是否还处于被锁定状态</strong>：
+<ol>
+<li>
+<p>如果<strong>是</strong>，则<strong>挂起持有锁的线程</strong>，并<strong>将指向当前线程的锁记录地址的指针放入对象头 Mark Word</strong>，<strong>升级为轻量级锁状态</strong>（00），然后<strong>恢复持有锁的当前线程</strong>，<strong>进入轻量级锁的竞争模式</strong>。</p>
+</li>
+<li>
+<p>如果<strong>不是</strong>，则<strong>恢复到无锁状态</strong>（01），以<strong>允许其余线程竞争</strong>。</p>
+<blockquote>
+<p>需要注意的是，此处将当前<strong>线程挂起再恢复的过程中并没有发生锁的转移</strong>，<strong>仍然在当前线程手中</strong>，<strong>只是穿插了个将对象头中的线程 ID 变更为指向锁记录地址的指针</strong>。</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li>偏向锁的获得和撤销流程如下图所示：
+  <img src="../../media/202108/2021-08-01_1646230.6237563968401273.png" alt="" /></li>
+</ol>
+<h4 id="623-轻量级锁">
+  6.2.3 轻量级锁
+  <a class="anchor" href="#623-%e8%bd%bb%e9%87%8f%e7%ba%a7%e9%94%81">#</a>
+</h4>
+<h5 id="6231-含义">
+  6.2.3.1 含义
+  <a class="anchor" href="#6231-%e5%90%ab%e4%b9%89">#</a>
+</h5>
+<ol>
+<li>轻量级锁的<strong>主要目的是在没有多线程竞争的前提下，减少传统的重量级锁使用操作系统互斥量产生的性能消耗</strong>。</li>
+<li>轻量级锁<strong>适用的场景是线程交替执行同步块的情况</strong>，<strong>如果存在同一时间访问同一锁的情况</strong>，<strong>必然会导致轻量级锁膨胀为重量级锁</strong>。</li>
+</ol>
+<h5 id="6232-原理">
+  6.2.3.2 原理
+  <a class="anchor" href="#6232-%e5%8e%9f%e7%90%86">#</a>
+</h5>
+<h6 id="62321-获得轻量级锁">
+  6.2.3.2.1 获得轻量级锁
+  <a class="anchor" href="#62321-%e8%8e%b7%e5%be%97%e8%bd%bb%e9%87%8f%e7%ba%a7%e9%94%81">#</a>
+</h6>
+<p>当<strong>关闭偏向锁功能</strong>或者<strong>多个线程竞争偏向锁导致偏向锁升级为轻量级锁</strong>，则会<strong>尝试获取轻量级锁</strong>，其步骤如下：</p>
+<ol>
+<li>在<strong>线程进入同步块</strong>时，如果<strong>同步对象锁状态为无锁状态</strong>（锁标志位为 01，是否为偏向锁为 0），<strong>虚拟机首先在当前线程的栈帧中建立一个名为
+  <a href="https://notebook.grayson.top/project-34/doc-815/#3-2-%E5%AF%B9%E8%B1%A1%E5%A4%B4%E4%B8%AD%E7%9A%84-Mark-Word-%E4%B8%8E%E7%BA%BF%E7%A8%8B%E4%B8%AD%E7%9A%84-Lock-Record">Lock Record</a>的空间</strong>，<strong>用于存储锁对象目前的
+  <a href="https://notebook.grayson.top/project-34/doc-815/#3-1-Java-%E5%AF%B9%E8%B1%A1%E5%A4%B4">Mark Word</a>的拷贝</strong>，此时线程堆栈与对象头的状态如下图所示：
+  <img src="../../media/202108/2021-08-01_1728480.2817707048990693.png" alt="" /></li>
+<li><strong>拷贝对象头中的 Mark Word 到 Lock Record 中</strong>。</li>
+<li><strong>拷贝成功后</strong>，虚拟机将<strong>使用 CAS 操作尝试将对象 Mark Word 中的 Lock Word 更新为指向当前线程 Lock Record 的指针</strong>，<strong>并将 Lock Record 里的 <code>Owner</code> 指针指向 <code>object mark word</code></strong>，如果<strong>更新成功</strong>，则<strong>执行步骤 4</strong>，<strong>否则</strong>，<strong>执行步骤 5</strong>。</li>
+<li>如果这个动作<strong>更新成功</strong>了，那么<strong>当前线程就拥有了该对象的锁</strong>，并且<strong>对象 Mark Word 的锁标志位设置为 00</strong>，即表示<strong>此对象处于轻量级锁定状态</strong>，此时线程堆栈与对象头的状态如下图所示：
+  <img src="../../media/202108/2021-08-01_1737530.30787306714992335.png" alt="" /></li>
+<li>如果这个操作<strong>更新失败</strong>了，虚拟机首先会<strong>检查对象 Mark Word 中的 Lock Word 是否指向当前线程的堆栈</strong>：
+<ol>
+<li>如果<strong>是</strong>，说明<strong>当前线程已经拥有了这个对象的锁</strong>，那就可以<strong>直接进入同步块继续执行</strong>。</li>
+<li><strong>否则</strong>，说明<strong>多个线程竞争锁</strong>，<strong>进入自旋执行 3</strong>，<strong>若自旋结束时仍未获得锁</strong>，<strong>轻量级锁就要膨胀为重量级锁</strong>，<strong>锁标志的状态值变为 10</strong>，<strong>Mark Word 中存储的就是指向重量级锁的指针</strong>，<strong>当前线程以及后面等待锁的线程也要进入阻塞状态</strong>。</li>
+</ol>
+</li>
+</ol>
+<h6 id="62322-释放轻量级锁">
+  6.2.3.2.2 释放轻量级锁
+  <a class="anchor" href="#62322-%e9%87%8a%e6%94%be%e8%bd%bb%e9%87%8f%e7%ba%a7%e9%94%81">#</a>
+</h6>
+<p><strong>轻量级锁的释放也是通过 CAS 操作来进行的</strong>，主要步骤如下：</p>
+<ol>
+<li>
+<p><strong>通过 CAS 操作尝试把线程中复制的 Mark Word 对象替换为当前的 Mark Word</strong>：</p>
+<ol>
+<li>如果<strong>替换成功</strong>，<strong>整个同步过程就完成了</strong>，<strong>恢复到无锁状态</strong>（01）。</li>
+<li>如果<strong>替换失败</strong>，说明有<strong>其他线程尝试过获取该锁</strong>，那就要<strong>在释放锁的同时</strong>，<strong>唤醒被挂起的线程</strong>。</li>
+</ol>
+</li>
+<li>
+<p>轻量级锁的获得及释放过程如下图所示：
+  <img src="../../media/202108/2021-08-01_1750410.7020816132164583.png" alt="" /></p>
+</li>
+</ol>
+<h5 id="6233-相关问题">
+  6.2.3.3 相关问题
+  <a class="anchor" href="#6233-%e7%9b%b8%e5%85%b3%e9%97%ae%e9%a2%98">#</a>
+</h5>
+<h6 id="62331-为什么升级为轻量级锁时要把对象头里的-mark-word-复制到线程栈的-lock-record-中呢">
+  6.2.3.3.1 为什么升级为轻量级锁时要把对象头里的 Mark Word 复制到线程栈的 Lock Record 中呢
+  <a class="anchor" href="#62331-%e4%b8%ba%e4%bb%80%e4%b9%88%e5%8d%87%e7%ba%a7%e4%b8%ba%e8%bd%bb%e9%87%8f%e7%ba%a7%e9%94%81%e6%97%b6%e8%a6%81%e6%8a%8a%e5%af%b9%e8%b1%a1%e5%a4%b4%e9%87%8c%e7%9a%84-mark-word-%e5%a4%8d%e5%88%b6%e5%88%b0%e7%ba%bf%e7%a8%8b%e6%a0%88%e7%9a%84-lock-record-%e4%b8%ad%e5%91%a2">#</a>
+</h6>
+<ol>
+<li>因为在<strong>申请对象锁时需要以该值作为 CAS 的比较条件</strong>，同时，<strong>在升级到重量级锁的时候</strong>，能<strong>通过这个比较判定是否在持有锁的过程中此锁被其他线程申请过</strong>，<strong>如果被其他线程申请了</strong>，则<strong>在释放锁的时候要唤醒被挂起的线程</strong>。</li>
+</ol>
+<h6 id="62332-为什么会尝试-cas-不成功以及什么情况下会不成功">
+  6.2.3.3.2 为什么会尝试 CAS 不成功，以及什么情况下会不成功
+  <a class="anchor" href="#62332-%e4%b8%ba%e4%bb%80%e4%b9%88%e4%bc%9a%e5%b0%9d%e8%af%95-cas-%e4%b8%8d%e6%88%90%e5%8a%9f%e4%bb%a5%e5%8f%8a%e4%bb%80%e4%b9%88%e6%83%85%e5%86%b5%e4%b8%8b%e4%bc%9a%e4%b8%8d%e6%88%90%e5%8a%9f">#</a>
+</h6>
+<ol>
+<li><strong>CAS 本身是不带锁机制的</strong>，而是<strong>通过比较而来</strong>，假设如下场景：
+<ol>
+<li><strong>线程 A 和线程 B 都在对象头里的锁标识为无锁状态下进入</strong>，那么如果<strong>线程 A 先更新对象头为其锁记录指针成功之后</strong>，<strong>线程 B 再用 CAS 去更新</strong>，就会<strong>发现此时的对象头已经不是其操作前的对象 HashCode 了</strong>，所以<strong>CAS 会失败</strong>，也就是说，<strong>只有两个线程并发申请锁的时候会发生 CAS 失败</strong>。</li>
+<li>然后<strong>线程 B 进行 CAS 自旋</strong>，<strong>等待对象头的锁标识重新变回无锁状态</strong>，<strong>或对象头的内容等于对象 HashCode</strong>（因为这是线程 B 做 CAS 操作前的值），这也就意味着<strong>线程 A 执行结束</strong>（轻量级锁中只有线程 A 执行完毕撤销锁了才会重置对象头），此时<strong>线程 B 的 CAS 终于成功了</strong>，于是<strong>线程 B 获得了锁以及执行同步代码的权限</strong>。</li>
+<li>如果<strong>线程 A 的执行时间较长</strong>，<strong>线程 B 经过若干次 CAS 时钟没有成功</strong>，则<strong>锁膨胀为重量级锁</strong>，即<strong>线程 B 被挂起阻塞</strong>，<strong>等待重新调度</strong>。</li>
+</ol>
+</li>
+</ol>
+<h4 id="624-重量级锁">
+  6.2.4 重量级锁
+  <a class="anchor" href="#624-%e9%87%8d%e9%87%8f%e7%ba%a7%e9%94%81">#</a>
+</h4>
+<h5 id="6241-含义">
+  6.2.4.1 含义
+  <a class="anchor" href="#6241-%e5%90%ab%e4%b9%89">#</a>
+</h5>
+<ol>
+<li>重量级锁是指<strong>依赖于操作系统 Mutex Lock 实现的锁</strong>。</li>
+<li><strong>操作系统实现线程之间的切换需要从用户态转换到核心态</strong>，这个<strong>成本非常高</strong>，<strong>状态之间的转换需要相对比较长的时间</strong>，因此<strong>重量级锁一般效率比较低</strong>。</li>
+</ol>
+<h3 id="63-转换">
+  6.3 转换
+  <a class="anchor" href="#63-%e8%bd%ac%e6%8d%a2">#</a>
+</h3>
+<p>
+  <img src="../../media/202108/2021-08-02_1016450.034139424210533065.png" alt="" /></p>
+<p>
+  <img src="../../media/202108/2021-08-02_1017140.003877683336248383.png" alt="" /></p>
+<h3 id="64-选择">
+  6.4 选择
+  <a class="anchor" href="#64-%e9%80%89%e6%8b%a9">#</a>
+</h3>
+<ol>
+<li>各种锁并不是相互替代的，而是在不同场景下的不同选择：
+<ol>
+<li>如果是<strong>单线程使用</strong>，那
+  <a href="/school-recruitment/#6-2-2-%e5%81%8f%e5%90%91%e9%94%81">偏向锁</a><strong>毫无疑问代价最小</strong>，并且他就<strong>能解决问题</strong>，<strong>仅仅在内存中比较下对象头就可以了</strong>。</li>
+<li>如果是<strong>出现了其他线程竞争</strong>，则<strong>偏向锁就会升级为
+  <a href="/school-recruitment/#6-2-3-%e8%bd%bb%e9%87%8f%e7%ba%a7%e9%94%81">轻量级锁</a></strong>。</li>
+<li>如果<strong>其他线程通过一定次数的 CAS 尝试没有成功</strong>，则<strong>进入</strong>
+  <a href="/school-recruitment/#6-2-4-%e9%87%8d%e9%87%8f%e7%ba%a7%e9%94%81">重量级锁</a>，在这种情况下，进入同步代码块就要做<strong>偏向锁建立</strong>、<strong>偏向锁撤销</strong>、<strong>轻量级锁建立</strong>、<strong>升级到重量级锁</strong>，最终还是得<strong>靠重量级锁来解决问题</strong>，那这样<strong>代价比直接用重量级锁要大不少</strong>。</li>
+</ol>
+</li>
+<li>所以，使用哪种技术，一定要看其所处的环境及场景，在<strong>绝大多数的情况下</strong>，<strong>偏向锁是有效的</strong>，这是基于HotSpot作者发现的<strong>大多数锁只会由同一线程并发申请</strong>的经验规律。</li>
+<li>不同锁的优缺点及适用场景如下：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>锁</th>
+<th>优点</th>
+<th>缺点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+  <a href="/school-recruitment/#6-2-2-%e5%81%8f%e5%90%91%e9%94%81">偏向锁</a></td>
+<td>加锁和解锁不需要额外的消耗，和执行非同步方法仅存在纳米级的差距。</td>
+<td>如果线程间存在锁竞争，会带来额外的锁撤销的消耗。</td>
+<td>适用于只有一个线程访问同步块的场景。</td>
+</tr>
+<tr>
+<td>
+  <a href="/school-recruitment/#6-2-3-%e8%bd%bb%e9%87%8f%e7%ba%a7%e9%94%81">轻量级锁</a></td>
+<td>竞争的线程不会阻塞，提高了程序的响应速度。</td>
+<td>如果始终得不到锁竞争的线程使用自旋会消耗CPU。</td>
+<td>追求响应时间，同步块执行速度非常快。</td>
+</tr>
+<tr>
+<td>
+  <a href="/school-recruitment/#6-2-4-%e9%87%8d%e9%87%8f%e7%ba%a7%e9%94%81">重量级锁</a></td>
+<td>线程竞争不使用自旋，不会消耗CPU。</td>
+<td>线程阻塞，响应时间缓慢。</td>
+<td>追求吞吐量，同步块执行速度较慢。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="参考文献">
+  参考文献
+  <a class="anchor" href="#%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae">#</a>
+</h2>
+<ol>
+<li>
+  <a href="https://www.jianshu.com/p/f584799f1c77">一张图读懂非公平锁与公平锁</a>。</li>
+<li>
+  <a href="https://blog.csdn.net/qq_35190492/article/details/104943579">阿里面试官：说一下公平锁和非公平锁的区别？</a></li>
+<li>
+  <a href="https://tech.meituan.com/2018/11/15/java-lock.html">不可不说的 Java“锁”事</a>。</li>
+<li>
+  <a href="https://juejin.cn/post/6844904066317828104">Java 不可重入锁和可重入锁理解</a>。</li>
+<li>
+  <a href="https://www.cnblogs.com/aspirant/p/11470858.html">深入分析 Synchronized 原理(阿里面试题)</a>。</li>
+</ol>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/wpwbb510582246/ComputerCookbook-SchoolRecruitment/edit/main/exampleSite/content/docs/java/2%e3%80%81Java%e5%a4%9a%e7%ba%bf%e7%a8%8b/2.16%20Java%e4%b8%ad%e7%9a%84%e9%94%81.md" target="_blank" rel="noopener">
+      <img src="/school-recruitment/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+
+
+  <script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#java中的锁">Java中的锁</a>
+      <ul>
+        <li><a href="#1-公平锁和非公平锁">1 公平锁和非公平锁</a>
+          <ul>
+            <li><a href="#11-基本概念">1.1 基本概念</a>
+              <ul>
+                <li><a href="#111-公平锁">1.1.1 公平锁</a>
+                  <ul>
+                    <li><a href="#1111-含义">1.1.1.1 含义</a></li>
+                    <li><a href="#1112-优缺点">1.1.1.2 优缺点</a>
+                      <ul>
+                        <li><a href="#11121-优点">1.1.1.2.1 优点</a></li>
+                        <li><a href="#11122-缺点">1.1.1.2.2 缺点</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#112-非公平锁">1.1.2 非公平锁</a>
+                  <ul>
+                    <li><a href="#1121-含义">1.1.2.1 含义</a></li>
+                    <li><a href="#1122-优缺点">1.1.2.2 优缺点</a>
+                      <ul>
+                        <li><a href="#11221-优点">1.1.2.2.1 优点</a></li>
+                        <li><a href="#11222-缺点">1.1.2.2.2 缺点</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#12-具体实例">1.2 具体实例</a></li>
+            <li><a href="#13-源码分析">1.3 源码分析</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-可重入锁与非可重入锁">2 可重入锁与非可重入锁</a>
+          <ul>
+            <li><a href="#21-基本概念">2.1 基本概念</a>
+              <ul>
+                <li><a href="#211-可重入锁">2.1.1 可重入锁</a>
+                  <ul>
+                    <li><a href="#2111-含义">2.1.1.1 含义</a></li>
+                    <li><a href="#2112-实例">2.1.1.2 实例</a></li>
+                    <li><a href="#2113-优缺点">2.1.1.3 优缺点</a>
+                      <ul>
+                        <li><a href="#21131-优点">2.1.1.3.1 优点</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#212-非可重入锁">2.1.2 非可重入锁</a>
+                  <ul>
+                    <li><a href="#2121-含义">2.1.2.1 含义</a></li>
+                    <li><a href="#2122-实例">2.1.2.2 实例</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#22-实例分析">2.2 实例分析</a>
+              <ul>
+                <li><a href="#221-可重入锁">2.2.1 可重入锁</a></li>
+                <li><a href="#222-非可重入锁">2.2.2 非可重入锁</a></li>
+              </ul>
+            </li>
+            <li><a href="#23-源码分析">2.3 源码分析</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-乐观锁与悲观锁">3 乐观锁与悲观锁</a>
+          <ul>
+            <li><a href="#31-基本概念">3.1 基本概念</a></li>
+            <li><a href="#32-实例分析">3.2 实例分析</a></li>
+            <li><a href="#33-源码分析">3.3 源码分析</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-独占锁与共享锁">4 独占锁与共享锁</a>
+          <ul>
+            <li><a href="#41-基本概念">4.1 基本概念</a>
+              <ul>
+                <li><a href="#411-独占锁">4.1.1 独占锁</a></li>
+                <li><a href="#412-共享锁">4.1.2 共享锁</a></li>
+              </ul>
+            </li>
+            <li><a href="#42-源码分析">4.2 源码分析</a></li>
+          </ul>
+        </li>
+        <li><a href="#5-自旋锁与适应性自旋锁">5 自旋锁与适应性自旋锁</a>
+          <ul>
+            <li><a href="#51-基本概念">5.1 基本概念</a>
+              <ul>
+                <li><a href="#511-自旋锁">5.1.1 自旋锁</a>
+                  <ul>
+                    <li><a href="#5111-含义">5.1.1.1 含义</a></li>
+                    <li><a href="#5112-优缺点">5.1.1.2 优缺点</a>
+                      <ul>
+                        <li><a href="#51121-缺点">5.1.1.2.1 缺点</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#512-适应性自旋锁">5.1.2 适应性自旋锁</a>
+                  <ul>
+                    <li><a href="#5121-含义">5.1.2.1 含义</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#52-源码分析">5.2 源码分析</a></li>
+          </ul>
+        </li>
+        <li><a href="#6-无锁偏向锁轻量级锁重量级锁">6 无锁、偏向锁、轻量级锁、重量级锁</a>
+          <ul>
+            <li><a href="#61-前言">6.1 前言</a></li>
+            <li><a href="#62-分类">6.2 分类</a>
+              <ul>
+                <li><a href="#621-无锁">6.2.1 无锁</a></li>
+                <li><a href="#622-偏向锁">6.2.2 偏向锁</a>
+                  <ul>
+                    <li><a href="#6221-为什么要引入偏向锁">6.2.2.1 为什么要引入偏向锁</a></li>
+                    <li><a href="#6222-含义">6.2.2.2 含义</a></li>
+                    <li><a href="#6223-原理">6.2.2.3 原理</a>
+                      <ul>
+                        <li><a href="#62231-获得偏向锁">6.2.2.3.1 获得偏向锁</a></li>
+                        <li><a href="#62232-撤销偏向锁">6.2.2.3.2 撤销偏向锁</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#623-轻量级锁">6.2.3 轻量级锁</a>
+                  <ul>
+                    <li><a href="#6231-含义">6.2.3.1 含义</a></li>
+                    <li><a href="#6232-原理">6.2.3.2 原理</a>
+                      <ul>
+                        <li><a href="#62321-获得轻量级锁">6.2.3.2.1 获得轻量级锁</a></li>
+                        <li><a href="#62322-释放轻量级锁">6.2.3.2.2 释放轻量级锁</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#6233-相关问题">6.2.3.3 相关问题</a>
+                      <ul>
+                        <li><a href="#62331-为什么升级为轻量级锁时要把对象头里的-mark-word-复制到线程栈的-lock-record-中呢">6.2.3.3.1 为什么升级为轻量级锁时要把对象头里的 Mark Word 复制到线程栈的 Lock Record 中呢</a></li>
+                        <li><a href="#62332-为什么会尝试-cas-不成功以及什么情况下会不成功">6.2.3.3.2 为什么会尝试 CAS 不成功，以及什么情况下会不成功</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#624-重量级锁">6.2.4 重量级锁</a>
+                  <ul>
+                    <li><a href="#6241-含义">6.2.4.1 含义</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#63-转换">6.3 转换</a></li>
+            <li><a href="#64-选择">6.4 选择</a></li>
+          </ul>
+        </li>
+        <li><a href="#参考文献">参考文献</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

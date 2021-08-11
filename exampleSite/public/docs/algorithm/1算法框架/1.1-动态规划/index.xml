@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Computer Cookbook School Recruitment</title>
+    <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</link>
+    <description>Recent content on Computer Cookbook School Recruitment</description>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.1-%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.1-%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97/</guid>
+      <description>斐波那契数列 #  1 题目 #  写一个函数，输入 n ，求斐波那契（Fibonacci）数列的第 n 项（即 F(N)）。斐波那契数列的定义如下：
+F(0) = 0, F(1) = 1 F(N) = F(N - 1) + F(N - 2), 其中 N &amp;gt; 1. 斐波那契数列由 0 和 1 开始，之后的斐波那契数就是由之前的两数相加而得出。
+答案需要取模 1e9+7（1000000007），如计算初始结果为：1000000008，请返回 1。
+示例 1：
+输入：n = 2 输出：1 示例 2：
+输入：n = 5 输出：5 提示：
+ 0 &amp;lt;= n &amp;lt;= 100     遇到求总数的问题时一般考虑用动态规划来求。
+  这类问题的基本思路就是先寻找状态之间的关系，确定状态转移方程，然后使用暴力递归的方法求解，接着使用带有备忘录的递归、dp 数组的迭代解法进行优化。
+  类似的题目还有：</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E5%87%91%E9%9B%B6%E9%92%B1%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E5%87%91%E9%9B%B6%E9%92%B1%E9%97%AE%E9%A2%98/</guid>
+      <description>凑零钱问题 #  1 题目 #  给你一个整数数组 coins ，表示不同面额的硬币；以及一个整数 amount ，表示总金额。
+计算并返回可以凑成总金额所需的 最少的硬币个数 。如果没有任何一种硬币组合能组成总金额，返回 -1 。
+你可以认为每种硬币的数量是无限的。
+示例 1：
+输入：coins = [1, 2, 5], amount = 11 输出：3 解释：11 = 5 + 5 + 1 示例 2：
+输入：coins = [2], amount = 3 输出：-1 示例 3：
+输入：coins = [1], amount = 0 输出：0 示例 4：
+输入：coins = [1], amount = 1 输出：1 示例 5：
+输入：coins = [1], amount = 2 输出：2 提示：</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.3-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.3-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/</guid>
+      <description>贪心算法 #  1 定义 #  贪心算法可以认为是动态规划算法的一个特例，相比动态规划，使用贪心算法需要满足更多的条件（贪心选择性质），但是效率比动态规划要高。
+贪心选择性质： 简单地说就是每一步做出一个局部最优的选择，最终的结果就是全局最优。需要注意的是，这是一种特殊性质，只有一部分问题拥有这个性质。
+ 比如面前放着 100 张人民币，我们只能拿 10 张，怎么才能拿到最多的面额？显然每次选择剩下钞票中面值最大的一张，最后我们的选择一定是最优的。 但是大部分问题明显不具有贪心选择性质，比如斗地主，对手出对儿三，按照贪心策略，我们应该出尽可能小的牌刚好压制住对方，但现实情况我们甚至可能会出王炸。这种情况就不能用贪心算法，而得使用动态规划解决。  2 示例 #  2.1 区间调度问题 #  2.1.1 无重叠区间 #  2.1.1.1 题目 #  给定一个区间的集合，找到需要移除区间的最小数量，使剩余区间互不重叠。
+注意:
+1. 可以认为区间的终点总是大于它的起点。 2. 区间 [1,2] 和 [2,3] 的边界相互“接触”，但没有相互重叠。 示例 1:
+输入: [ [1,2], [2,3], [3,4], [1,3] ] 输出: 1 解释: 移除 [1,3] 后，剩下的区间没有重叠。 示例 2:
+输入: [ [1,2], [1,2], [1,2] ] 输出: 2 解释: 你需要移除两个 [1,2] 来使剩下的区间没有重叠。 示例 3:</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.4-%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.4-%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/</guid>
+      <description>最长递增子序列 #  1 题目 #  给你一个整数数组 nums ，找到其中最长严格递增子序列的长度。
+子序列是由数组派生而来的序列，删除（或不删除）数组中的元素而不改变其余元素的顺序。例如，[3,6,2,7] 是数组 [0,3,1,6,2,2,7] 的子序列。
+示例 1：
+输入：nums = [10,9,2,5,3,7,101,18] 输出：4 解释：最长递增子序列是 [2,3,7,101]，因此长度为 4 。 示例 2：
+输入：nums = [0,1,0,3,2,3] 输出：4 示例 3：
+输入：nums = [7,7,7,7,7,7,7] 输出：1 提示：
+ 1 &amp;lt;= nums.length &amp;lt;= 2500 -104 &amp;lt;= nums[i] &amp;lt;= 104  进阶：
+ 你可以设计时间复杂度为 O(n2) 的解决方案吗？ 你能将算法的时间复杂度降低到 O(n log(n)) 吗?  2 解题思路 #  2.1 动态规划法 #  2.1.1 问题分析 #  动态规划的核心设计思想是数学归纳法。</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.5-%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.5-%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB/</guid>
+      <description>编辑距离 #  1 题目 #  给你两个单词 word1 和 word2，请你计算出将 word1 转换成 word2 所使用的最少操作数 。
+你可以对一个单词进行如下三种操作：
+ 插入一个字符 删除一个字符 替换一个字符  示例 1：
+输入：word1 = &amp;quot;horse&amp;quot;, word2 = &amp;quot;ros&amp;quot; 输出：3 解释： horse -&amp;gt; rorse (将 &#39;h&#39; 替换为 &#39;r&#39;) rorse -&amp;gt; rose (删除 &#39;r&#39;) rose -&amp;gt; ros (删除 &#39;e&#39;) 示例 2：
+输入：word1 = &amp;quot;intention&amp;quot;, word2 = &amp;quot;execution&amp;quot; 输出：5 解释： intention -&amp;gt; inention (删除 &#39;t&#39;) inention -&amp;gt; enention (将 &#39;i&#39; 替换为 &#39;e&#39;) enention -&amp;gt; exention (将 &#39;n&#39; 替换为 &#39;x&#39;) exention -&amp;gt; exection (将 &#39;n&#39; 替换为 &#39;c&#39;) exection -&amp;gt; execution (插入 &#39;u&#39;) 提示：</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.6-%E9%AB%98%E6%A5%BC%E6%89%94%E9%B8%A1%E8%9B%8B/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.6-%E9%AB%98%E6%A5%BC%E6%89%94%E9%B8%A1%E8%9B%8B/</guid>
+      <description>高楼扔鸡蛋 #  1 题目 #  给你 k 枚相同的鸡蛋，并可以使用一栋从第 1 层到第 n 层共有 n 层楼的建筑。
+已知存在楼层 f ，满足 0 &amp;lt;= f &amp;lt;= n ，任何从 高于 f 的楼层落下的鸡蛋都会碎，从 f 楼层或比它低的楼层落下的鸡蛋都不会破。
+每次操作，你可以取一枚没有碎的鸡蛋并把它从任一楼层 x 扔下（满足 1 &amp;lt;= x &amp;lt;= n）。如果鸡蛋碎了，你就不能再次使用它。如果某枚鸡蛋扔下后没有摔碎，则可以在之后的操作中 重复使用 这枚鸡蛋。
+请你计算并返回要确定 f 确切的值 的 最小操作次数 是多少？
+示例 1：
+输入：k = 1, n = 2 输出：2 解释： 鸡蛋从 1 楼掉落。如果它碎了，肯定能得出 f = 0 。 否则，鸡蛋从 2 楼掉落。如果它碎了，肯定能得出 f = 1 。 如果它没碎，那么肯定能得出 f = 2 。 因此，在最坏的情况下我们需要移动 2 次以确定 f 是多少。 示例 2：</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.7-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E5%BA%8F%E5%88%97/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.7-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E5%BA%8F%E5%88%97/</guid>
+      <description>最长回文子序列 #  1 题目 #  给定一个字符串 s ，找到其中最长的回文子序列，并返回该序列的长度。可以假设 s 的最大长度为 1000 。 示例 1: 输入:
+&amp;quot;bbbab&amp;quot; 输出:
+4 一个可能的最长回文子序列为 &amp;ldquo;bbbb&amp;rdquo;。
+示例 2: 输入:
+&amp;quot;cbbd&amp;quot; 输出:
+2 一个可能的最长回文子序列为 &amp;ldquo;bb&amp;rdquo;。
+提示：
+ 1 &amp;lt;= s.length &amp;lt;= 1000 s 只包含小写英文字母  2 解题思路 #  2.1 子序列问题处理模板 #  对于这种子序列问题，我们一般需要使用动态规划的方法来解决：
+ 找状态关系（通过数学归纳获得）。 定义 dp 数组（根据状态转移方程获得）。  dp 数组的定义主要有两种方式，一种是定义一个一维数组，另一种是定义一个二维数组。
+2.1.1 一维 dp 数组 #  例如，在 最长递增子序列中，我们就是定义了一个一维数组，其含义为：在子数组 $array[0..i]$ 中，我们要求的子序列（最长递增子序列）的长度是 $dp[i]$。
+int n = array.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.8-%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%92%8C/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.8-%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%92%8C/</guid>
+      <description>最大子序和 #  1 题目 #  给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+示例 1：
+输入：nums = [-2,1,-3,4,-1,2,1,-5,4] 输出：6 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。 示例 2：
+输入：nums = [1] 输出：1 示例 3：
+输入：nums = [0] 输出：0 示例 4：
+输入：nums = [-1] 输出：-1 示例 5：
+输入：nums = [-100000] 输出：-100000 提示：
+ 1 &amp;lt;= nums.length &amp;lt;= 3 * 104 -105 &amp;lt;= nums[i] &amp;lt;= 105  进阶： 如果你已经实现复杂度为 O(n) 的解法，尝试使用更为精妙的 分治法 求解。
+2 解题思路 #  2.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8/</guid>
+      <description>买卖股票 #  1 题目 #  给定一个数组 prices ，它的第 i 个元素 prices[i] 表示一支给定股票第 i 天的价格。
+你只能选择 某一天 买入这只股票，并选择在 未来的某一个不同的日子 卖出该股票。设计一个算法来计算你所能获取的最大利润。
+返回你可以从这笔交易中获取的最大利润。如果你不能获取任何利润，返回 0 。
+示例 1：
+输入：[7,1,5,3,6,4] 输出：5 解释：在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。 注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格；同时，你不能在买入前卖出股票。 示例 2：
+输入：prices = [7,6,4,3,1] 输出：0 解释：在这种情况下, 没有交易完成, 所以最大利润为 0。 提示：
+ 1 &amp;lt;= prices.length &amp;lt;= 105 0 &amp;lt;= prices[i] &amp;lt;= 104  2 解题思路 #  2.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.10-%E6%9C%80%E9%95%BF%E9%87%8D%E5%A4%8D%E5%AD%90%E6%95%B0%E7%BB%84/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.10-%E6%9C%80%E9%95%BF%E9%87%8D%E5%A4%8D%E5%AD%90%E6%95%B0%E7%BB%84/</guid>
+      <description>最长重复子数组 #  1 题目 #  给两个整数数组 A 和 B ，返回两个数组中公共的、长度最长的子数组的长度。
+示例：
+输入： A: [1,2,3,2,1] B: [3,2,1,4,7] 输出：3 解释： 长度最长的公共子数组是 [3, 2, 1] 。 提示：
+ 1 &amp;lt;= len(A), len(B) &amp;lt;= 1000 0 &amp;lt;= A[i], B[i] &amp;lt; 100  2 解题思路 #  2.1 暴力解法 #  2.1.1 问题分析 #   首先将 $nums2$ 中的元素对应的下标保存在 $map$ 中，这样便于查找 $nums1$ 中的元素是否在 $nums2$ 中出现。 然后遍历 $nums1$，假设当前遍历的元素为 $item$：  如果 $item$ 没有在 $nums2$ 中出现，则直接返回。 如果 $item$ 在 $nums2$ 中出现，则以 $item$ 为起点，同步遍历 $nums1$ 和 $nums2$ 的后续元素，直到两个数组中对应元素不相等，或达到任意数组的边界，计算两个数组相应部分的的重复子数组的大小，并对最终的结果进行更新。   最后返回最终结果即可。  2.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.11-%E6%9C%80%E9%95%BF%E6%9C%89%E6%95%88%E6%8B%AC%E5%8F%B7/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.11-%E6%9C%80%E9%95%BF%E6%9C%89%E6%95%88%E6%8B%AC%E5%8F%B7/</guid>
+      <description>最长有效括号 #  1 题目 #  给你一个只包含 &amp;lsquo;(&amp;rsquo; 和 &amp;lsquo;)&amp;rsquo; 的字符串，找出最长有效（格式正确且连续）括号子串的长度。
+示例 1：
+输入：s = &amp;#34;(()&amp;#34; 输出：2 解释：最长有效括号子串是 &amp;#34;()&amp;#34; 示例 2：
+输入：s = &amp;#34;)()())&amp;#34; 输出：4 解释：最长有效括号子串是 &amp;#34;()()&amp;#34; 示例 3：
+输入：s = &amp;#34;&amp;#34; 输出：0 提示：
+ 0 &amp;lt;= s.length &amp;lt;= 3 * 104 s[i] 为 &amp;lsquo;(&amp;rsquo; 或 &amp;lsquo;)&amp;rsquo;  2 解题思路 #  2.1 动态规划 #  2.1.1 问题解析 #   对于这种最值型题目一般采用动态规划的方法来求解。 动态规划题目的分析分为以下 4 个步骤：  确定状态：  研究最优策略的最后一步。 化为子问题。   转移方程：  根据子问题定义得到。   初始条件和边界情况。 计算顺序。   首先，我们定义一个 $dp$ 数组，其中 $dp[i]$表示以下标为 $i$ 的字符结尾的最长有效子字符串的长度。 然后进行动态规划的求解：  确定状态：  对于最优的策略，一定有最后一个元素 $s[i]$，所以，我们先看第 $i$ 个位置，这个位置的元素 $s[i]$ 有两种情况：  $s[i] = &amp;lsquo;(&#39;$：这时 $s[i]$无法和其之前的元素组成有效的括号对，所以 $dp[i] = 0$。 $s[i] = &amp;lsquo;)&#39;$：这时，需要看其前面一个元素来判断是否为有效括号对：   $s[i - 1] = &amp;lsquo;(&#39;$：即 $s[i]$和 $s[i - 1]$ 组成一对有效括号，有效括号长度新增 2，此时以 $i$位置的字符结尾的最长有效括号长度为以 $(i - 2)$ 位置的字符结尾的最长有效括号长度加 2，我们无需知道 $(i - 2)$ 位置的字符是否可以组成有序括号对，此时有：</description>
+    </item>
+    
+  </channel>
+</rss>
