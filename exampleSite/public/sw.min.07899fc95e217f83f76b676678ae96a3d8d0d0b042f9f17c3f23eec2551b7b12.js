@@ -1,1 +1,0 @@
-navigator.serviceWorker&&navigator.serviceWorker.register("/school-recruitment/sw.js",{scope:"/school-recruitment/"})
