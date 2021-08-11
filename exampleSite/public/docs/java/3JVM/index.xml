@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>3、JVM on Computer Cookbook School Recruitment</title>
+    <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/</link>
+    <description>Recent content in 3、JVM on Computer Cookbook School Recruitment</description>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="https://books.grayson.top/school-recruitment/docs/java/3JVM/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.1-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.1-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F/</guid>
+      <description>运行时数据区域 #  JVM 运行时数据区域主要有 程序计数器、 Java 虚拟机栈 、本地方法栈、堆、方法区 、运行时常量池 六个区域。
+![]../../media/202105//1621914617.836086.png)
+1 程序计数器（Program Counter Register） #   由于 JVM 同时可以处理多个线程，所以就涉及到一些线程调度，当 CPU 暂停运行线程把时间片让给另一个线程的时候，我们需要保存这个线程被暂停执行前的一些现场状态，需要记录当前执行到哪一行字节码了，所以具备保存现场的功能。 每条线程都有自己的PC 寄存器，在任意时刻虚拟机只会执行一个方法，如果执行的方法不是 Native 方法，PC 寄存器则保存指向当前执行字节码的指令地址；如果执行的是 Native 方法，则 PC 寄存器为空。   If that method is not native, the pc register contains the address of the Java Virtual Machine instruction currently being executed. If the method currently being executed by the thread is native, the value of the Java Virtual Machine&amp;rsquo;s pc register is undefined.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.2-%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E5%AD%98%E6%B4%BB%E7%9A%84%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.2-%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E5%AD%98%E6%B4%BB%E7%9A%84%E6%96%B9%E6%B3%95/</guid>
+      <description>判断对象是否存活的方法 #  判断对象是否存活的方法有两种，分别是 引用计数法、可达性分析算法。
+ 注：如无特殊说明，本文所有图的来源为《深入理解 Java 虚拟机 JVM 高级特性与最佳实践》
+   引用计数法
+ 引用计数法是指给对象添加一个引用计数器，每当有一个地方引用它时，计数器值就加 1，当引用失效时，计数器值就减 1，任何时刻计数器为 0 的对象就是不可能再被使用的。 缺点是它很难解决对象之间相互循环引用的问题。举个简单的例子，对象 objA 和 obB 都有字段 Instance,赋值令 obja instance=objB 及 obiB. Instance=ojA，除此之外，这两个对象再无任何引用,实际上这两个对象已经不可能再被访问,但是它们因为互相引用着对方，导致它们的引用计数都不为 0，于是引用计数算法无法通知 GC 收集器回收它们。    可达性分析算法
+ 主要通过一系列的称为“GC Roots”的对象作为起点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象到 GC Roots 没有任何引用链相连（即从 GC Roots 到这个对象不可达）时，则证明对象是不可用的。    ![]../../media/202105//1621914618.1032557.png)</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.3-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.3-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95/</guid>
+      <description>垃圾收集算法 #  3.3.1 标记-清除算法 #  最基础的收集算法是“标记-清除”算法，算法分为“标记”和“清除”两个阶段：首先需要标记出所有需要回收的对象，在标记完成后统一回收所有被标记的对象。它的主要不足有两个：一个是效率问题，标记和清除两个过程的效率都不高；另一个是空间问题，标记清除之后会产生大量不连续的内存碎片，空间碎片太多可能会导致以后在程序运行过程中需要分配较大对象时，无法找到足够的连续内存而不得不提前触发另一次垃圾收集动作。
+3.3.2 复制算法 #  为了解决效率问题，一种称为“复制”的收集算法出现了，它将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这一块的内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。这样使得每次都是对整个半区进行内存回收，内存分配时也就不用考虑内存碎片等复杂情况，只要移动堆顶指针，按顺序分配内存即可，实现简单，运行高效，只是这种算法的代价是将内存缩小为了原来的一半。
+复制算法一般用来回收新生代，由于新生代中的对象是“朝生夕死”的，所以并不需要按照1:1的比例来划分内存空间，而是将内存划分为一块较大的Eden空间和两块较小的Survivor空间，每次使用Eden和其中一块Survivor。当回收时，将Eden和Survivor中还存活着的对象一次性复制到另一块Survivor空间上，最后清理掉Eden和刚才用过的Survivor空间。当Survivor空间不够用时，需要依赖其他内存进行分配担保。
+3.3.3 标记-整理算法 #  复制收集算法在对象存活率较高时就要进行较多的赋值操作，效率就会变低，更关键的是，如果不想浪费50%的空间，就需要额外的空间进行分配担保，以应对被使用的内存中所有对象都100%存活的极端情况，所以在老年代一般不能直接选用这种算法。
+根据老年代的特点，有人提出了“标记-整理”算法，标记过程仍然与“标记-清除”算法一样，但后续步骤不是直接对可回收对象进行清理，而是让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。
+3.3.4 分代收集算法 #  当代商业虚拟机的垃圾收集都采用“分代收集”算法，这种算法根据对象存活周期的不同将内存划分为几块。一般是把Java堆划分为新生代和老年代，这样就可以根据各个年代的特点选用最适当的收集算法：
+ 在新生代中，每次垃圾回收都发现有大批对象死去，只有少量存活，那就选用复制算法，只需要付出少量存活对象的复制成本就可以完成收集。 在老年代中，因为对象存活率高，没有额外空间对它进行分配担保，就必须使用“标记-清理”或“标记-整理”算法来进行回收。  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.4-%E7%B1%BB%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%92%8C%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.4-%E7%B1%BB%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%92%8C%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/</guid>
+      <description>类的生命周期和加载过程 #  ![6zd6i.png (787×430)]../../media/202105//1621914619.9545197.png)
+一个类在 JVM 里的生命周期有 7 个阶段，分别是：
+ 加载（Loading） 验证（Verification） 准备（Preparation） 解析（Resolution） 初始化（Initialization） 使用（Using） 卸载（Unloading）  其中前 5 个部分（加载、验证、准备、解析、初始化）统称为类加载，具体过程如下：
+  加载： 这个阶段的主要操作是根据明确知道的 class 完全限定名，来获取二进制 classfile 格式的字节流，简单点说就是找到文件系统中 jar 包或存在于任何地方的&amp;quot;class 文件&amp;quot;。如果找不到，则会抛出 NoClassDefFound 错误。加载阶段并不会检查 classfile 的语法和格式，整个过程主要由 JVM 和 Java 的具体某一个 类加载器 协作完成。
+  验证： 这个阶段主要是确保 class 文件里的字节流信息符合当前虚拟机的要求，不会危害虚拟机的安全。验证过程中会检查 classfile 的语义，判断常量池中的符号，并执行类型检查，主要目的是判断字节码的合法性。
+  准备： 这个阶段会创建静态字段，并将其初始化为标准默认值（比如 null 或者 0 值），并分配方发表，即在方法区中分配这些变量所使用的的内存空间，需要注意的是，准备阶段并未执行任何 Java 代码。 例如：对于 public static int i = 1;，后面在类初始化阶段才会执行赋值为 1，但是如果使用 final 作为静态常量，则会在准备阶段就会被赋值为 1。</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.5-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%97%B6%E6%9C%BA/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.5-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%97%B6%E6%9C%BA/</guid>
+      <description>类加载时机 #  1 类的初始化触发的情况 #   当虚拟机启动时，初始化用户指定的主类，就是启动执行的main方法所在的类。 当遇到用以新建目标类实例的new指令时，初始化new指令的目标类，就是new一个类的时候要初始化。 当遇到调用静态方法的指令时，初始化该静态方法所在的类。 当遇到访问静态字段的指令时，初始化该静态字段所在的类。 子类的初始化会触发父类的初始化。 如果一个接口定义了default方法，那么直接实现或者间接实现该接口的类的初始化，会触发该接口的初始化。 使用反射API对某个类进行反射调用时，初始化这个类，其实跟前面一样，反射调用要么是已经有实例了，要么是静态方法，都需要初始化。 当初次调用MethodHandle实例时，初始化该MethodHandle指向的方法所在的类。  2 不会指定类初始化的情况 #   通过子类引用父类的静态字段，只会触发父类的初始化，而不会触发子类的初始化。 定义对象数组，不会触发该类的初始化。 常量在编译期间会存入调用类的常量池中，本质上没有直接引用常量的类，不会触发定义常量所在的类。 通过类名获取Class对象，不会触发类的初始化，Hello.class不会让Hello类初始化。 通过ClassLoader默认的loadClass方法，也不会触发初始化动作（加载了，但是不初始化）。  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.6-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E7%9A%84%E7%A7%8D%E7%B1%BB/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.6-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E7%9A%84%E7%A7%8D%E7%B1%BB/</guid>
+      <description>类加载器的种类 #  类加载过程可以描述为“通过一个类的全限定名 a.b.c.XXClass来获取描述此类的 Class对象”，这个过程由类加载器（CLassLoader） 来完成。这样的好处在于，子类加载器可以复用父类加载器加载的类。 类加载器主要分为三种：
+![csrk7.png (651×444)]../../media/202105//1621914620.392762.png)
+  启动类加载器（BootstrapClassLoader）：
+ 他用来加载Java的核心类，是用C++代码来实现的，并不继承自java.lang.ClassLoader（负责加载JDK中jre/lib/tr.jar里所有的class）。 他可以看做是JVM自带的，我们在代码层面无法直接获取到启动类加载器的引用，所以不允许直接操作他，如果打印出来就是个null，但是后面可以通过命令行参数影响他加载什么。    扩展类加载器（ExtCLassLoader）：
+ 他负责加载JRE的扩展目录，lib/ext或者由java.ext.dirs系统属性指定的目录中的JAR包的类。 代码里直接获取他的父类加载器为null，因为无法拿到启动类加载器。    应用类加载器（AppClassLoader）：
+ 他负责在JVM启动时加载来自Java命令的-classpath或者-cp选项、java.class.path系统属性指定的jar包和类路径。 在应用程序代码里可以通过ClassLoader的静态方法getSystemClassLoader()来获取应用类加载器。 如果没有特别指定，则在没有使用自定义类加载器情况下，用户自定义的类都由此类加载器加载。    自定义类加载器（CustomClassLoader）：
+ 除了前面三种系统自带的类加载器，用户还可以自己定义类加载器，如果用户自定义了类加载器，则自定义类加载器都以应用类加载器作为父加载器。    </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.7-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E7%9A%84%E7%89%B9%E7%82%B9/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.7-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E7%9A%84%E7%89%B9%E7%82%B9/</guid>
+      <description>类加载机制的特点 #  类加载机制有三个特点，具体如下：
+ 双亲委托：  当一个自定义类加载器需要加载一个类，比如java.lang.String，他很懒，不会一上来就直接加载他，而是先委托自己的父类加载器去加载。父加载器如果发现自己还有父加载器，会一直往前找。 这样只要上级加载器比如启动类加载器，已经加载了某个类比如java.lang.String，所有的子类加载器都不需要自己加载了。 如果几个类加载器都没有加载到指定名称的类，那么会抛出ClassNotFoundException 异常。   负责依赖： 如果一个加载器在加载某个类的时候，发现这个类依赖于另外几个类或接口，也会去尝试加载这些依赖项。 缓存加载： 为了提升加载效率，消除重复加载，一旦某个类被一个类加载器加载，那么他会缓存这个加载结果，不会重复加载。  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.8-JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.8-JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/</guid>
+      <description>JVM内存结构 #  1 概述 #  JVM 内部使用Java 内存模型，在逻辑上将内存划分为线程栈（Thread Stacks）和堆内存（Heap）两个部分，如下图所示：
+![4pajs.jpg (1148×816)]../../media/202105//1621914622.9091363.png)
+1.1 线程栈 #  JVM 中，每个正在运行的线程，都有自己的线程栈。
+ 线程栈包含了当前正在执行的方法链或调用链上的所有方法的状态信息， 所以线程栈又被称为方法栈或调用栈。 线程栈里面保存了调用链上正在执行的所有方法中的局部变量：  每个线程都只能访问自己的线程栈。 每个线程都不能访问其他线程的局部变量。   即使两个线程正在执行完全相同的代码，但每个线程都会在自己的线程栈内创建对应代码中声明的局部变量，所以每个线程都有一份自己的局部变量副本：  所有原生类型的局部变量都存储在线程栈中，因此对其他线程是不可见的。 线程可以将一个原生变量值的副本传给另一个线程，但不能共享原生局部变量本身。    1.2 堆内存 #  堆内存又称为共享堆，堆中的所有对象，可以被所有线程访问，只要他们能拿到对象的引用地址：
+ 如果一个线程可以访问某个对象时，也就可以访问该对象的成员变量。 如果两个线程同时调用某个对象的同一个方法，则他们都可以访问到这个对象的成员变量，但每个线程的局部变量副本是独立的。  虽然各个线程自己使用的局部变量都在自己的栈上，但是大家可以共享堆上的对象，各个不同线程访问同一个对象实例的基础类型的成员变量，会给每个线程一个变量的副本。
+![6j9fe.jpg (1688×1078)]../../media/202105//1621914622.9118786.png)
+1.3 总结 #   如果是原生数据类型的局部变量，那么他的内容就全部保留在线程栈中。 如果是对象引用，在对象的引用地址保存在栈中，而实际的对象内容保存在堆中。 对象的成员变量与对象本身一起存储在堆上，不管成员变量的类型是原生数值，还是对象引用。 类的静态变量则和类定义一样都保存在堆中。  总结一下：
+ 原始数据类型的局部变量和对象引用地址在栈上。 对象、对象成员与类定义、静态变量在堆上。  ![ksq1n.jpg (1728×1098)]../../media/202105//1621914622.9144847.png)
+2 线程栈 #  ![6yhj7.jpg (1450×986)]../../media/202105//1621914622.9165661.png)</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.9-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95%E6%9C%89%E5%93%AA%E4%BA%9B/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.9-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95%E6%9C%89%E5%93%AA%E4%BA%9B/</guid>
+      <description>常见的垃圾收集算法有哪些 #  1 引用计数法 #  2.1 原理 #   这种算法会在每一个对象上记录这个对象被引用的次数，只要有任何一个对象引用了该对象，这个对象的计数器就加 1，取消对这个对象的引用时，这个对象的计数器就减 1。 任何一个时刻，如果该对象的计数器为 0，那么这个对象就是可以回收的。  2.2 缺点 #   如果出现了对象之间的相互引用，这样单纯的引用计数就会出现问题，导致循环引用的对象没办法回收，这时就会出现内存泄漏，该释放的没释放，该回收的没回收。 如果依赖关系复杂，计算机的内存资源很可能用满，或者说不够用，这样就可能会导致内存溢出。 由于以上原因，在JVM 中没有使用引用计数法。  2 JVM 常用 GC 算法 #  各种垃圾收集器的实现细节虽然不尽相同，但总体而言，垃圾收集器都专注于两件事情：
+ 查找所有存活对象。 抛弃其他部分，即死对象，不再使用的对象。  2.1 标记可达对象（Marking Reacable Objects） #  现代 JVM 中所有的 GC 算法，第一步都是找出所有存活的对象，如下图所示：
+![e575a130-322d-11ea-9111-a36492d50563 (2054×1134)]../../media/202105//1621914623.3531394.png)
+ 首先，有一些特定的对象被指定为GC 根元素（Garbage Collection Roots），包括：  当前正在执行的方法里的局部变量和输入参数。 活动线程。 内存中所有类的静态字段。 JNI 引用。   其次，GC 遍历内存中整体的对象关系图，从 GC 根元素开始扫描，到直接引用，以及其他对象（通过对象的属性域），所有 GC 访问到的对象都被标记为存活对象。  存活对象在上图中用蓝色表示，标记阶段完成后，所有存活对象都被标记了。 而其他对象（上图中灰色部分）就是根元素不可达的，也就是程序不能再使用这些不可达的对象，这样的对象被认为是垃圾，GC 会在接下来的阶段清除他们。   在标记阶段有几个需要注意的地方：  标记阶段需要暂停所有的应用线程，以遍历所有对象的引用关系，因为不暂停就没法跟踪一直在变化的引用关系图，这种情景叫做全线停顿（Stop The World Pause），而可以安全暂停线程的点叫做安全点，然后，JVM 就可以专心执行清理工作了，安全点可能由多种因素触发，GC 是触发安全点最常见的原因。 暂停的时间与堆内存大小、对象的总数没有直接关系，而是由存活对象的数量来决定，所以增加堆内存的大小并不会直接影响标记阶段占用的时间。    2.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.10-%E6%8C%87%E9%92%88%E7%A2%B0%E6%92%9E%E5%92%8C%E7%A9%BA%E9%97%B2%E5%88%97%E8%A1%A8/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.10-%E6%8C%87%E9%92%88%E7%A2%B0%E6%92%9E%E5%92%8C%E7%A9%BA%E9%97%B2%E5%88%97%E8%A1%A8/</guid>
+      <description>指针碰撞和空闲列表 #  1 原理分析 #  为对象分配空间的任务等同于把一块确定大小的内存从 Java 堆中划分出来：
+ 假设 Java 堆中的内存是绝对规整的，所有用过的内存都放在一边，空闲的内存放在另一边，中间放着一个指针作为分界点的指示器，那所分配的内存就仅仅是把那个指针向空闲空间那边挪动一段与对象大小相等的距离，这种分配方式称为指针碰撞（Pointer Bumping）。 如果 Java 堆中的内存并不是规整的，已使用的内存和空闲的内存相互交错，那就没有办法简单地进行指针碰撞了，虚拟机就必须维护一个列表，记录上哪些内存块是可用的，在分配的时候从列表中找到一块足够大的空间划分给对象实例，并更新列表上的记录，这种分配方式称为空闲列表（Free List）。 选择哪种分配方式由 Java 堆是否规整决定，而 Java 堆是否规整又由所采用的的垃圾收集器是否带有压缩整理功能决定。 因此：  在使用Serial、ParNew等带有Compact过程的收集器时，系统采用的分配算法时指针碰撞。 在使用CMS这种基于标记-清除算法的收集器时，通常采用空闲列表。    指针碰撞：
+![]../../media/202105//1621914623.735002.png)
+空闲列表：
+![]../../media/202105//1621914623.7397084.png)
+2 参考文献 #    指针碰撞和空闲列表。  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.11-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E6%9C%89%E5%93%AA%E4%BA%9B/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.11-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E6%9C%89%E5%93%AA%E4%BA%9B/</guid>
+      <description>常见的垃圾收集器有哪些 #  JVM 中常见的垃圾收集器主要包括串行 GC 收集器（Serial GC）、ParNew 收集器、并行 GC 收集器（Parallel GC）、CMS 收集器（Most Concurrent Mark and Sweep Garbage Collector）、G1 收集器（Garbage First）五种。
+1 串行 GC 收集器（Serial GC） #  Serial 收集器主要包括Serial 收集器（用于年轻代）、Serial Old 收集器（用于老年代）两种。
+2.1 特点 #   串行 GC在年轻代使用标记-复制算法，在老年代使用标记-清除-整理算法。 两者都是单线程的垃圾收集器，不能进行并行处理，所以都会触发全线暂停（STW），停止所有的应用线程。  2.2 缺点 #   不能充分利用多核 CPU，因为不管有多少 CPU 内核，JVM 在垃圾收集时都只能使用单个核心。  2.3 启用方法 #  -XX:+UseSerialGC 2 ParNew 收集器 #  ParNew 收集器是Serial 收集器的多线程版本，它是许多运行在 Server 模式下的虚拟机中首选的新生代收集器，因为除了 Serial 收集器外，目前只有他能与CMS 收集器配合工作。</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.12-%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E4%B8%8E%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E7%9A%84%E5%8C%BA%E5%88%AB/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.12-%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E4%B8%8E%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
+      <description>内存溢出与内存泄漏的区别 #  1 基本概念 #  1.1 内存溢出 #  内存溢出（Out Of Memory）是指程序在申请内存时，没有足够的内存空间供其使用。
+1.2 内存泄漏 #  内存泄漏（Memory Leak）是指不再使用的对象持续占有内存，使得这部分内存得不到及时释放，从而造成内存空间浪费。
+2 二者关系 #   如果存在严重的内存泄漏问题，随着时间的推移，则必然会引起内存溢出。 内存泄漏一般是资源管理问题或程序 Bug，内存溢出则是内存空间不足和内存泄漏的最终结果。  3 内存溢出的常见情况 #  3.1 持久代溢出 #   因为运行常量池在方法区，而方法区在持久代中，因此出现持久代溢出的原因可能是运行时常量池溢出。 也可能是程序中使用了大量的 jar 或 class，使得方法区中保存的 class 对象没有被及时回收或class 信息使用的内存超过了配置的大小。  3.2 堆溢出 #   发生这种溢出的原因一般是创建的对象太多，在进行垃圾回收之前对象数量达到了最大堆的容量限制。 解决这个区域异常的方法是通过内存映像分析工具对 Dump 出来的转储快照进行分析，看到底是内存溢出还是内存泄漏：  如果是内存泄漏，可以通过工具查看泄漏对象到 GC Roots 的应用链，定位泄漏代码的位置，修改程序或算法。 如果不是内存泄漏，说明内存中的对象确实都还必须存活，那就应该检查虚拟机的堆参数 -Xmx（最大堆大小）和 -Xms（初始堆大小），与机器物理内存对比看是否可以调大。    3.3 虚拟机栈和本地方法栈溢出 #    如果线程请求的栈深度大于虚拟机所允许的最大深度，将抛出 StackOverFlowError。 如果虚拟机在扩展栈时无法申请到足够的内存空间，则抛出 OutOfMemoryError。  4 内存泄漏 #  4.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.13-%E5%B8%B8%E7%94%A8%E7%9A%84JVM%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E6%9C%89%E5%93%AA%E4%BA%9B/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.13-%E5%B8%B8%E7%94%A8%E7%9A%84JVM%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E6%9C%89%E5%93%AA%E4%BA%9B/</guid>
+      <description>常用的JVM启动参数有哪些 #  # JVM 启动参数不换行 # 设置堆内存 -Xmx4g -Xms4g # 指定 GC 算法 -XX:+UseG1GC -XX:MaxGCPauseMillis=50 # 指定 GC 并行线程数 -XX:ParallelGCThreads=4 # 打印 GC 日志 -XX:+PrintGCDetails -XX:+PrintGCDateStamps # 指定 GC 日志文件 -Xloggc:gc.log # 指定 Meta 区的最大值 -XX:MaxMetaspaceSize=2g # 设置单个线程栈的大小 -Xss1m # 指定堆内存溢出时自动进行 Dump -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/usr/local/ # 指定默认的连接超时时间 -Dsun.net.client.defaultConnectTimeout=2000 -Dsun.net.client.defaultReadTimeout=2000 # 指定时区 -Duser.timezone=GMT+08 # 设置默认的文件编码为 UTF-8 -Dfile.encoding=UTF-8 # 指定随机数熵源(Entropy Source) -Djava.security.egd=file:/dev/./urandom </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.14-%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.14-%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/</guid>
+      <description>反射机制 #  1 含义 #    一般情况下，我们使用某个类时必定知道他是什么类，是用来做什么的，于是我们直接对这个类进行实例化，之后使用这个类对象进行操作，这种进行类对象的初始化的方法，我们可以理解为正射，例如：
+Apple apple = new Apple(); apple.setPrice(4.0);   而反射只有在运行时才知道要操作的类是什么，并且可以在运行时获取类的完整构造，并调用对应的方法，例如：
+Class&amp;lt;?&amp;gt; cls = Class.forName(&amp;#34;top.grayson.jvm.reflect.Apple&amp;#34;); Method setPriceMethod = cls.getMethod(&amp;#34;setPrice&amp;#34;, double.class); Constructor&amp;lt;?&amp;gt; constructor = cls.getConstructor(); Object instance = constructor.newInstance(); setPriceMethod.invoke(instance, 5.0);   上面两段代码的执行结果是完全一样的，但是其思路完全不一样：
+ 第一段代码在未运行时就已经确定了要运行的类（Apple）。 第二段代码在运行时通过字符串值才得知要运行的类（top.grayson.jvm.reflect.Apple）。    完整的代码及运行结果如下：
+public class ReflectTest1 { public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException { // 直接初始化，正射  Apple apple = new Apple(); apple.</description>
+    </item>
+    
+  </channel>
+</rss>

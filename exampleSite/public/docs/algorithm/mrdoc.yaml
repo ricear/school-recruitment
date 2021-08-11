@@ -1,0 +1,181 @@
+project_desc: Algorithm Notebook
+project_name: Algorithm Notebook
+project_role: 0
+toc:
+- children:
+  - children:
+    - file: 1.1.1 斐波那契数列.md
+      name: 1.1.1 斐波那契数列
+    - file: 1.1.2 凑零钱问题.md
+      name: 1.1.2 凑零钱问题
+    - file: 1.1.3 贪心算法.md
+      name: 1.1.3 贪心算法
+    - file: 1.1.4 最长递增子序列.md
+      name: 1.1.4 最长递增子序列
+    - file: 1.1.5 编辑距离.md
+      name: 1.1.5 编辑距离
+    - file: 1.1.6 高楼扔鸡蛋.md
+      name: 1.1.6 高楼扔鸡蛋
+    - file: 1.1.7 最长回文子序列.md
+      name: 1.1.7 最长回文子序列
+    - file: 1.1.8 最大子序和.md
+      name: 1.1.8 最大子序和
+    - file: 1.1.9 买卖股票.md
+      name: 1.1.9 买卖股票
+    - file: 1.1.10 最长重复子数组.md
+      name: 1.1.10 最长重复子数组
+    - file: 1.1.11 最长有效括号.md
+      name: 1.1.11 最长有效括号
+    file: 1.1 动态规划.md
+    name: 1.1 动态规划
+  - children:
+    - file: 1.2.3 如何运用二分查找算法.md
+      name: 1.2.3 如何运用二分查找算法
+    - file: 1.2.1 二分查找框架.md
+      name: 1.2.1 二分查找框架
+    - file: 1.2.2 搜索旋转排序数组.md
+      name: 1.2.2 搜索旋转排序数组
+    file: 1.2 二分查找.md
+    name: 1.2 二分查找
+  - children:
+    - file: 1.3.1 反转链表.md
+      name: 1.3.1 反转链表
+    - file: 1.3.2 数组中的第k个最大元素.md
+      name: 1.3.2 数组中的第k个最大元素
+    - file: 1.3.3 二叉树的最近公共祖先.md
+      name: 1.3.3 二叉树的最近公共祖先
+    file: 1.3 数据结构.md
+    name: 1.3 数据结构
+  - file: 1.4 排序算法.md
+    name: 1.4 排序算法
+  - children:
+    - file: 1.5.1 二叉树遍历.md
+      name: 1.5.1 二叉树遍历
+    - file: 1.5.2 岛屿问题.md
+      name: 1.5.2 岛屿问题
+    - file: 1.5.3 平衡二叉树.md
+      name: 1.5.3 平衡二叉树
+    - file: 1.5.4 二叉树路径问题.md
+      name: 1.5.4 二叉树路径问题
+    - file: 1.5.5 构造二叉树.md
+      name: 1.5.5 构造二叉树
+    file: 1.5 二叉树.md
+    name: 1.5 二叉树
+  - children:
+    - file: 1.6.1 回溯算法解题框架.md
+      name: 1.6.1 回溯算法解题框架
+    - file: 1.6.2 全排列.md
+      name: 1.6.2 全排列
+    - file: 1.6.3 N皇后.md
+      name: 1.6.3 N皇后
+    file: 1.6 回溯算法.md
+    name: 1.6 回溯算法
+  file: 1、算法框架.md
+  name: 1、算法框架
+- children:
+  - children:
+    - file: 2.1 快速模幂算法.md
+      name: 2.1 快速模幂算法
+    - file: 2.2 搜索二维矩阵.md
+      name: 2.2 搜索二维矩阵
+    - file: 2.3 螺旋矩阵.md
+      name: 2.3 螺旋矩阵
+    - file: 2.4 x 的平方根.md
+      name: 2.4 x 的平方根
+    file: 2.1 数学.md
+    name: 2.1 数学
+  - file: 2.2 二分查找.md
+    name: 2.2 二分查找
+  - children:
+    - file: 2.3.1 删除有序数组中的重复项.md
+      name: 2.3.1 删除有序数组中的重复项
+    - file: 2.3.4 如何寻找消失的元素.md
+      name: 2.3.4 如何寻找消失的元素
+    - file: 2.3.5 如何寻找缺失和重复的元素.md
+      name: 2.3.5 如何寻找缺失和重复的元素
+    - file: 2.3.2 找出数组游戏的赢家.md
+      name: 2.3.2 找出数组游戏的赢家
+    - file: 2.3.6 最大数.md
+      name: 2.3.6 最大数
+    - file: 2.3.7 二维数组中的查找.md
+      name: 2.3.7 二维数组中的查找
+    - file: 2.3.8 两数之和.md
+      name: 2.3.8 两数之和
+    - file: 2.3.9 三数之和.md
+      name: 2.3.9 三数之和
+    - file: 2.3.10 合并两个有序数组.md
+      name: 2.3.10 合并两个有序数组
+    file: 2.3 数组.md
+    name: 2.3 数组
+  - children:
+    - file: 2.4.2 如何寻找最⻓回⽂⼦串.md
+      name: 2.4.2 如何寻找最⻓回⽂⼦串
+    - file: 2.4.3 如何判定括号的合法性.md
+      name: 2.4.3 如何判定括号的合法性
+    - file: 2.4.1 构造 K 个回文字符串.md
+      name: 2.4.1 构造 K 个回文字符串
+    - file: 2.4.6 无重复字符的最长子串.md
+      name: 2.4.6 无重复字符的最长子串
+    - file: 2.4.7 字符串相加.md
+      name: 2.4.7 字符串相加
+    - file: 2.4.8 翻转字符串里的单词.md
+      name: 2.4.8 翻转字符串里的单词
+    - file: 2.4.5 长度为3的不同回文子序列.md
+      name: 2.4.5 长度为3的不同回文子序列
+    - file: 2.4.4 字符串转换整数 (atoi).md
+      name: 2.4.4 字符串转换整数 (atoi)
+    file: 2.4 字符串.md
+    name: 2.4 字符串
+  - children:
+    - file: 2.5.2 如何高效判断回文链表.md
+      name: 2.5.2 如何高效判断回文链表
+    - file: 2.5.1 环形链表 II.md
+      name: 2.5.1 环形链表 II
+    - file: 2.5.3 K 个一组翻转链表.md
+      name: 2.5.3 K 个一组翻转链表
+    - file: 2.5.4 相交链表.md
+      name: 2.5.4 相交链表
+    - file: 2.5.5 链表中倒数第k个节点.md
+      name: 2.5.5 链表中倒数第k个节点
+    - file: 2.5.6 合并K个升序链表.md
+      name: 2.5.6 合并K个升序链表
+    file: 2.5 链表.md
+    name: 2.5 链表
+  - children:
+    - file: 2.6.1 在二叉树中分配硬币.md
+      name: 2.6.1 在二叉树中分配硬币
+    - file: 2.6.2 将有序数组转换为二叉搜索树.md
+      name: 2.6.2 将有序数组转换为二叉搜索树
+    - file: 2.6.4 重建二叉树.md
+      name: 2.6.4 重建二叉树
+    - file: 2.6.5 二叉树中的最大路径和.md
+      name: 2.6.5 二叉树中的最大路径和
+    file: 2.6 二叉树.md
+    name: 2.6 二叉树
+  - children:
+    - file: 2.7.1 用栈实现队列.md
+      name: 2.7.1 用栈实现队列
+    file: 2.7 队列.md
+    name: 2.7 队列
+  - children:
+    - file: 2.8.1 如何高效解决接雨水问题.md
+      name: 2.8.1 如何高效解决接雨水问题
+    - file: 2.8.2 最少侧跳次数.md
+      name: 2.8.2 最少侧跳次数
+    file: 2.8 动态规划.md
+    name: 2.8 动态规划
+  - children:
+    - file: 2.9.1 实现 Trie (前缀树).md
+      name: 2.9.1 实现 Trie (前缀树)
+    - file: 2.9.2 LRU 缓存机制.md
+      name: 2.9.2 LRU 缓存机制
+    file: 2.9 设计.md
+    name: 2.9 设计
+  - file: 2.10 随机算法之水塘抽样算法.md
+    name: 2.10 随机算法之水塘抽样算法
+  file: 2、高频面试题.md
+  name: 2、高频面试题
+- file: 3、日常练习.md
+  name: 3、日常练习
+- file: 4、剑指Offer.md
+  name: 4、剑指Offer

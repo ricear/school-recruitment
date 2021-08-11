@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Computer Cookbook School Recruitment</title>
+    <link>https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/</link>
+    <description>Recent content on Computer Cookbook School Recruitment</description>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.1-IP%E5%9C%B0%E5%9D%80%E7%9A%84%E5%88%86%E7%B1%BB/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.1-IP%E5%9C%B0%E5%9D%80%E7%9A%84%E5%88%86%E7%B1%BB/</guid>
+      <description>IP地址的分类 #   两级的 IP 地址通常由网络号和主机号组成：  第一个字段是网络号，标志着主机所连接到的网络，一个网络号在整个因特网范围内必须是唯一的。 第二个字段是主机号，它标志着主机，一个主机号在他前面所指明的网络范围内必须是唯一的。   IP 地址分为五大类，分别为 A 类、B 类、C 类、D 类和 E 类，具体如下：  A 类地址： 以0开头，第一个字节范围是1~126（1.0.0.0 - 126.255.255.255）。 B 类地址： 以10开头，第一个字节范围是128~191（128.0.0.0 - 191.255.255.255）。 C 类地址： 以110开头，第一个字节范围是192~223（192.0.0.0 - 223.255.255.255）。 D 类地址： 以1110开头，第一个字节范围是224~239（224.0.0.0 - 239.255.255.255）（作为多播使用）。 E 类地址： 保留。   A、B、C 是基本类，D、E 作为多播和保留使用。 留用的内部私有地址如下：  A 类地址：10.0.0.0&amp;ndash;10.255.255.255。 B 类地址：172.16.0.0&amp;ndash;172.31.255.255。 C 类地址： 192.168.0.0&amp;ndash;192.168.255.255。   IP 地址与子网掩码相与得到网络号。 主机号全为 0的是网络号（例如：192.168.2.0），主机号全为 1的是广播地址（例如：192.168.2.255）。   参考文献 #    IP 地址的分类？  IP 地址分类详解。  IP地址的分类。  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.2-%E5%88%92%E5%88%86%E5%AD%90%E7%BD%91/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.2-%E5%88%92%E5%88%86%E5%AD%90%E7%BD%91/</guid>
+      <description>划分子网 #  1 为什么要划分子网 #   简单地说就是一个公司不可能使用 254 个公网地址，A 公司想用 6 个地址，B 公司也想用 6 个地址，如果把这两个公司的地址都放在一个大网段里，这两个公司的地址就能够直接互通。  2 什么是划分子网 #   子网划分就是通过借用 IP 地址的若干位主机位来充当子网地址，从而将原来的网络分为若干个彼此隔离的子网。 通过划分子网，我们可以按照我们的需要将网络分割成小网络，这样也有助于降低流量和隐藏网络的复杂性。 子网掩码对应的网络号和子网号都为1，主机号为0，通过将子网掩码和与操作，可以得到对应的网络地址。 划分子网后，数据报仍然先按照网络号找到目的网络，发送到路由器，路由器再按照网络号和子网号找到目的子网，然后再将子网掩码与目标地址逐位与操作，若结果为某个子网的网络地址，则送到该子网。   3 子网划分的优点 #   减少网络流量。 提高网络性能。 简化管理。 易于扩大地理范围。  4 参考文献 #    什么叫划分子网？  网络基础知识&amp;ndash;子网划分。  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.3-%E4%BB%80%E4%B9%88%E6%98%AFARP%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.3-%E4%BB%80%E4%B9%88%E6%98%AFARP%E5%8D%8F%E8%AE%AE/</guid>
+      <description>什么是ARP协议 #   ARP协议完成了IP地址和物理地址的映射。 每一个主机都设有一个ARP高速缓存，里面有所在局域网上的各主机和路由器的IP地址到硬件地址的映射表。 当源主机要发送数据包到目的主机时，会先检查自己的ARP高速缓存中有没有目的主机的MAC地址：  如果有，就直接将数据包发送到这个MAC地址。 如果没有，就向所在局域网发起一个ARP请求的广播包（在发送自己的ARP请求时，同样会带上自己的IP地址到硬件地址的映射）。   收到请求的主机检查自己的IP地址和目的主机IP地址是否一致，如果一致，则保存源主机的映射到自己的ARP缓存，然后给源主机发送一个ARP响应数据包。 源主机收到响应数据包之后，先添加目的主机的IP地址与MAC地址的映射，再进行数据传送。 如果源主机一直没有收到响应，表示ARP查询失败。 如果所要找的主机和源主机不在同一个局域网上，那么就要通过ARP找到一个位于本局域网上的某个路由器的硬件地址，然后把分组发给这个路由器，让这个路由器把分组转发给下一个网络，剩下的工作就由下一个网络来做。  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.4-NAT%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.4-NAT%E5%8D%8F%E8%AE%AE/</guid>
+      <description>NAT协议 #  1 什么是NAT协议 #   NAT，Network Address Translation，即网络地址转换协议。 主要用于解决内网中的主机要和因特网上的主机通信，由NAT路由器将主机的本地IP地址转换为全球IP地址。 NAT不仅能解决IP地址不足的问题，而且还能够有效地避免来自网络外部的攻击，隐藏并保护网络内部的计算机。 NAT主要分为两种，一种是静态NAT，一种是动态NAT，具体如下：  静态NAT： 将内部网络中的每个主机都永久映射成外部网络中的某个合法的地址，多用于服务器。 动态NAT： 在外部网络中定义了一个或多个合法地址，采用动态分配的方法映射到内部网络。    2 参考文献 #    什么是NAT (网络地址转换)？  网络地址转换协议NAT功能详解及NAT基础知识介绍。  </description>
+    </item>
+    
+  </channel>
+</rss>

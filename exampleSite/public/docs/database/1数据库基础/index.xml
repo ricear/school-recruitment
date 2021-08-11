@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Computer Cookbook School Recruitment</title>
+    <link>https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/</link>
+    <description>Recent content on Computer Cookbook School Recruitment</description>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.1-%E4%BA%8B%E5%8A%A1%E7%9A%84%E6%A6%82%E5%BF%B5%E5%92%8C%E7%89%B9%E6%80%A7/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.1-%E4%BA%8B%E5%8A%A1%E7%9A%84%E6%A6%82%E5%BF%B5%E5%92%8C%E7%89%B9%E6%80%A7/</guid>
+      <description>事务的概念和特性 #  1 事务的概念 #   数据库中的事务是一个操作序列，包含了一组数据库操作命令。 事务把这一组命令作为一个整体一起向系统提交或撤销操作请求，即这一组命令要么都执行，要么都不执行，因此事务是一个不可分割的工作逻辑单元。  2 事务的特性 #   注：如果没有特别说明，下面的事物的特性的原理指的都是MySQL的InnoDB引擎。
+ 事务具有 4 个特性，即原子性（Atomicity）、一致性（Consistency）、隔离性（Isolation）、持久性（Durability），这 4 个特性通常简称为ACID。
+2.1 原子性 #  2.1.1 含义 #   事务开始后的所有操作，要么全部做完，要么全部不做，不可能停滞在中间环节。 事务执行过程中出错，会回滚到事务开始前的状态，所有的操作就像没有发生一样。  2.1.2 实现原理 #   InnoDB 引擎使用Undo Log（回滚日志）来保证原子性操作，我们对数据库中的每一条数据的改动（Insert、Delete、Update）都会被记录到 Undo Log 中，比如以下这些操作：  插入一条记录时，至少要把这条记录的主键记下来，之后回滚的时候只需把这个主键对应的记录删掉就好了。 删除一条记录时，至少要把这条记录中的内容都记下来，这样之后回滚时再把由这些内容组成的记录插入到表中就好了。 修改一条记录时，至少要把修改这条记录前的旧值都记录下来，这样之后回滚时再把这条记录更新为旧值就好了。   当事务执行失败或者调用了 rollback 方法时，就会触发回滚事件，利用 Undo Log 中的记录将数据回滚到修改之前的样子。  2.2 一致性 #  2.2.1 含义 #   事务开始前和结束后，数据库的完整性约束没有被破坏。 比如A 向 B 转账，不可能 A 扣了钱，B 却没收到。  2.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.2-%E9%94%81/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.2-%E9%94%81/</guid>
+      <description>锁 #  首先，对 MySQL 锁进行划分：
+ 按照锁的粒度划分：表锁（Table Level Lock）、行锁（Row Level Lock）。 按照锁的使用方式划分：共享锁（Share Lock）、排他锁（悲观锁的一种实现）（eXclusive Lock）。 按照锁的思想划分：悲观锁（Pessimistic Concurrency Control, PCC）、乐观锁（Optimistic Concurrency Control, PCC）。 InnoDB的几种意向锁：意向共享锁（Intensive Shared Lock, IS）、意向排他锁（Intensive Exclusive Lock）。 InnoDB的几种行级锁：记录锁（Recoord Lock）、间隙锁（Gap Lock）、临键锁（Next-key Lock）。  1 表锁和行锁 #  1.1 表锁 #  1.1.1 含义 #   表级锁是 MySQL 中粒度最大的一种锁，表示当前的操作对整张表加锁。 表锁响应的是非索引字段，即全表扫描，全表扫描时锁定整张表。 表级锁有两种模式：表共享锁（Table Read Lock）、表独占写锁（Table Write Lock）：  表共享锁： 不会阻塞其他用户对同一张表的读请求，但会阻塞对同一张表的写请求。 表独占写锁：会阻塞其他用户对同一张表的读写请求，当一个线程获得对一个表的写锁之后，只有持有锁的线程可以对表进行更新操作，其他线程的读、写操作都会等待，直到锁被释放为止。    1.1.2 如何加表锁 #    给表显示加锁，一般是为了一定程度模拟事务操作，实现对某一时间点多个表的一致性读取。
+  例如，有一个订单表 orders，其中记录有订单的总金额 total，同时还有一个订单明细表 order_detail，其中记录有订单每一产品的金额小计 subtotal，假设我们需要检查这两个表的金额合计是否相等，可能就需要执行如下两条 SQL：</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.3-%E9%94%81%E5%8D%8F%E8%AE%AE/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.3-%E9%94%81%E5%8D%8F%E8%AE%AE/</guid>
+      <description>锁协议 #  1 三级封锁协议 #   三级封锁协议就是三个不同级别的封锁协议，他们是以何时加锁，何时解锁来区分的。
+ 1.1 一级封锁协议 #  1.1.1 含义 #   事务 $T$ 在修改数据 $R$ 之前必须先对其加 $X$ 锁，直到事务结束才释放，事务结束包括正常结束（Commit）和非正常结束（Rollback）。 在一级封锁协议中，如果仅仅是读数据而不对其进行修改，是不需要加锁的。 一级封锁协议可以解决更新丢失问题，但是他不能保证可重复读和不读脏数据。  1.1.2 示例 #  1.1.2.1 不使用锁导致的更新丢失问题 #   1.1.2.2 使用一级锁解决更新丢失问题 #    1.1.2.3 为什么一级锁不能解决脏读问题 #  脏读例子：
+ 用一级锁的情况：
+ 1.2 二级封锁协议 #  1.2.1 含义 #   在一级封锁协议之上，事务 $T$ 在读取数据 $R$ 之前必须先对其加 $S$ 锁，读完后方可释放 $S$ 锁。 二级封锁协议除了可以解决丢失更新问题，还可以进一步解决脏读问题。 但在二级封锁协议中，由于读完数据后即可释放 $S$ 锁，所以他不能保证可重复读。  1.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.4-%E4%BA%8B%E5%8A%A1%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.4-%E4%BA%8B%E5%8A%A1%E6%97%A5%E5%BF%97/</guid>
+      <description>事务日志 #  数据库的事务日志主要分三类，分别是Binlog、Redo Log、Undo Log。
+1 Binlog #  1.1 含义 #   Binlog 记录了对 MySQL 数据库执行更改的所有操作，但是不包括 SELECT 和 SHOW 这类操作，但是若操作本身并没有导致数据库发生变化，那么该操作可能也会写入 Binlog，如update t set a = 1 where a = 2;，但是表t 中并不存在a = 2 的巨鹿，此时并不会对数据库进行更改，但是这个操作也会写入 Binlog。 Binlog 主要有以下几种作用：  恢复： 某些数据的恢复需要 Binlog，例如，在一个数据库全备文件恢复后，用户可以通过 Binlog 进行 point-in-time 的恢复（将数据恢复到一个给定的时间点，通常是在进行全量备份之后进行）。 复制： 其原理与恢复类似，通过复制和执行 Binlog 使一台远程的 MySQL 数据库（一般称为 slave 或 standby）与一台 MySQL 数据库（一般称为 master 或 primary）进行实时同步。 审计： 用户可以通过 Binlog 中的信息进行审计，判断是否有对数据库进行注入的攻击。    1.2 常用参数 #  1.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.5-MVCC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.5-MVCC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/</guid>
+      <description>MVCC实现原理 #  1 含义 #   MVCC 是在并发访问数据库时，通过对数据做多版本管理，避免因为写锁的阻塞而造成数据的并发阻塞问题。 通俗的讲就是 MVCC通过保存数据的历史版本，根据比较版本号来处理数据的是否显示，从而达到读取数据的时候不需要加锁就可以保证事务隔离性的效果。  2 核心知识点 #  2.1 事务版本号 #   每次事务开启前都会从数据库获得一个自增长的事务 ID，可以从事务 ID判断事务执行的先后顺序。  2.2 隐藏列 #   DB_TRX_ID： 记录操作该数据事务的事务 ID。 DP_POLL_PTR： 指向上一个版本数据在 Undo Log 里的位置指针。 DB_ROW_ID：隐藏 ID，当建表没有合适的索引作为聚集索引时，会用该隐藏 ID 创建聚集索引。  2.3 Undo Log #  2.3.1 含义 #   Undo Log 主要用于记录数据被修改之前的日志，在表信息修改之前会先把数据拷贝到 Undo Log 里，在事务进行回滚时可以通过 Undo Log 里的日志进行数据还原，具体可参考 Undo Log。  2.3.2 用途 #   保证事务进行 ROLLBACK 时的原子性和一致性，当事务进行回滚的时候可以用 Undo Log 的数据进行恢复。 在MVCC 版本控制中，通过读取 Undo Log 的历史版本数据可以实现不同事务版本号都拥有自己独立的快照数据版本。  2.</description>
+    </item>
+    
+  </channel>
+</rss>

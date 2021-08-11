@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Computer Cookbook School Recruitment</title>
+    <link>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.4-%E7%BC%93%E5%AD%98%E5%BC%82%E5%B8%B8/</link>
+    <description>Recent content on Computer Cookbook School Recruitment</description>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.4-%E7%BC%93%E5%AD%98%E5%BC%82%E5%B8%B8/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.4-%E7%BC%93%E5%AD%98%E5%BC%82%E5%B8%B8/3.4.1-%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.4-%E7%BC%93%E5%AD%98%E5%BC%82%E5%B8%B8/3.4.1-%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/</guid>
+      <description>缓存穿透、缓存击穿、缓存雪崩 #  1 缓存穿透 #  1.1 含义 #   缓存穿透是指数据库中没有符合条件的数据，缓存服务器中也就没有缓存数据，导致业务系统每次都绕过缓存服务器查询下游的数据库，缓存服务器完全失去了其应有的作用。 如果黑客试图发起针对该 key 的大量访问攻击，数据库将不堪重负，最终可能导致崩溃宕机。 从下图可以看出查询时是直接穿过缓存到达下游数据库，大致业务流程如下图所示：   1.2 解决方法 #  1.2.1 接口层增加校验 #   在接口层增加校验，不合法的参数直接返回。 不相信任务调用方，根据自己提供的接口规范来，作为被调用方，要考虑可能任何的参数传值。  1.2.2 存储空值或默认值 #   虽然数据库中没有符合条件的数据，可以考虑缓存空值或者适合业务的默认值，来缓解这种情况。 为了降低数据的不一致，需要注意两点：  缓存的过期时间需要设置的比较短。 当数据库数据更新时也需要及时更新缓存中对应的数据。    1.2.3 为 IP 设置访问阈值 #   正常用户不会这样暴力攻击，只有是恶意者才会这样做，可以在网关 Nginx 作一个配置项，为每一个 IP 设置访问阈值。  1.2.4 使用布隆过滤器 #  1.2.4.1 背景 #   假如我们需要过滤某些不安全的网页，现在有 100 亿个黑名单页面，每个网页的 URL 最多占用 64 字节，现要设计一种网页过滤系统，可以根据网页的 URL 判断该网页是否在黑名单上，要求该系统允许有万分之一以下的判断错误率，并且使用的额外空间不要超过 30G。 可以采用以下几种方案：  将访问过的 URL 保存到数据库：每次需要过滤网页就需要启用一个数据库 select 查询，且当数据量变得非常庞大后，关系型数据库查询的效率会变得很低。 用 HashSet 将访问过的 URL 保存起来：这样只需要接近 $O(1)$ 的代价就可以查到一个 URL 是否被访问过了，但是内存消耗太大（存储容量占比高，考虑到负载因子的存在，通常空间是不能被用满的，一旦我们的值很多，例如上亿的时候，那么 HashSet 占据的内存大小就变得很可观了）。 URL 经过 MD5 或者 SHA-1 等单向哈希后再保存到 HashSet 数据库：字符串经过 MD5 散列处理后的信息摘要长度只有 128bit，SHA-1 处理后也只有 160bit，因此方法 3 比方法 2 节省了好几倍的内存。 BitMap 的方法：建立一个 BitSet，将每个 URL 经过哈希函数映射到某一位，这样消耗内存是比较少的，但缺点是单一哈希函数发生冲突的概率太高。    1.</description>
+    </item>
+    
+  </channel>
+</rss>
