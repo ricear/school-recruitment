@@ -1,0 +1,3969 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="分库分表 #  1 为什么要进行分库分表 #    在业务数据量比较少的时代，我们使用单机数据库就能满足业务使用，随着业务请求量越来越多，数据库中的数据量快速增加，这时单机数据库已经不能满足业务的性能要求，数据库主从架构随之应运而生。
+  主从复制是将数据库写操作和读操作进行分离，使用多个只读实例（Slaver Replication）负责处理读请求，主实例（Master）负责处理写请求，只读实例通过复制主实例的数据来保持与主实例的数据一致性，由于只读实例可以水平扩展，所以更多的读请求不成问题。
+  随着云计算、大数据时代的到来，事情并没有完美的得以解决，当写请求越来越多，主实例的写请求变成主要的性能瓶颈。
+  如果仅仅通过增加一个主实例来分担写请求，写操作如何在两个主实例之间同步来保证数据一致性，如何避免双写，此时问题会变得更加复杂，这时就需要用到分库分表（Sharding），对写操作进行切分来解决，如下图所示：
+  上图中的 DDM 为华为云的中间件产品，全称是 Distributed Database Middleware，作为 RDS（Relational Database Service）的前置分布式数据库访问服务，彻底解决了数据库的扩展性问题，对应用透明地实现海量数据的高并发访问，实现了读写分离和分库分表。
+   2 分库分表的切分方式 #   数据的切分（Sharding）根据其切分规则的类型，可以分为两种切分模式：  一种是按照不同的表（或者 Schema）来切分到不同的数据库（主机）上，这种切分方式可以称之为数据的垂直（纵向）切分。 另外一种则是根据表中的数据的逻辑关系，将同一个表中的数据按照某种条件拆分到多台数据库（主机）上面，这种切分称之为数据的水平（横向）切分。   垂直切分最大的特点就是规则简单，实施也更为方便，尤其适合各业务之间的耦合度非常低，相互影响很小，业务逻辑非常清晰的系统，在这种系统中，可以很容易做到将不同业务模块所使用的的表拆分到不同的数据库中，根据不同的表来进行拆分，对应用程序的影响也更小，拆分规则也会比较简单清晰。 水平切分相对于垂直切分来说，稍微复杂一些，因为要将同一个表中的不同数据拆分到不同的数据库中，对于应用程序来说，拆分规则本身比根据表名来拆分更为复杂，后期的数据维护也会更为复杂一些。 具体而言，如果单个库太大，这是我们要看是因为表多而导致数据多，还是因为单张表里面的数据多：  如果是因为表多而数据多，则使用垂直切分，根据业务切分成不同的库。 如果是因为单张表的数据量太大，这时要用水平切分，即把表的数据按照某种规则切分成多张表，甚至多个库上的多张表。   分库分表的顺序应该是先垂直分，后水平分，因为垂直分更简单，更符合我们处理现实世界问题的方式。  3 垂直切分 #  3.1 含义 #    垂直切分常见有垂直分库和垂直分表两种。
+  垂直分库就是根据业务耦合性，将关联度低的表存储在不同的数据库，做法与大系统拆分为多个小系统类似，按业务分类进行独立划分：">
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
+<meta property="og:description" content="分库分表 #  1 为什么要进行分库分表 #    在业务数据量比较少的时代，我们使用单机数据库就能满足业务使用，随着业务请求量越来越多，数据库中的数据量快速增加，这时单机数据库已经不能满足业务的性能要求，数据库主从架构随之应运而生。
+  主从复制是将数据库写操作和读操作进行分离，使用多个只读实例（Slaver Replication）负责处理读请求，主实例（Master）负责处理写请求，只读实例通过复制主实例的数据来保持与主实例的数据一致性，由于只读实例可以水平扩展，所以更多的读请求不成问题。
+  随着云计算、大数据时代的到来，事情并没有完美的得以解决，当写请求越来越多，主实例的写请求变成主要的性能瓶颈。
+  如果仅仅通过增加一个主实例来分担写请求，写操作如何在两个主实例之间同步来保证数据一致性，如何避免双写，此时问题会变得更加复杂，这时就需要用到分库分表（Sharding），对写操作进行切分来解决，如下图所示：
+  上图中的 DDM 为华为云的中间件产品，全称是 Distributed Database Middleware，作为 RDS（Relational Database Service）的前置分布式数据库访问服务，彻底解决了数据库的扩展性问题，对应用透明地实现海量数据的高并发访问，实现了读写分离和分库分表。
+   2 分库分表的切分方式 #   数据的切分（Sharding）根据其切分规则的类型，可以分为两种切分模式：  一种是按照不同的表（或者 Schema）来切分到不同的数据库（主机）上，这种切分方式可以称之为数据的垂直（纵向）切分。 另外一种则是根据表中的数据的逻辑关系，将同一个表中的数据按照某种条件拆分到多台数据库（主机）上面，这种切分称之为数据的水平（横向）切分。   垂直切分最大的特点就是规则简单，实施也更为方便，尤其适合各业务之间的耦合度非常低，相互影响很小，业务逻辑非常清晰的系统，在这种系统中，可以很容易做到将不同业务模块所使用的的表拆分到不同的数据库中，根据不同的表来进行拆分，对应用程序的影响也更小，拆分规则也会比较简单清晰。 水平切分相对于垂直切分来说，稍微复杂一些，因为要将同一个表中的不同数据拆分到不同的数据库中，对于应用程序来说，拆分规则本身比根据表名来拆分更为复杂，后期的数据维护也会更为复杂一些。 具体而言，如果单个库太大，这是我们要看是因为表多而导致数据多，还是因为单张表里面的数据多：  如果是因为表多而数据多，则使用垂直切分，根据业务切分成不同的库。 如果是因为单张表的数据量太大，这时要用水平切分，即把表的数据按照某种规则切分成多张表，甚至多个库上的多张表。   分库分表的顺序应该是先垂直分，后水平分，因为垂直分更简单，更符合我们处理现实世界问题的方式。  3 垂直切分 #  3.1 含义 #    垂直切分常见有垂直分库和垂直分表两种。
+  垂直分库就是根据业务耦合性，将关联度低的表存储在不同的数据库，做法与大系统拆分为多个小系统类似，按业务分类进行独立划分：" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.8-%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/" /><meta property="article:section" content="docs" />
+
+
+
+<title>2.8 分库分表 | Computer Cookbook School Recruitment</title>
+<link rel="manifest" href="/school-recruitment/manifest.json">
+<link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
+  <script defer src="/school-recruitment/flexsearch.min.js"></script>
+  <script defer src="/school-recruitment/en.search.min.1bc398404d6e9eec8ffa32b7de2bb82b89efd0a8a92c5a540e9f38e9bb5b4a5b.js" integrity="sha256-G8OYQE1unuyP&#43;jK33iu4K4nv0KipLFpUDp846btbSls=" crossorigin="anonymous"></script>
+
+  <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a href="/school-recruitment/"><span>Computer Cookbook School Recruitment</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="https://www.grayson.top" target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/wpwbb510582246" target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-353f7a5578fa41dbc42c73ea30fe2255" class="toggle"  />
+    <label for="section-353f7a5578fa41dbc42c73ea30fe2255" class="flex justify-between">
+      <a role="button" class="">第一章 算法</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e0c159ebe8e8b165cd558008fb5f5074" class="toggle"  />
+    <label for="section-e0c159ebe8e8b165cd558008fb5f5074" class="flex justify-between">
+      <a role="button" class="">1、算法框架</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a9fe725cb6a0f216530b1ac2b85e3b7a" class="toggle"  />
+    <label for="section-a9fe725cb6a0f216530b1ac2b85e3b7a" class="flex justify-between">
+      <a role="button" class="">1.1 动态规划</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.1-%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97/" class="">1.1.1 斐波那契数列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E5%87%91%E9%9B%B6%E9%92%B1%E9%97%AE%E9%A2%98/" class="">1.1.2 凑零钱问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.3-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="">1.1.3 贪心算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.4-%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/" class="">1.1.4 最长递增子序列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.5-%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB/" class="">1.1.5 编辑距离</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.6-%E9%AB%98%E6%A5%BC%E6%89%94%E9%B8%A1%E8%9B%8B/" class="">1.1.6 高楼扔鸡蛋</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.7-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E5%BA%8F%E5%88%97/" class="">1.1.7 最长回文子序列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.8-%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%92%8C/" class="">1.1.8 最大子序和</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8/" class="">1.1.9 买卖股票</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.10-%E6%9C%80%E9%95%BF%E9%87%8D%E5%A4%8D%E5%AD%90%E6%95%B0%E7%BB%84/" class="">1.1.10 最长重复子数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.11-%E6%9C%80%E9%95%BF%E6%9C%89%E6%95%88%E6%8B%AC%E5%8F%B7/" class="">1.1.11 最长有效括号</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e36081c41f3a4d8d8355cae83c46c9b8" class="toggle"  />
+    <label for="section-e36081c41f3a4d8d8355cae83c46c9b8" class="flex justify-between">
+      <a role="button" class="">1.2 二分查找</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/1.2.1-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E6%A1%86%E6%9E%B6/" class="">1.2.1 二分查找框架</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/1.2.2-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">1.2.2 搜索旋转排序数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/1.2.3-%E5%A6%82%E4%BD%95%E8%BF%90%E7%94%A8%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95/" class="">1.2.3 如何运用二分查找算法</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2ac9691c4865fdec0880b3cb638bc594" class="toggle"  />
+    <label for="section-2ac9691c4865fdec0880b3cb638bc594" class="flex justify-between">
+      <a role="button" class="">1.3 数据结构</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.1-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/" class="">1.3.1 反转链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.2-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACk%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0/" class="">1.3.2 数组中的第k个最大元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.3-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/" class="">1.3.3 二叉树的最近公共祖先</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6c6359aa6ff642b64a85093d9888f8ad" class="toggle"  />
+    <label for="section-6c6359aa6ff642b64a85093d9888f8ad" class="flex justify-between">
+      <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.4-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" class="">1.4 排序算法</a>
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9b9f975ded87a304ee48569c44f19492" class="toggle"  />
+    <label for="section-9b9f975ded87a304ee48569c44f19492" class="flex justify-between">
+      <a role="button" class="">1.5 二叉树</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.1-%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86/" class="">1.5.1 二叉树遍历</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.2-%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/" class="">1.5.2 岛屿问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.3-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" class="">1.5.3 平衡二叉树</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.4-%E4%BA%8C%E5%8F%89%E6%A0%91%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98/" class="">1.5.4 二叉树路径问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.5-%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/" class="">1.5.5 构造二叉树</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-4571e95d0021653ce2d27ee4b0838ca0" class="toggle"  />
+    <label for="section-4571e95d0021653ce2d27ee4b0838ca0" class="flex justify-between">
+      <a role="button" class="">1.6 回溯算法</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.1-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E8%A7%A3%E9%A2%98%E6%A1%86%E6%9E%B6/" class="">1.6.1 回溯算法解题框架</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-%E5%85%A8%E6%8E%92%E5%88%97/" class="">1.6.2 全排列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.3-N%E7%9A%87%E5%90%8E/" class="">1.6.3 N皇后</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-8b579ed4452b6a8d2017a24343689b5c" class="toggle"  />
+    <label for="section-8b579ed4452b6a8d2017a24343689b5c" class="flex justify-between">
+      <a role="button" class="">2、高频面试题</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5a653711e83b11abc9ab6143b1a9fd64" class="toggle"  />
+    <label for="section-5a653711e83b11abc9ab6143b1a9fd64" class="flex justify-between">
+      <a role="button" class="">2.1 数学</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.1-%E5%BF%AB%E9%80%9F%E6%A8%A1%E5%B9%82%E7%AE%97%E6%B3%95/" class="">2.1.1 快速模幂算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.2-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/" class="">2.1.2 搜索二维矩阵</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.3-%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/" class="">2.1.3 螺旋矩阵</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.4-x-%E7%9A%84%E5%B9%B3%E6%96%B9%E6%A0%B9/" class="">2.1.4 X 的平方根</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5c279474332677699cd0b53888bd51ba" class="toggle"  />
+    <label for="section-5c279474332677699cd0b53888bd51ba" class="flex justify-between">
+      <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" class="">2.2 二分查找</a>
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e057e8659d2f838952397ed15d20f46c" class="toggle"  />
+    <label for="section-e057e8659d2f838952397ed15d20f46c" class="flex justify-between">
+      <a role="button" class="">2.3 数组</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.1-%E5%88%A0%E9%99%A4%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E9%A1%B9/" class="">2.3.1 删除有序数组中的重复项</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.2-%E6%89%BE%E5%87%BA%E6%95%B0%E7%BB%84%E6%B8%B8%E6%88%8F%E7%9A%84%E8%B5%A2%E5%AE%B6/" class="">2.3.2 找出数组游戏的赢家</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.4-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%B6%88%E5%A4%B1%E7%9A%84%E5%85%83%E7%B4%A0/" class="">2.3.4 如何寻找消失的元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.5-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E7%BC%BA%E5%A4%B1%E5%92%8C%E9%87%8D%E5%A4%8D%E7%9A%84%E5%85%83%E7%B4%A0/" class="">2.3.5 如何寻找缺失和重复的元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.6-%E6%9C%80%E5%A4%A7%E6%95%B0/" class="">2.3.6 最大数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.7-%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/" class="">2.3.7 二维数组中的查找</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.8-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/" class="">2.3.8 两数之和</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.9-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" class="">2.3.9 三数之和</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">2.3.10 合并两个有序数组</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b0bb9f9be9775f7e7856b63f7c5be80e" class="toggle"  />
+    <label for="section-b0bb9f9be9775f7e7856b63f7c5be80e" class="flex justify-between">
+      <a role="button" class="">2.4 字符串</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.1-%E6%9E%84%E9%80%A0-K-%E4%B8%AA%E5%9B%9E%E6%96%87%E5%AD%97%E7%AC%A6%E4%B8%B2/" class="">2.4.1 构造 K 个回文字符串</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.2-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%9C%80%E5%9B%9E%E4%B8%B2/" class="">2.4.2 如何寻找最 回 串</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.3-%E5%A6%82%E4%BD%95%E5%88%A4%E5%AE%9A%E6%8B%AC%E5%8F%B7%E7%9A%84%E5%90%88%E6%B3%95%E6%80%A7/" class="">2.4.3 如何判定括号的合法性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.4-%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E6%8D%A2%E6%95%B4%E6%95%B0-atoi/" class="">2.4.4 字符串转换整数 (Atoi)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.5-%E9%95%BF%E5%BA%A6%E4%B8%BA3%E7%9A%84%E4%B8%8D%E5%90%8C%E5%9B%9E%E6%96%87%E5%AD%90%E5%BA%8F%E5%88%97/" class="">2.4.5 长度为3的不同回文子序列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.6-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/" class="">2.4.6 无重复字符的最长子串</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.7-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E5%8A%A0/" class="">2.4.7 字符串相加</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.8-%E7%BF%BB%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%87%8C%E7%9A%84%E5%8D%95%E8%AF%8D/" class="">2.4.8 翻转字符串里的单词</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c2cc4653d849ecb4e8d0df9162693740" class="toggle"  />
+    <label for="section-c2cc4653d849ecb4e8d0df9162693740" class="flex justify-between">
+      <a role="button" class="">2.5 链表</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.1-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8-II/" class="">2.5.1 环形链表 Ii</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.2-%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E5%88%A4%E6%96%AD%E5%9B%9E%E6%96%87%E9%93%BE%E8%A1%A8/" class="">2.5.2 如何高效判断回文链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.3-K-%E4%B8%AA%E4%B8%80%E7%BB%84%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" class="">2.5.3 K 个一组翻转链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.4-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/" class="">2.5.4 相交链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.5-%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E8%8A%82%E7%82%B9/" class="">2.5.5 链表中倒数第k个节点</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.6-%E5%90%88%E5%B9%B6K%E4%B8%AA%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/" class="">2.5.6 合并 K个升序链表</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-95a636b3d00f4ce42d96beeef34d9742" class="toggle"  />
+    <label for="section-95a636b3d00f4ce42d96beeef34d9742" class="flex justify-between">
+      <a role="button" class="">2.6 二叉树</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.1-%E5%9C%A8%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E5%88%86%E9%85%8D%E7%A1%AC%E5%B8%81/" class="">2.6.1 在二叉树中分配硬币</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.2-%E5%B0%86%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E8%BD%AC%E6%8D%A2%E4%B8%BA%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/" class="">2.6.2 将有序数组转换为二叉搜索树</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.4-%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91/" class="">2.6.4 重建二叉树</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.5-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E8%B7%AF%E5%BE%84%E5%92%8C/" class="">2.6.5 二叉树中的最大路径和</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2dca4a28932da6fd2ab80d6adf86f380" class="toggle"  />
+    <label for="section-2dca4a28932da6fd2ab80d6adf86f380" class="flex justify-between">
+      <a role="button" class="">2.7 队列</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.7-%E9%98%9F%E5%88%97/2.7.1-%E7%94%A8%E6%A0%88%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97/" class="">2.7.1 用栈实现队列</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9868fca37e026543bb4220219b385440" class="toggle"  />
+    <label for="section-9868fca37e026543bb4220219b385440" class="flex justify-between">
+      <a role="button" class="">2.8 动态规划</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.8-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/2.8.1-%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E8%A7%A3%E5%86%B3%E6%8E%A5%E9%9B%A8%E6%B0%B4%E9%97%AE%E9%A2%98/" class="">2.8.1 如何高效解决接雨水问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.8-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/2.8.2-%E6%9C%80%E5%B0%91%E4%BE%A7%E8%B7%B3%E6%AC%A1%E6%95%B0/" class="">2.8.2 最少侧跳次数</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2b868ec58580c16b57b76d0e583b5ec9" class="toggle"  />
+    <label for="section-2b868ec58580c16b57b76d0e583b5ec9" class="flex justify-between">
+      <a role="button" class="">2.9 设计</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.9-%E8%AE%BE%E8%AE%A1/2.9.1-%E5%AE%9E%E7%8E%B0-Trie-%E5%89%8D%E7%BC%80%E6%A0%91/" class="">2.9.1 实现 Trie (前缀树)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.9-%E8%AE%BE%E8%AE%A1/2.9.2-LRU-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/" class="">2.9.2 Lru 缓存机制</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0922907dd56f7a4a192db7338c0e7143" class="toggle"  />
+    <label for="section-0922907dd56f7a4a192db7338c0e7143" class="flex justify-between">
+      <a role="button" class="">第二章 计算机基础</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e090ea075956ea0a88f3be27eb8b8174" class="toggle"  />
+    <label for="section-e090ea075956ea0a88f3be27eb8b8174" class="flex justify-between">
+      <a role="button" class="">1、计算机网络</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-043e7911fd2d67fbc52b823c1516a0d8" class="toggle"  />
+    <label for="section-043e7911fd2d67fbc52b823c1516a0d8" class="flex justify-between">
+      <a role="button" class="">1.1 传输层： Tcp和 UDP</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.1-%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B/" class="">1.1.1 三次握手</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.2-%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/" class="">1.1.2 四次挥手</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.3-%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/" class="">1.1.3 流量控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.5-%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/" class="">1.1.5 拥塞控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.6-TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.1.6 Tcp和 Udp的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.7-TCP%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7/" class="">1.1.7 Tcp如何保证传输的可靠性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.8-TCP%E9%95%BF%E8%BF%9E%E6%8E%A5%E5%92%8C%E7%9F%AD%E8%BF%9E%E6%8E%A5/" class="">1.1.8 Tcp长连接和短连接</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c1e479729a89ea5ddbe8dd67b5f3ed4e" class="toggle"  />
+    <label for="section-c1e479729a89ea5ddbe8dd67b5f3ed4e" class="flex justify-between">
+      <a role="button" class="">1.2 应用层：HTTP和HTTPS</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.1-HTTP%E5%92%8CHTTPS%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.2.1 Http和 HTTP S的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.2-GET%E5%92%8CPOST%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.2.2 Get和 Post的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.3-Session%E4%B8%8ECookie%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.2.3 Session与 Cookie的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.4-%E4%BB%8E%E8%BE%93%E5%85%A5%E7%BD%91%E5%9D%80%E5%88%B0%E8%8E%B7%E5%BE%97%E9%A1%B5%E9%9D%A2%E7%9A%84%E8%BF%87%E7%A8%8B%E8%B6%8A%E8%AF%A6%E7%BB%86%E8%B6%8A%E5%A5%BD/" class="">1.2.4 从输入网址到获得页面的过程（越详细越好）</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.5-HTTP%E8%AF%B7%E6%B1%82%E6%9C%89%E5%93%AA%E4%BA%9B%E5%B8%B8%E8%A7%81%E7%9A%84%E7%8A%B6%E6%80%81%E7%A0%81/" class="">1.2.5 Http请求有哪些常见的状态码</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.6-%E4%BB%80%E4%B9%88%E6%98%AFRIP%E7%AE%97%E6%B3%95%E6%98%AF%E4%BB%80%E4%B9%88/" class="">1.2.6 什么是 Rip，算法是什么</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.7-HTTP1.0HTTP1.1%E5%92%8CHTTP2.0%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB/" class="">1.2.7 Http1.0、 Http1.1和 Http2.0的主要区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.8-DNS/" class="">1.2.8 DNS</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.9-HTTPS%E5%8A%A0%E5%AF%86%E5%92%8C%E8%AE%A4%E8%AF%81%E8%BF%87%E7%A8%8B/" class="">1.2.9 HTTP S加密和认证过程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.10-%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB/" class="">1.2.10 常见网络攻击</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.11-REST/" class="">1.2.11 Rest</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.3-%E8%AE%A1%E7%AE%97%E5%85%B6%E7%BD%91%E7%BB%9C%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" class="">1.3 计算其网络体系结构</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9a70073e95afd0aa2b7107f6cb77a3ce" class="toggle"  />
+    <label for="section-9a70073e95afd0aa2b7107f6cb77a3ce" class="flex justify-between">
+      <a role="button" class="">1.4 网络层协议</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.1-IP%E5%9C%B0%E5%9D%80%E7%9A%84%E5%88%86%E7%B1%BB/" class="">1.4.1 Ip地址的分类</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.2-%E5%88%92%E5%88%86%E5%AD%90%E7%BD%91/" class="">1.4.2 划分子网</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.3-%E4%BB%80%E4%B9%88%E6%98%AFARP%E5%8D%8F%E8%AE%AE/" class="">1.4.3 什么是 Arp协议</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.4-NAT%E5%8D%8F%E8%AE%AE/" class="">1.4.4 Nat协议</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-09f7d8995bc26810475d1c56597a312e" class="toggle"  />
+    <label for="section-09f7d8995bc26810475d1c56597a312e" class="flex justify-between">
+      <a role="button" class="">2、操作系统</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2f767bf946d6dc8ddeda6b6435471e5b" class="toggle"  />
+    <label for="section-2f767bf946d6dc8ddeda6b6435471e5b" class="flex justify-between">
+      <a role="button" class="">2.1 进程和线程</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.1.1 进程和线程的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.2-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" class="">2.1.2 进程间通信方式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.3-%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98/" class="">2.1.3 进程同步问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.4-%E8%BF%9B%E7%A8%8B%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E7%8A%B6%E6%80%81/" class="">2.1.4 进程有哪几种状态</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.5-%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5/" class="">2.1.5 进程调度策略</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.6-%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B/" class="">2.1.6 僵尸进程和孤儿进程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.7-%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/" class="">2.1.7 线程同步</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.8-%E5%8D%8F%E7%A8%8B/" class="">2.1.8 协程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.9-%E5%BC%82%E5%B8%B8%E6%8E%A7%E5%88%B6%E6%B5%81/" class="">2.1.9 异常控制流</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.10-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" class="">2.1.10 Io多路复用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.11-%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/" class="">2.1.11 用户态和内核态</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.2-%E6%AD%BB%E9%94%81/" class="">2.2 死锁</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b2b1a78994c9898abed1b08fef134abd" class="toggle"  />
+    <label for="section-b2b1a78994c9898abed1b08fef134abd" class="flex justify-between">
+      <a role="button" class="">2.3 内存管理</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.1-%E5%88%86%E9%A1%B5%E5%92%8C%E5%88%86%E6%AE%B5/" class="">2.3.1 分页和分段</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.2-%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/" class="">2.3.2 虚拟内存</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.3-%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95/" class="">2.3.3 页面置换算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.4-%E5%B1%80%E9%83%A8%E6%80%A7%E5%8E%9F%E7%90%86/" class="">2.3.4 局部性原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.5-%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA/" class="">2.3.5 缓冲区溢出</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.4-%E7%A3%81%E7%9B%98%E8%B0%83%E5%BA%A6/" class="">2.4 磁盘调度</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e28cc33fe5745d14abf4a0147d0624a5" class="toggle" checked />
+    <label for="section-e28cc33fe5745d14abf4a0147d0624a5" class="flex justify-between">
+      <a role="button" class="">第三章 数据库</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6fd3cab540793410b1ce567d790deadc" class="toggle"  />
+    <label for="section-6fd3cab540793410b1ce567d790deadc" class="flex justify-between">
+      <a role="button" class="">1、数据库基础</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.1-%E4%BA%8B%E5%8A%A1%E7%9A%84%E6%A6%82%E5%BF%B5%E5%92%8C%E7%89%B9%E6%80%A7/" class="">1.1 事务的概念和特性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.2-%E9%94%81/" class="">1.2 锁</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.3-%E9%94%81%E5%8D%8F%E8%AE%AE/" class="">1.3 锁协议</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.4-%E4%BA%8B%E5%8A%A1%E6%97%A5%E5%BF%97/" class="">1.4 事务日志</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.5-MVCC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">1.5 Mvcc实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-12290256fbd76ac6014c39648c5827fe" class="toggle"  />
+    <label for="section-12290256fbd76ac6014c39648c5827fe" class="flex justify-between">
+      <a role="button" class="">1.6 基础知识</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.1-%E4%B8%89%E8%8C%83%E5%BC%8F/" class="">1.6.1 三范式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.2-%E5%A4%9A%E8%A1%A8%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F/" class="">1.6.2 多表连接方式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.3-%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" class="">1.6.3 存储过程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.4-DELETETRUNCATE%E5%92%8CDROP%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.6.4 Delete、 Truncate和 Drop的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.5-%E8%A7%A6%E5%8F%91%E5%99%A8/" class="">1.6.5 触发器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.6-%E8%A7%86%E5%9B%BE/" class="">1.6.6 视图</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d1b14978df09adfe15777e58b9b435ec" class="toggle" checked />
+    <label for="section-d1b14978df09adfe15777e58b9b435ec" class="flex justify-between">
+      <a role="button" class="">2、 My SQL</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.1-%E7%B4%A2%E5%BC%95/" class="">2.1 索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.2-B-%E6%A0%91B&#43;%E6%A0%91%E7%B4%A2%E5%BC%95%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/" class="">2.2 B 树、 B 树索引算法原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.3-%E7%B4%A2%E5%BC%95%E7%BB%84%E7%BB%87%E8%A1%A8/" class="">2.3 索引组织表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.4-InnoDB%E5%92%8CMyISAM%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.4 Inno Db和 My Isam的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.5-Checkpoint%E6%8A%80%E6%9C%AF/" class="">2.5 Checkpoint技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.6-%E5%AE%95%E6%9C%BA%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%90%86/" class="">2.6 宕机恢复原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.7-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%98%E5%8C%96/" class="">2.7 数据库优化</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.8-%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/" class=" active">2.8 分库分表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.9-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/" class="">2.9 一致性哈希算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.10-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" class="">2.10 主从复制</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-53f351d3e26dfa58c34e937b76a0c4ce" class="toggle"  />
+    <label for="section-53f351d3e26dfa58c34e937b76a0c4ce" class="flex justify-between">
+      <a role="button" class="">3、 Redis</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-356f36d039b40fdb10be19d36f2f2793" class="toggle"  />
+    <label for="section-356f36d039b40fdb10be19d36f2f2793" class="flex justify-between">
+      <a role="button" class="">3.1 概述</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.1-Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BF%AB/" class="">3.1.1 Redis为什么这么快</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.2-Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="">3.1.2 Redis数据类型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.3-%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6/" class="">3.1.3 持久化机制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.4-%E8%BF%87%E6%9C%9F%E6%9C%BA%E5%88%B6%E5%92%8C%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" class="">3.1.4 过期机制和内存淘汰策略</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.2-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" class="">3.2 线程模型</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-4731e97839509d5614da88af39acf326" class="toggle"  />
+    <label for="section-4731e97839509d5614da88af39acf326" class="flex justify-between">
+      <a role="button" class="">3.3 分布式问题</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.3-%E5%88%86%E5%B8%83%E5%BC%8F%E9%97%AE%E9%A2%98/3.3.1-Redis%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="">3.3.1 Redis实现分布式锁</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-555105a060edfd5dfac44ac6d49d31e5" class="toggle"  />
+    <label for="section-555105a060edfd5dfac44ac6d49d31e5" class="flex justify-between">
+      <a role="button" class="">3.4 缓存异常</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.4-%E7%BC%93%E5%AD%98%E5%BC%82%E5%B8%B8/3.4.1-%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/" class="">3.4.1 缓存穿透、缓存击穿、缓存雪崩</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f0d841e400bf38796a65a65ef72b420e" class="toggle"  />
+    <label for="section-f0d841e400bf38796a65a65ef72b420e" class="flex justify-between">
+      <a role="button" class="">第四章 设计模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/1%E6%A6%82%E8%BF%B0/" class="">1、概述</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e796a2fc1bf6b4e9454f5a191dd15040" class="toggle"  />
+    <label for="section-e796a2fc1bf6b4e9454f5a191dd15040" class="flex justify-between">
+      <a role="button" class="">2、创建型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/2%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/2.1-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="">2.1 单例模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/2%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/2.2-%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" class="">2.2 工厂模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/2%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/2.3-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="">2.3 代理模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-eca69da21de5b0cd25d8421dec09a327" class="toggle"  />
+    <label for="section-eca69da21de5b0cd25d8421dec09a327" class="flex justify-between">
+      <a role="button" class="">第五章 Java</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a64d861c08691e8f06f1178d4d28cf04" class="toggle"  />
+    <label for="section-a64d861c08691e8f06f1178d4d28cf04" class="flex justify-between">
+      <a role="button" class="">1、 Java基础</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.1-StringStringBuffer%E5%92%8CStringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.1 String、 String Buffer和 String Builder的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.2-HashMap%E5%92%8CConcurrentHashMap%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">1.2 Hash Map和 Concurrent Hash Map实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.3-ArrayList%E5%92%8CLinkedList%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">1.3 Array List和 Linked List实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.4-%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="">1.4 深拷贝与浅拷贝</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-21d6c85d1bc3cd657a462ac4b09f9d02" class="toggle"  />
+    <label for="section-21d6c85d1bc3cd657a462ac4b09f9d02" class="flex justify-between">
+      <a role="button" class="">2、 Java多线程</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.1-Runnable%E5%92%8C-Thread%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.1 Runnable和 Thread的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.2-Thread%E7%B1%BB%E4%B8%AD%E7%9A%84start%E5%92%8Crun%E6%96%B9%E6%B3%95%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB/" class="">2.2 Thread类中的start()和run()方法有什么区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.3-Java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%AD%E8%B0%83%E7%94%A8wait%E5%92%8Csleep%E6%96%B9%E6%B3%95%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C/" class="">2.3 Java多线程中调用wait()和sleep()方法有什么不同</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.4-ReentrantLock%E5%92%8CSynchronized%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.4 Reentrant Lock和 Synchronized的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.5-volatile%E9%80%82%E7%94%A8%E4%BA%8E%E9%AB%98%E5%B9%B6%E5%8F%91%E7%9A%84%E4%BB%80%E4%B9%88%E5%9C%BA%E6%99%AF/" class="">2.5 Volatile适用于高并发的什么场景</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.6-%E5%A4%9A%E7%BA%BF%E7%A8%8Bjoin%E6%96%B9%E6%B3%95%E7%94%A8%E4%BA%8E%E4%BB%80%E4%B9%88%E5%9C%BA%E6%99%AF/" class="">2.6 多线程join方法用于什么场景</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.7-%E5%A4%9A%E4%B8%AA%E7%BA%BF%E7%A8%8B%E9%97%B4%E5%A6%82%E4%BD%95%E5%85%B1%E4%BA%AB%E6%95%B0%E6%8D%AE/" class="">2.7 多个线程间如何共享数据</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.8-%E7%BA%BF%E7%A8%8B%E7%9A%84%E7%8A%B6%E6%80%81%E6%9C%89%E5%93%AA%E4%BA%9B%E5%90%84%E8%87%AA%E7%9A%84%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E6%98%AF%E4%BB%80%E4%B9%88/" class="">2.8 线程的状态有哪些，各自的使用场景是什么</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-Java%E8%87%AA%E5%B8%A6%E5%93%AA%E5%87%A0%E7%A7%8D%E7%BA%BF%E7%A8%8B%E6%B1%A0/" class="">2.9 Java自带哪几种线程池</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.10-Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/" class="">2.10 Java内存模型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.11-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7/" class="">2.11 并发编程的三大特性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.12-%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92/" class="">2.12 指令重排</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.13-Volatile%E5%8E%9F%E7%90%86/" class="">2.13 Volatile原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.14-CAS%E5%8E%9F%E7%90%86/" class="">2.14 Cas原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.15-Java%E7%9A%844%E7%A7%8D%E5%BC%95%E7%94%A8%E7%BA%A7%E5%88%AB/" class="">2.15 Java的4种引用级别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.16-Java%E4%B8%AD%E7%9A%84%E9%94%81/" class="">2.16 Java中的锁</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.17-Synchronized%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.17 Synchronized实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.18-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.18 线程池实现原理</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-65e183c484720f91ba3d1676e1ed5a16" class="toggle"  />
+    <label for="section-65e183c484720f91ba3d1676e1ed5a16" class="flex justify-between">
+      <a role="button" class="">3、JVM</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.1-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F/" class="">3.1 运行时数据区域</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.2-%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E5%AD%98%E6%B4%BB%E7%9A%84%E6%96%B9%E6%B3%95/" class="">3.2 判断对象是否存活的方法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.3-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95/" class="">3.3 垃圾收集算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.4-%E7%B1%BB%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%92%8C%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/" class="">3.4 类的生命周期和加载过程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.5-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%97%B6%E6%9C%BA/" class="">3.5 类加载时机</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.6-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E7%9A%84%E7%A7%8D%E7%B1%BB/" class="">3.6 类加载器的种类</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.7-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E7%9A%84%E7%89%B9%E7%82%B9/" class="">3.7 类加载机制的特点</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.8-JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" class="">3.8 Jvm内存结构</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.9-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95%E6%9C%89%E5%93%AA%E4%BA%9B/" class="">3.9 常见的垃圾收集算法有哪些</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.10-%E6%8C%87%E9%92%88%E7%A2%B0%E6%92%9E%E5%92%8C%E7%A9%BA%E9%97%B2%E5%88%97%E8%A1%A8/" class="">3.10 指针碰撞和空闲列表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.11-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E6%9C%89%E5%93%AA%E4%BA%9B/" class="">3.11 常见的垃圾收集器有哪些</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.12-%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E4%B8%8E%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">3.12 内存溢出与内存泄漏的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.13-%E5%B8%B8%E7%94%A8%E7%9A%84JVM%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E6%9C%89%E5%93%AA%E4%BA%9B/" class="">3.13 常用的 Jvm启动参数有哪些</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.14-%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/" class="">3.14 反射机制</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="toggle"  />
+    <label for="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="flex justify-between">
+      <a role="button" class="">第六章 Spring全家桶</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.1-%E6%A6%82%E8%BF%B0/" class="">1.1 概述</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.2-Spring-IOC/" class="">1.2 Spring Ioc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.3-Spring-AOP/" class="">1.3 Spring Aop</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/school-recruitment/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>2.8 分库分表</strong>
+
+  <label for="toc-control">
+    
+    <img src="/school-recruitment/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#分库分表">分库分表</a>
+      <ul>
+        <li><a href="#1-为什么要进行分库分表">1 为什么要进行分库分表</a></li>
+        <li><a href="#2-分库分表的切分方式">2 分库分表的切分方式</a></li>
+        <li><a href="#3-垂直切分">3 垂直切分</a>
+          <ul>
+            <li><a href="#31-含义">3.1 含义</a></li>
+            <li><a href="#32-优缺点">3.2 优缺点</a>
+              <ul>
+                <li><a href="#321-优点">3.2.1 优点</a></li>
+                <li><a href="#322-缺点">3.2.2 缺点</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#4-水平切分">4 水平切分</a>
+          <ul>
+            <li><a href="#41-含义">4.1 含义</a></li>
+            <li><a href="#42-优缺点">4.2 优缺点</a>
+              <ul>
+                <li><a href="#421-优点">4.2.1 优点</a></li>
+                <li><a href="#422-缺点">4.2.2 缺点</a></li>
+              </ul>
+            </li>
+            <li><a href="#43-切分规则">4.3 切分规则</a>
+              <ul>
+                <li><a href="#431-根据数值范围">4.3.1 根据数值范围</a>
+                  <ul>
+                    <li><a href="#431-含义">4.3.1 含义</a></li>
+                    <li><a href="#432-优缺点">4.3.2 优缺点</a>
+                      <ul>
+                        <li><a href="#4321-优点">4.3.2.1 优点</a></li>
+                        <li><a href="#4322-缺点">4.3.2.2 缺点</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#432-根据数值取模">4.3.2 根据数值取模</a>
+                  <ul>
+                    <li><a href="#4321-优点-1">4.3.2.1 优点</a></li>
+                    <li><a href="#4322-缺点-1">4.3.2.2 缺点</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#5-分库分表带来的问题">5 分库分表带来的问题</a>
+          <ul>
+            <li><a href="#51-事务一致性问题">5.1 事务一致性问题</a>
+              <ul>
+                <li><a href="#511-分布式事务">5.1.1 分布式事务</a></li>
+                <li><a href="#512-最终一致性">5.1.2 最终一致性</a></li>
+              </ul>
+            </li>
+            <li><a href="#52-跨节点关联查询-join-问题">5.2 跨节点关联查询 join 问题</a>
+              <ul>
+                <li><a href="#521-全局表">5.2.1 全局表</a></li>
+                <li><a href="#522-字段冗余">5.2.2 字段冗余</a></li>
+                <li><a href="#523-数据组装">5.2.3 数据组装</a></li>
+                <li><a href="#524-er-分片">5.2.4 ER 分片</a></li>
+              </ul>
+            </li>
+            <li><a href="#53-跨节点分页排序函数问题">5.3 跨节点分页、排序、函数问题</a></li>
+            <li><a href="#54-全局主键避重问题">5.4 全局主键避重问题</a>
+              <ul>
+                <li><a href="#541-uuid">5.4.1 UUID</a></li>
+                <li><a href="#542-结合数据库维护主键-id-表">5.4.2 结合数据库维护主键 ID 表</a></li>
+                <li><a href="#543-flickr-团队使用的主键生成策略">5.4.3 Flickr 团队使用的主键生成策略</a></li>
+                <li><a href="#544-优化后的-flickr-方案">5.4.4 优化后的 Flickr 方案</a></li>
+                <li><a href="#545-snowflake分布式自增id算法">5.4.5 Snowflake分布式自增ID算法</a></li>
+              </ul>
+            </li>
+            <li><a href="#55-数据迁移扩容问题">5.5 数据迁移、扩容问题</a></li>
+          </ul>
+        </li>
+        <li><a href="#参考文献">参考文献</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="分库分表">
+  分库分表
+  <a class="anchor" href="#%e5%88%86%e5%ba%93%e5%88%86%e8%a1%a8">#</a>
+</h1>
+<h2 id="1-为什么要进行分库分表">
+  1 为什么要进行分库分表
+  <a class="anchor" href="#1-%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e8%bf%9b%e8%a1%8c%e5%88%86%e5%ba%93%e5%88%86%e8%a1%a8">#</a>
+</h2>
+<ol>
+<li>
+<p>在业务数据量比较少的时代，我们使用单机数据库就能满足业务使用，随着业务请求量越来越多，数据库中的数据量快速增加，这时<strong>单机数据库已经不能满足业务的性能要求</strong>，数据库<strong>主从架构随之应运而生</strong>。</p>
+</li>
+<li>
+<p><strong>主从复制是将数据库写操作和读操作进行分离</strong>，使用<strong>多个只读实例</strong>（Slaver Replication）<strong>负责处理读请求</strong>，<strong>主实例</strong>（Master）<strong>负责处理写请求</strong>，<strong>只读实例通过复制主实例的数据来保持与主实例的数据一致性</strong>，由于<strong>只读实例可以水平扩展</strong>，所以<strong>更多的读请求不成问题</strong>。</p>
+</li>
+<li>
+<p>随着云计算、大数据时代的到来，事情并没有完美的得以解决，当<strong>写请求越来越多</strong>，<strong>主实例的写请求变成主要的性能瓶颈</strong>。</p>
+</li>
+<li>
+<p>如果<strong>仅仅通过增加一个主实例来分担写请求</strong>，<strong>写操作如何在两个主实例之间同步来保证数据一致性</strong>，<strong>如何避免双写</strong>，此时问题会变得更加复杂，这时就需要用到<strong>分库分表</strong>（Sharding），<strong>对写操作进行切分</strong>来解决，如下图所示：</p>
+<p>
+  <img src="../../media/202107/2021-07-06_1655060.146678676511521.png" alt="" /></p>
+<blockquote>
+<p>上图中的 DDM 为华为云的中间件产品，全称是 Distributed Database Middleware，作为 RDS（Relational Database Service）的前置分布式数据库访问服务，彻底解决了数据库的扩展性问题，对应用透明地实现海量数据的高并发访问，实现了读写分离和分库分表。</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="2-分库分表的切分方式">
+  2 分库分表的切分方式
+  <a class="anchor" href="#2-%e5%88%86%e5%ba%93%e5%88%86%e8%a1%a8%e7%9a%84%e5%88%87%e5%88%86%e6%96%b9%e5%bc%8f">#</a>
+</h2>
+<ol>
+<li>数据的切分（Sharding）根据其切分规则的类型，可以分为两种切分模式：
+<ol>
+<li>一种是<strong>按照不同的表</strong>（或者 Schema）<strong>来切分到不同的数据库</strong>（主机）上，这种切分方式可以称之为数据的<strong>垂直</strong>（纵向）<strong>切分</strong>。</li>
+<li>另外一种则是<strong>根据表中的数据的逻辑关系</strong>，<strong>将同一个表中的数据按照某种条件拆分到多台数据库</strong>（主机）<strong>上面</strong>，这种切分称之为数据的<strong>水平</strong>（横向）<strong>切分</strong>。</li>
+</ol>
+</li>
+<li><strong>垂直切分最大的特点就是规则简单</strong>，<strong>实施也更为方便</strong>，尤其<strong>适合各业务之间的耦合度非常低</strong>，<strong>相互影响很小</strong>，<strong>业务逻辑非常清晰的系统</strong>，在这种系统中，可以<strong>很容易做到将不同业务模块所使用的的表拆分到不同的数据库中</strong>，根据不同的表来进行拆分，<strong>对应用程序的影响也更小</strong>，<strong>拆分规则也会比较简单清晰</strong>。</li>
+<li><strong>水平切分</strong>相对于垂直切分来说，<strong>稍微复杂一些</strong>，因为要<strong>将同一个表中的不同数据拆分到不同的数据库中</strong>，对于应用程序来说，<strong>拆分规则本身比根据表名来拆分更为复杂</strong>，<strong>后期的数据维护也会更为复杂一些</strong>。</li>
+<li>具体而言，如果单个库太大，这是我们要看是因为表多而导致数据多，还是因为单张表里面的数据多：
+<ol>
+<li>如果是<strong>因为表多而数据多</strong>，则使用<strong>垂直切分</strong>，<strong>根据业务切分成不同的库</strong>。</li>
+<li>如果是<strong>因为单张表的数据量太大</strong>，这时要用<strong>水平切分</strong>，即<strong>把表的数据按照某种规则切分成多张表</strong>，<strong>甚至多个库上的多张表</strong>。</li>
+</ol>
+</li>
+<li>分库分表的顺序应该是<strong>先垂直分</strong>，<strong>后水平分</strong>，因为<strong>垂直分更简单</strong>，更<strong>符合我们处理现实世界问题的方式</strong>。</li>
+</ol>
+<h2 id="3-垂直切分">
+  3 垂直切分
+  <a class="anchor" href="#3-%e5%9e%82%e7%9b%b4%e5%88%87%e5%88%86">#</a>
+</h2>
+<h3 id="31-含义">
+  3.1 含义
+  <a class="anchor" href="#31-%e5%90%ab%e4%b9%89">#</a>
+</h3>
+<ol>
+<li>
+<p>垂直切分常见有<strong>垂直分库</strong>和<strong>垂直分表</strong>两种。</p>
+</li>
+<li>
+<p><strong>垂直分库就是根据业务耦合性</strong>，<strong>将关联度低的表存储在不同的数据库</strong>，<strong>做法与大系统拆分为多个小系统类似</strong>，<strong>按业务分类进行独立划分</strong>：</p>
+<ol>
+<li>这种方法<strong>业务和数据结构最清晰</strong>。</li>
+<li>但是<strong>模块间不能相互关联查询</strong>，如果有就<strong>必须通过数据冗余或应用层二次加工来解决</strong>。</li>
+</ol>
+<p>
+  <img src="../../media/202107/2021-07-07_1002330.5093049523560614.png" alt="image" /></p>
+</li>
+<li>
+<p><strong>垂直分表是基于数据库中的列进行</strong>，如果<strong>某个表字段较多</strong>，可以<strong>新建一张扩展表</strong>，<strong>将不经常用或字段长度较大的字段拆分出去到扩展表中</strong>：</p>
+<ol>
+<li>这样更<strong>便于开发和维护</strong>。</li>
+<li>同时也能<strong>避免跨页问题</strong>，因为 MySQL<strong>底层是通过数据页存储</strong>的，<strong>一条记录占用空间过大会导致跨页</strong>，<strong>造成额外的性能开销</strong>，</li>
+<li>另外数据库<strong>以行为单位将数据加载到内存中</strong>，这样<strong>表中字段长度较短且访问频率较高</strong>，<strong>内存能加载更多的数据</strong>，<strong>命中率更高</strong>，<strong>减少了磁盘 IO</strong>，从而<strong>提升了数据库性能</strong>。</li>
+</ol>
+<p>
+  <img src="../../media/202107/2021-07-07_1003540.9505461469248985.png" alt="image" /></p>
+</li>
+</ol>
+<h3 id="32-优缺点">
+  3.2 优缺点
+  <a class="anchor" href="#32-%e4%bc%98%e7%bc%ba%e7%82%b9">#</a>
+</h3>
+<h4 id="321-优点">
+  3.2.1 优点
+  <a class="anchor" href="#321-%e4%bc%98%e7%82%b9">#</a>
+</h4>
+<ol>
+<li><strong>解决业务系统层面的耦合</strong>，<strong>业务清晰</strong>。</li>
+<li>与微服务的治理类似，能<strong>对不同业务的数据进行分级管理</strong>、<strong>维护</strong>、<strong>监控</strong>、<strong>扩展</strong>等。</li>
+<li><strong>高并发场景下</strong>，垂直切分能<strong>在一定程度上提升 IO</strong>、<strong>数据库连接数</strong>、<strong>单机硬件资源的瓶颈</strong>等。</li>
+</ol>
+<h4 id="322-缺点">
+  3.2.2 缺点
+  <a class="anchor" href="#322-%e7%bc%ba%e7%82%b9">#</a>
+</h4>
+<ol>
+<li><strong>部分表无法 <code>join</code></strong>，只能<strong>通过接口聚合方式解决</strong>，<strong>提升了开发的复杂度</strong>。</li>
+<li><strong>分布式事务处理复杂</strong>。</li>
+<li>依然<strong>存在单表数据量过大的问题</strong>。</li>
+</ol>
+<h2 id="4-水平切分">
+  4 水平切分
+  <a class="anchor" href="#4-%e6%b0%b4%e5%b9%b3%e5%88%87%e5%88%86">#</a>
+</h2>
+<h3 id="41-含义">
+  4.1 含义
+  <a class="anchor" href="#41-%e5%90%ab%e4%b9%89">#</a>
+</h3>
+<ol>
+<li>当一个应用<strong>难以再细粒度的垂直切分</strong>，或<strong>切分后数据量行数巨大</strong>，<strong>存在单库读写</strong>、<strong>存储性能瓶颈</strong>，这时候就需要进行<strong>水平切分</strong>了。</li>
+<li><strong>水平切分分为库内分表和分库分表两种方式</strong>，是<strong>根据表内数据内在的逻辑关系</strong>，<strong>将同一个表按不同的条件分散到多个数据库或多个表中</strong>，<strong>每个表中只包含一部分数据</strong>，从而<strong>使得单个表的数据量变小</strong>，<strong>达到分布式的效果</strong>。
+  <img src="../../media/202107/2021-07-07_1020000.9306178180800245.png" alt="image" /></li>
+<li><strong>库内分表只解决了单一表数据量过大的问题</strong>，但<strong>没有将表分布到不同机器的库上</strong>，因此<strong>对于减轻 MySQL 数据库的压力来说</strong>，<strong>帮助不是很大</strong>，大家还是<strong>竞争同一个物理机的 CPU</strong>、<strong>内存</strong>、<strong>网络 IO</strong>，因此<strong>最好通过分库分表来解决</strong>。</li>
+</ol>
+<h3 id="42-优缺点">
+  4.2 优缺点
+  <a class="anchor" href="#42-%e4%bc%98%e7%bc%ba%e7%82%b9">#</a>
+</h3>
+<h4 id="421-优点">
+  4.2.1 优点
+  <a class="anchor" href="#421-%e4%bc%98%e7%82%b9">#</a>
+</h4>
+<ol>
+<li><strong>不存在单库数据量过大</strong>、<strong>高并发的性能瓶颈</strong>，<strong>提升系统稳定性和负载能力</strong>。</li>
+<li><strong>应用端改造较小</strong>，<strong>不需要拆分业务模块</strong>。</li>
+</ol>
+<h4 id="422-缺点">
+  4.2.2 缺点
+  <a class="anchor" href="#422-%e7%bc%ba%e7%82%b9">#</a>
+</h4>
+<ol>
+<li><strong>跨分片的事务一致性难以保证</strong>。</li>
+<li><strong>跨库的 <code>join</code> 关联查询性能较差</strong>。</li>
+<li><strong>数据多次扩展难度和维护量极大</strong>。</li>
+</ol>
+<h3 id="43-切分规则">
+  4.3 切分规则
+  <a class="anchor" href="#43-%e5%88%87%e5%88%86%e8%a7%84%e5%88%99">#</a>
+</h3>
+<h4 id="431-根据数值范围">
+  4.3.1 根据数值范围
+  <a class="anchor" href="#431-%e6%a0%b9%e6%8d%ae%e6%95%b0%e5%80%bc%e8%8c%83%e5%9b%b4">#</a>
+</h4>
+<h5 id="431-含义">
+  4.3.1 含义
+  <a class="anchor" href="#431-%e5%90%ab%e4%b9%89">#</a>
+</h5>
+<ol>
+<li>根据<strong>时间区间</strong>或<strong>ID 区间</strong>来切分，例如：
+<ol>
+<li><strong>按日期将不同月甚至是日的数据分散到不同的库中</strong>。</li>
+<li><strong>将 <code>userid</code> 为 1~9999 的记录分到第一个库</strong>，<strong>10000~20000 分到第二个库</strong>，<strong>以此类推</strong>。</li>
+</ol>
+</li>
+<li>某种意义上，某些系统中使用的<strong>冷热数据分离</strong>，将一些使用较少的历史数据迁移到其他库中，<strong>业务功能上只提供热点数据的查询</strong>，也是类似的实践。</li>
+</ol>
+<h5 id="432-优缺点">
+  4.3.2 优缺点
+  <a class="anchor" href="#432-%e4%bc%98%e7%bc%ba%e7%82%b9">#</a>
+</h5>
+<h6 id="4321-优点">
+  4.3.2.1 优点
+  <a class="anchor" href="#4321-%e4%bc%98%e7%82%b9">#</a>
+</h6>
+<ol>
+<li><strong>单表大小可控</strong>。</li>
+<li>天然<strong>便于水平扩展</strong>，后期如果想<strong>对整个分片集群扩容</strong>时，<strong>只需要添加节点</strong>即可，<strong>无需对其他分片的数据进行迁移</strong>。</li>
+<li><strong>使用分片字段进行范围查找时</strong>，<strong>连续分片可可快速定位分片进行快速查询</strong>，有效<strong>避免跨分片查询的问题</strong>。</li>
+</ol>
+<h6 id="4322-缺点">
+  4.3.2.2 缺点
+  <a class="anchor" href="#4322-%e7%bc%ba%e7%82%b9">#</a>
+</h6>
+<ol>
+<li><strong>热点数据成为性能瓶颈</strong>，<strong>连续分片可能存在数据热点</strong>，例如<strong>按时间字段分片</strong>，<strong>有些分片存储最近时间段的数据</strong>，可能会被<strong>频繁的读写</strong>，而<strong>有些分片存储的历史数据</strong>，则<strong>很少被查询</strong>。
+  <img src="../../media/202107/2021-07-07_1050280.7680275164055212.png" alt="image" /></li>
+</ol>
+<h4 id="432-根据数值取模">
+  4.3.2 根据数值取模
+  <a class="anchor" href="#432-%e6%a0%b9%e6%8d%ae%e6%95%b0%e5%80%bc%e5%8f%96%e6%a8%a1">#</a>
+</h4>
+<ol>
+<li>一般采用<code>hash</code><strong>取模</strong>的切分方式，例如，将<code>Customer</code> 表根据<code>cusno</code> 字段切分到 4 个库中，余数为 0 的放到第一个库，余数为 1 的放到第二个库，以此类推，这样同一个用户的数据会分散到同一个库中，如果<strong>查询条件带有 <code>cusno</code> 字段</strong>，则<strong>可明确定位到相应库去查询</strong>。</li>
+</ol>
+<h5 id="4321-优点-1">
+  4.3.2.1 优点
+  <a class="anchor" href="#4321-%e4%bc%98%e7%82%b9-1">#</a>
+</h5>
+<ol>
+<li><strong>数据分片相对比较均匀</strong>，<strong>不容易出现热点和并发访问的瓶颈</strong>。</li>
+</ol>
+<h5 id="4322-缺点-1">
+  4.3.2.2 缺点
+  <a class="anchor" href="#4322-%e7%bc%ba%e7%82%b9-1">#</a>
+</h5>
+<ol>
+<li>后期<strong>分片集群扩容</strong>时，需要<strong>迁移旧的数据</strong>（使用
+  <a href="https://notebook.grayson.top/project-37/doc-762">一致性哈希算法</a>能较好的避免这个问题）。</li>
+<li><strong>容易面临跨分片查询的复杂问题</strong>，比如上例中，如果<strong>频繁用到的查询条件中不带 <code>cusno</code> <strong>时，将会导致</strong>无法定位数据库</strong>，从而<strong>需要同时向 4 个库发起查询</strong>，再<strong>在内存中合并数据</strong>，<strong>取最小集返回给应用</strong>，<strong>分库反而成为拖累</strong>。
+  <img src="../../media/202107/2021-07-07_1706260.3279698848723256.png" alt="image" /></li>
+</ol>
+<h2 id="5-分库分表带来的问题">
+  5 分库分表带来的问题
+  <a class="anchor" href="#5-%e5%88%86%e5%ba%93%e5%88%86%e8%a1%a8%e5%b8%a6%e6%9d%a5%e7%9a%84%e9%97%ae%e9%a2%98">#</a>
+</h2>
+<h3 id="51-事务一致性问题">
+  5.1 事务一致性问题
+  <a class="anchor" href="#51-%e4%ba%8b%e5%8a%a1%e4%b8%80%e8%87%b4%e6%80%a7%e9%97%ae%e9%a2%98">#</a>
+</h3>
+<h4 id="511-分布式事务">
+  5.1.1 分布式事务
+  <a class="anchor" href="#511-%e5%88%86%e5%b8%83%e5%bc%8f%e4%ba%8b%e5%8a%a1">#</a>
+</h4>
+<ol>
+<li>当<strong>更新内容同时分布在不同库</strong>中，不可避免<strong>会带来跨库事务问题</strong>，跨分片事务也是分布式事务，没有简单的方案，一般可使用<strong>XA 协议</strong>和
+  <a href="https://notebook.grayson.top/project-37/doc-745/#4-%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4"><strong>两阶段提交</strong></a>来处理。</li>
+<li>分布式事务能<strong>最大限度保证数据库操作的原子性</strong>，但<strong>在提交事务时需要协调多个节点</strong>，<strong>推后了提交事务的时间点</strong>，<strong>延长了事务的执行时间</strong>，导致<strong>事务在访问共享资源时发生冲突或死锁的概率增高</strong>。</li>
+<li>随着<strong>数据库节点的增多</strong>，这种<strong>趋势会越来越严重</strong>，从而<strong>成为系统在数据库层面上水平扩展的枷锁</strong>。</li>
+</ol>
+<h4 id="512-最终一致性">
+  5.1.2 最终一致性
+  <a class="anchor" href="#512-%e6%9c%80%e7%bb%88%e4%b8%80%e8%87%b4%e6%80%a7">#</a>
+</h4>
+<ol>
+<li>
+<p>对于那些<strong>性能要求很高</strong>，但对<strong>一致性要求不高的系统</strong>，往往<strong>不苛求系统的实时一致性</strong>，只要<strong>在允许的时间段内达到最终一致性</strong>即可，可采用<strong>事务补偿</strong>的方式。</p>
+</li>
+<li>
+<p>与事务在执行过程中发生错误后立即回滚的方式不同，事务补偿是一种<strong>事后检查补救</strong>的措施，一些常见的实现方法有：</p>
+<ol>
+<li><strong>对数据进行对账检查</strong>。</li>
+<li><strong>基于日志进行对比</strong>。</li>
+<li><strong>定期同标准数据来源进行同步</strong>。</li>
+</ol>
+<p>事务补偿还要结合业务系统来考虑。</p>
+</li>
+</ol>
+<h3 id="52-跨节点关联查询-join-问题">
+  5.2 跨节点关联查询 join 问题
+  <a class="anchor" href="#52-%e8%b7%a8%e8%8a%82%e7%82%b9%e5%85%b3%e8%81%94%e6%9f%a5%e8%af%a2-join-%e9%97%ae%e9%a2%98">#</a>
+</h3>
+<p>切分之前，系统中很多列表和详情页所需的数据可以通过 <code>sql join</code> 来完成，而<strong>切分之后</strong>，<strong>数据可能分布在不同的节点上</strong>，此时 <code>join</code> 带来的问题就比较麻烦了，考虑到性能，应该<strong>尽量避免使用 <code>join</code> 查询</strong>。</p>
+<p>解决这个问题可以采用以下方法：</p>
+<h4 id="521-全局表">
+  5.2.1 全局表
+  <a class="anchor" href="#521-%e5%85%a8%e5%b1%80%e8%a1%a8">#</a>
+</h4>
+<ol>
+<li>全局表，也可以看做是<strong>数据字典表</strong>，就是系统中<strong>所有模块都可能依赖的一些表</strong>。</li>
+<li>字典表一般具有以下特性：
+<ol>
+<li><strong>变动不频繁</strong>。</li>
+<li><strong>数据量总体变化不大</strong>。</li>
+<li><strong>数据规模不大</strong>，<strong>很少有超过数十万条记录</strong>。</li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>比如 MyCat 定义的全局表具有以下特性：</p>
+<ol>
+<li>全局表的<strong>插入</strong>、<strong>更新操作会实时在所有节点上执行</strong>，<strong>保持各个分片的数据一致性</strong>。</li>
+<li>全局表的<strong>查询操作</strong>，<strong>只从一个节点获取</strong>。</li>
+<li>全局表<strong>可以跟任何一个表进行 <code>join</code> 操作</strong>。</li>
+</ol>
+</blockquote>
+<h4 id="522-字段冗余">
+  5.2.2 字段冗余
+  <a class="anchor" href="#522-%e5%ad%97%e6%ae%b5%e5%86%97%e4%bd%99">#</a>
+</h4>
+<ol>
+<li>这是一种典型的<strong>反范式设计</strong>，<strong>利用空间换时间</strong>，<strong>为了性能而避免 <code>join</code> 查询</strong>。</li>
+<li>例如，订单表保存<code>userId</code> 的时候，也将<code>userName</code> 冗余保存一份，这样查询订单详情时就不需要再去查询买家<code>user</code> 表了。</li>
+<li>但这种方法适用场景也有限，比较<strong>适用于依赖字段比较少的情况</strong>，而且冗余字段的<strong>一致性也比较难保证</strong>，就像上面订单表的例子，买家修改了<code>userName</code> 后，是否需要在历史订单中同步更新呢，这也需要结合实际业务场景进行考虑。</li>
+</ol>
+<h4 id="523-数据组装">
+  5.2.3 数据组装
+  <a class="anchor" href="#523-%e6%95%b0%e6%8d%ae%e7%bb%84%e8%a3%85">#</a>
+</h4>
+<ol>
+<li>在系统层面，<strong>分两次查询</strong>，<strong>第一次查询的结果集中找出关联数据 <code>id</code></strong>，<strong>然后根据 <code>id</code> 发起第二次请求得到关联数据</strong>，<strong>最后将得到的数据进行字段拼装</strong>。</li>
+</ol>
+<h4 id="524-er-分片">
+  5.2.4 ER 分片
+  <a class="anchor" href="#524-er-%e5%88%86%e7%89%87">#</a>
+</h4>
+<ol>
+<li>关系型数据库中，如果可以<strong>先确定表之间的关联关系</strong>，并<strong>将那些存在关联关系的表记录存放在同一分片上</strong>，那么就能较好的避免跨分片<code>join</code> 问题，在<code>1:1</code> 或<code>1:n</code> 的情况下，<strong>通常按照主表的 <code>ID</code> 主键切分</strong>，如下图所示：
+  <img src="../../media/202107/2021-07-08_1049300.27815031382540845.png" alt="image" /></li>
+<li>这样一来，$Data \space Node1$ 上面的 <code>order</code> 订单表与<code>orderdetail</code> 订单详情表就可以<strong>通过 <code>orderId</code> 进行局部的关联查询</strong>了，$Data \space Node2$ 上也一样。</li>
+</ol>
+<h3 id="53-跨节点分页排序函数问题">
+  5.3 跨节点分页、排序、函数问题
+  <a class="anchor" href="#53-%e8%b7%a8%e8%8a%82%e7%82%b9%e5%88%86%e9%a1%b5%e6%8e%92%e5%ba%8f%e5%87%bd%e6%95%b0%e9%97%ae%e9%a2%98">#</a>
+</h3>
+<ol>
+<li><strong>跨节点多库进行查询时</strong>，<strong>会出现 <code>limit</code> 分页、<code>order by</code> 排序等问题</strong>。</li>
+<li>分页需要按照指定字段进行排序：
+<ol>
+<li>当<strong>排序字段就是分片字段</strong>时，<strong>通过分片规则就比较容易定位到指定的分片</strong>。</li>
+<li>当<strong>排序字段为非分片字段</strong>时，就变得比较复杂了，需要<strong>先在不同的分片节点中将数据进行排序并返回</strong>，然后<strong>将不同分片返回的结果集进行汇总和再次排序</strong>，<strong>最终返回给用户</strong>，如下图所示：
+  <img src="../../media/202107/2021-07-08_1105020.4294751324393461.png" alt="image" />
+<ol>
+<li>上图中只是取第一页的数据，对性能影响还不是很大，但是如果取的页数很大，情况则变得复杂很多，因为各分片节点中的数据可能是随机的，为了排序的准确性，需要将所有节点的前 $N$ 页数据都排序做好合并，最后再进行整体的排序。</li>
+<li>这样的操作很<strong>耗费 CPU 和内存资源</strong>的，所以<strong>页数越大</strong>，<strong>系统的性能也会越差</strong>。</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>在使用<code>max</code>、<code>min</code>、<code>sum</code>、<code>count</code><strong>之类的函数进行计算的时候</strong>，<strong>也需要先在每个分片上执行相应的函数</strong>，<strong>然后将各个分片的结果集进行汇总和再次计算</strong>，<strong>最终将结果返回</strong>，如下图所示：
+  <img src="../../media/202107/2021-07-08_1110140.22015106658146533.png" alt="image" /></li>
+</ol>
+<h3 id="54-全局主键避重问题">
+  5.4 全局主键避重问题
+  <a class="anchor" href="#54-%e5%85%a8%e5%b1%80%e4%b8%bb%e9%94%ae%e9%81%bf%e9%87%8d%e9%97%ae%e9%a2%98">#</a>
+</h3>
+<p>在分库分表环境中，由于表中数据同时存在不同数据库中，主键值平时使用的自增长将无用武之地，<strong>某个分区数据库自生成的 <code>ID</code> 无法保证全局唯一</strong>，因此<strong>需要单独设置全局主键</strong>，以<strong>避免跨库主键重复问题</strong>，常见的主键生成策略如下：</p>
+<h4 id="541-uuid">
+  5.4.1 UUID
+  <a class="anchor" href="#541-uuid">#</a>
+</h4>
+<ol>
+<li>UUID 标准形式包含<strong>32 个 16 进制数字</strong>，<strong>分为 5 段</strong>，<strong>形式为 <code>8-4-4-4-12</code> 的 36 个字符</strong>，例如<code>550e8400-e29b-41d4-a716-446655440000</code>。</li>
+<li>优点：
+<ol>
+<li>UUID 是主键生成的<strong>最简单的方案</strong>，<strong>本地生成</strong>、<strong>性能高</strong>、<strong>没有网络耗时</strong>。</li>
+</ol>
+</li>
+<li>缺点：
+<ol>
+<li>由于<strong>UUID 非常长</strong>，会<strong>占用大量的内存空间</strong>。</li>
+<li><strong>作为主键建立索引和基于索引进行查询时都会存在性能问题</strong>，在 InnoDB 下，UUID 的<strong>无序性会引起数据位置频繁变动</strong>，<strong>导致分页</strong>。</li>
+</ol>
+</li>
+</ol>
+<h4 id="542-结合数据库维护主键-id-表">
+  5.4.2 结合数据库维护主键 ID 表
+  <a class="anchor" href="#542-%e7%bb%93%e5%90%88%e6%95%b0%e6%8d%ae%e5%ba%93%e7%bb%b4%e6%8a%a4%e4%b8%bb%e9%94%ae-id-%e8%a1%a8">#</a>
+</h4>
+<ol>
+<li>
+<p>在数据库中建立 <code>sequence</code> 表：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> sequence ( 
+id bigint(<span style="color:#ae81ff">20</span>) unsigned <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> auto_increment, 
+stub char(<span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">default</span> <span style="color:#e6db74">&#39;&#39;</span>,  
+<span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span> (id),  
+<span style="color:#66d9ef">UNIQUE</span> <span style="color:#66d9ef">KEY</span> stub (stub) 
+)ENGINE<span style="color:#f92672">=</span>MyISAM;
+</code></pre></div></li>
+<li>
+<p><code>studb</code> 字段设置为唯一索引，<code>stub</code> 值在 <code>sequence</code> 表中只有一条记录，可以同时为多张表生成全局 <code>ID</code>，<code>sequence</code> 表的内容，如下所示：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#f92672">+</span><span style="color:#75715e">--------------------+-------+ 
+</span><span style="color:#75715e"></span><span style="color:#f92672">|</span> id <span style="color:#f92672">|</span> stub <span style="color:#f92672">|</span> 
+<span style="color:#f92672">+</span><span style="color:#75715e">--------------------+-------+ 
+</span><span style="color:#75715e"></span><span style="color:#f92672">|</span> <span style="color:#ae81ff">72157623227190423</span> <span style="color:#f92672">|</span> a <span style="color:#f92672">|</span>
+<span style="color:#f92672">+</span><span style="color:#75715e">--------------------+-------+
+</span></code></pre></div></li>
+<li>
+<p>使用 MyISAM 存储引擎而不是 InnoDB，以获取更高的性能，因为 MyISAM 使用的是表级别的锁，对表的读写是串行的，所以不用担心在并发时两次读取同一个 ID 值。</p>
+</li>
+<li>
+<p>优点：</p>
+<ol>
+<li><strong>方案简单</strong>。</li>
+</ol>
+</li>
+<li>
+<p>缺点：</p>
+<ol>
+<li><strong>存在单点问题</strong>，<strong>强依赖数据库</strong>，当<strong>数据库异常时</strong>，<strong>整个系统都不可用</strong>。</li>
+<li><strong>配置主从可以增加可用性</strong>，但当<strong>主库挂了</strong>，<strong>主从切换时</strong>，<strong>数据一致性在特殊情况下难以保证</strong>。</li>
+<li><strong>性能瓶颈限制在单台 MySQL 的读写性能</strong>。</li>
+</ol>
+</li>
+</ol>
+<h4 id="543-flickr-团队使用的主键生成策略">
+  5.4.3 Flickr 团队使用的主键生成策略
+  <a class="anchor" href="#543-flickr-%e5%9b%a2%e9%98%9f%e4%bd%bf%e7%94%a8%e7%9a%84%e4%b8%bb%e9%94%ae%e7%94%9f%e6%88%90%e7%ad%96%e7%95%a5">#</a>
+</h4>
+<ol>
+<li>Flickr 团队使用的一种主键生成策略，与上面的<code>sequence</code> 表方案类似，但<strong>更好的解决了单点和性能瓶颈问题</strong>。</li>
+<li>这一方案的整体思想是<strong>建立 2 个以上的全局 ID 生成的服务器</strong>，<strong>每个服务器上只部署一个数据库</strong>，<strong>每个库有一张 <code>sequence</code> 表用于记录当前全局 ID</strong>，<strong>表中 ID 增长的步长是库的数量</strong>，<strong>起始值依次错开</strong>，这样能<strong>将 ID 的生成散列到各个数据库上</strong>，如下图所示：
+  <img src="../../media/202107/2021-07-08_1440000.9135150756047024.png" alt="image" /></li>
+<li>由两个数据库服务器生成 ID，设置不同的<code>auto_increment</code> 值，第一台的<code>sequence</code> 的起始值为 1，每次步长增长 2，另一台的<code>sequence</code> 起始值为 2，每次步长增长也是 2，结果第一台生成的 ID 都是奇数 $(1,3,5,7,&hellip;)$，第二台生成的 ID 都是偶数 $(2,4,6,8,&hellip;)$。</li>
+<li>优点：
+<ol>
+<li>这种方案<strong>将生成 ID 的压力均匀分布在两台机器上</strong>。</li>
+<li>同时<strong>提供了系统容错</strong>，<strong>第一台出现了错误</strong>，可以<strong>自动切换到第二台机器上获取 ID</strong>。</li>
+</ol>
+</li>
+<li>缺点：
+<ol>
+<li>系统<strong>添加机器水平扩展时较为复杂</strong>。</li>
+<li><strong>每次获取 ID 都要读写一次数据库</strong>，<strong>数据库的压力还是很大</strong>，<strong>只能靠堆机器来提升性能</strong>。</li>
+</ol>
+</li>
+</ol>
+<h4 id="544-优化后的-flickr-方案">
+  5.4.4 优化后的 Flickr 方案
+  <a class="anchor" href="#544-%e4%bc%98%e5%8c%96%e5%90%8e%e7%9a%84-flickr-%e6%96%b9%e6%a1%88">#</a>
+</h4>
+<ol>
+<li>可以基于 Flickr 的方案继续优化，<strong>使用批量的方式降低数据库的写压力</strong>，<strong>每次获取一段区间的 ID 号段</strong>，<strong>用完之后再去数据库获取</strong>，可以<strong>大大减轻数据库的压力</strong>，如下图所示：
+  <img src="../../media/202107/2021-07-08_1448450.9238176780771336.png" alt="image" /></li>
+<li>还是<strong>使用两台数据库服务器保证可用性</strong>，<strong>数据库中只存储当前的最大 ID</strong>，ID 生成服务器每次批量拉取 6 个 ID，先将<code>max_id</code> 修改为 5，<strong>当应用访问 ID 生成服务时</strong>，就<strong>不需要访问数据库</strong>，而是<strong>从号段缓存中依次派发 0 ~ 5 的 ID</strong>，当这些<strong>ID 发完后</strong>，再<strong>将 <code>max_id</code> 修改为 11</strong>，<strong>下次就能派发 6 ~ 11的ID</strong>，于是<strong>数据库的压力降低为原来的$\frac16$</strong>。</li>
+</ol>
+<h4 id="545-snowflake分布式自增id算法">
+  5.4.5 Snowflake分布式自增ID算法
+  <a class="anchor" href="#545-snowflake%e5%88%86%e5%b8%83%e5%bc%8f%e8%87%aa%e5%a2%9eid%e7%ae%97%e6%b3%95">#</a>
+</h4>
+<ol>
+<li>Twitter的Snowflake算法<strong>解决了分布式系统生成全局ID的需求</strong>，<strong>生成64位的Long型数字</strong>，组成部分如下图所示：
+  <img src="../../media/202107/2021-07-08_1457330.19687276270534215.png" alt="image" />
+<ol>
+<li><strong>第一位未使用</strong>。</li>
+<li>接下来是<strong>41位的毫秒级时间</strong>，41位的长度<strong>可以表示69年的时间</strong>。</li>
+<li><strong>5位Data Center ID</strong>，<strong>5位Worker ID</strong>，<strong>10位的长度最多支持部署1024个节点</strong>。</li>
+<li><strong>最后12位是毫秒内的计数</strong>，12位的计数顺序号<strong>支持每个节点每毫秒产生4096个ID序列</strong>。</li>
+</ol>
+</li>
+<li>优点：
+<ol>
+<li><strong>毫秒数在高位</strong>，<strong>生成的ID整体上按时间趋势递增</strong>。</li>
+<li><strong>不依赖第三方系统</strong>，<strong>稳定性和效率较高</strong>，理论上QPS约为$ 409.6w/s \space (1000 * 2^{12})$。</li>
+<li>整个分布式系统内<strong>不会产生ID碰撞</strong>。</li>
+<li><strong>可根据自身业务灵活分配 <code>bit</code>位</strong>。</li>
+</ol>
+</li>
+<li>缺点：
+<ol>
+<li><strong>强依赖机器时钟</strong>，<strong>如果时钟回拨</strong>，则<strong>可能导致生成ID重复</strong>。</li>
+</ol>
+</li>
+</ol>
+<h3 id="55-数据迁移扩容问题">
+  5.5 数据迁移、扩容问题
+  <a class="anchor" href="#55-%e6%95%b0%e6%8d%ae%e8%bf%81%e7%a7%bb%e6%89%a9%e5%ae%b9%e9%97%ae%e9%a2%98">#</a>
+</h3>
+<ol>
+<li>当业务高速发展，面临性能和存储的瓶颈时，才会考虑<strong>分片设计</strong>，此时就不可避免的需要<strong>考虑历史数据迁移的问题</strong>，一般做法是<strong>先读出历史数据</strong>，然后<strong>按指定的分片规则再将数据写入到各个分片节点中</strong>。</li>
+<li>此外，还需要<strong>根据当前的数据量和QPS</strong>，<strong>以及业务发展的速度</strong>，<strong>进行容量规划</strong>，<strong>推算出大概需要多少分片</strong>，<strong>一般建议单个分片上的单表数据量不超过1000W</strong>。</li>
+<li>如果采用<strong>数值范围分片</strong>，<strong>只需要添加节点就可以进行扩容了</strong>，<strong>不需要对分片数据进行迁移</strong>，如果采用的是<strong>数值取模分片</strong>，则考虑<strong>后期扩容的问题就相对比较麻烦</strong>。</li>
+</ol>
+<h2 id="参考文献">
+  参考文献
+  <a class="anchor" href="#%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae">#</a>
+</h2>
+<ol>
+<li>
+  <a href="https://www.infoq.cn/article/ZMlCBpIhOThWJeqmZD4I">干货丨数据库分库分表基础和实践</a>。</li>
+<li>
+  <a href="https://zhuanlan.zhihu.com/p/70878666">数据库的垂直切分与水平切分</a>。</li>
+<li>
+  <a href="https://juejin.cn/post/6844903648670007310">MySQL 分库分表方案，总结的非常好！</a></li>
+<li>
+  <a href="https://juejin.cn/post/6844903652096901134">数据库分库分表如何避免“过度设计”和“过早优化”</a>。</li>
+<li>
+  <a href="https://blog.csdn.net/weixin_44907813/article/details/106895129">mycat 读写分离 + 分库分表 + 全局表</a>。</li>
+</ol>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/wpwbb510582246/ComputerCookbook-SchoolRecruitment/edit/main/exampleSite/content/docs/database/2%e3%80%81MySQL/2.8%20%e5%88%86%e5%ba%93%e5%88%86%e8%a1%a8.md" target="_blank" rel="noopener">
+      <img src="/school-recruitment/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+
+
+  <script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#分库分表">分库分表</a>
+      <ul>
+        <li><a href="#1-为什么要进行分库分表">1 为什么要进行分库分表</a></li>
+        <li><a href="#2-分库分表的切分方式">2 分库分表的切分方式</a></li>
+        <li><a href="#3-垂直切分">3 垂直切分</a>
+          <ul>
+            <li><a href="#31-含义">3.1 含义</a></li>
+            <li><a href="#32-优缺点">3.2 优缺点</a>
+              <ul>
+                <li><a href="#321-优点">3.2.1 优点</a></li>
+                <li><a href="#322-缺点">3.2.2 缺点</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#4-水平切分">4 水平切分</a>
+          <ul>
+            <li><a href="#41-含义">4.1 含义</a></li>
+            <li><a href="#42-优缺点">4.2 优缺点</a>
+              <ul>
+                <li><a href="#421-优点">4.2.1 优点</a></li>
+                <li><a href="#422-缺点">4.2.2 缺点</a></li>
+              </ul>
+            </li>
+            <li><a href="#43-切分规则">4.3 切分规则</a>
+              <ul>
+                <li><a href="#431-根据数值范围">4.3.1 根据数值范围</a>
+                  <ul>
+                    <li><a href="#431-含义">4.3.1 含义</a></li>
+                    <li><a href="#432-优缺点">4.3.2 优缺点</a>
+                      <ul>
+                        <li><a href="#4321-优点">4.3.2.1 优点</a></li>
+                        <li><a href="#4322-缺点">4.3.2.2 缺点</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+                <li><a href="#432-根据数值取模">4.3.2 根据数值取模</a>
+                  <ul>
+                    <li><a href="#4321-优点-1">4.3.2.1 优点</a></li>
+                    <li><a href="#4322-缺点-1">4.3.2.2 缺点</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#5-分库分表带来的问题">5 分库分表带来的问题</a>
+          <ul>
+            <li><a href="#51-事务一致性问题">5.1 事务一致性问题</a>
+              <ul>
+                <li><a href="#511-分布式事务">5.1.1 分布式事务</a></li>
+                <li><a href="#512-最终一致性">5.1.2 最终一致性</a></li>
+              </ul>
+            </li>
+            <li><a href="#52-跨节点关联查询-join-问题">5.2 跨节点关联查询 join 问题</a>
+              <ul>
+                <li><a href="#521-全局表">5.2.1 全局表</a></li>
+                <li><a href="#522-字段冗余">5.2.2 字段冗余</a></li>
+                <li><a href="#523-数据组装">5.2.3 数据组装</a></li>
+                <li><a href="#524-er-分片">5.2.4 ER 分片</a></li>
+              </ul>
+            </li>
+            <li><a href="#53-跨节点分页排序函数问题">5.3 跨节点分页、排序、函数问题</a></li>
+            <li><a href="#54-全局主键避重问题">5.4 全局主键避重问题</a>
+              <ul>
+                <li><a href="#541-uuid">5.4.1 UUID</a></li>
+                <li><a href="#542-结合数据库维护主键-id-表">5.4.2 结合数据库维护主键 ID 表</a></li>
+                <li><a href="#543-flickr-团队使用的主键生成策略">5.4.3 Flickr 团队使用的主键生成策略</a></li>
+                <li><a href="#544-优化后的-flickr-方案">5.4.4 优化后的 Flickr 方案</a></li>
+                <li><a href="#545-snowflake分布式自增id算法">5.4.5 Snowflake分布式自增ID算法</a></li>
+              </ul>
+            </li>
+            <li><a href="#55-数据迁移扩容问题">5.5 数据迁移、扩容问题</a></li>
+          </ul>
+        </li>
+        <li><a href="#参考文献">参考文献</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

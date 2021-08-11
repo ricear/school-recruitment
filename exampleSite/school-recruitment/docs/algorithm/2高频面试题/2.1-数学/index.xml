@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Computer Cookbook School Recruitment</title>
+    <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/</link>
+    <description>Recent content on Computer Cookbook School Recruitment</description>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.1-%E5%BF%AB%E9%80%9F%E6%A8%A1%E5%B9%82%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.1-%E5%BF%AB%E9%80%9F%E6%A8%A1%E5%B9%82%E7%AE%97%E6%B3%95/</guid>
+      <description>快速模幂算法 #  今天来聊一道与数学运算有关的题目，LeetCode 372 题 Super Pow，需要我们进行巨大的幂运算，然后求余数。
+int superPow(int a, vector&amp;lt;int&amp;gt;&amp;amp; b); 要求我们的算法返回幂运算 a^b 的计算结果与 1337 取模后的结果。首先我们需要计算 a^b，但是这个 b 会非常大，所以 b 是用数组的形式表示的。
+2.1.1 处理数组指数 #  我们可以发现这样一个规律： 通过公式发现我们可以用递归来解决这个问题，因此问题的规模缩小了：
+superPow(a, [1,5,6,4]) =&amp;gt; superPow(a, [1,5,6]) 根据这个规律，我们可以写出如下代码框架：
+/** * 返回模幂运算 a^[b] 的计算结果与 base 取模后的结果 * 1. a^[1024] = a^4 * a^[1020] * = a^4 * (a^[102])^10 * @param a 底数 * @param b 指数 * @param base 取模数 * @return 模幂运算 a^b 的计算结果与 base 取模后的结果 */ public static int superPow(int a, Vector&amp;lt;Integer&amp;gt; b, int base) { if (b.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.2-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.2-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/</guid>
+      <description>搜索二维矩阵 #  1 题目 #  编写一个高效的算法来判断 m x n 矩阵中，是否存在一个目标值。该矩阵具有如下特性：
+每行中的整数从左到右按升序排列。 每行的第一个整数大于前一行的最后一个整数。 示例 1：
+ 输入：matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3 输出：true 示例 2：
+ 输入：matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 13 输出：false 提示：
+ m == matrix.length n == matrix[i].length 1 &amp;lt;= m, n &amp;lt;= 100 -104 &amp;lt;= matrix[i][j], target &amp;lt;= 104  2 解题思路 #  2.1 普通遍历 #  2.1.1 问题分析 #  由于矩阵每行中的整数从左到右按升序排列，每行的第一个整数大于前一行的最后一个整数，因此我们可以按照如下方法来遍历：
+ 先按行遍历，看每行的第一个元素是否等于目标元素，如果不等于，则找出第一个元素小于等于目标元素，最后一个元素大于等于目标元素的行。  如果能找到这样的行的话，则直接返回 true。 如果找不到这样的行的话，则直接返回 false。    上面的遍历方法时间复杂度较高，可以使用二分查找的方法代替普通查找，这就是下面要用的二分查找法。</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.3-%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.3-%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/</guid>
+      <description>螺旋矩阵 #  1 题目 #  给你一个 m 行 n 列的矩阵 matrix ，请按照 顺时针螺旋顺序 ，返回矩阵中的所有元素。
+示例 1：
+ 输入：matrix = [[1,2,3],[4,5,6],[7,8,9]] 输出：[1,2,3,6,9,8,7,4,5] 示例 2：
+ 输入：matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]] 输出：[1,2,3,4,8,12,11,10,9,5,6,7] 提示：
+ m == matrix.length n == matrix[i].length 1 &amp;lt;= m, n &amp;lt;= 10 -100 &amp;lt;= matrix[i][j] &amp;lt;= 100  2 问题分析 #  解决这个问题的基本思路是：
+ 计算需要遍历的圈数$totalRing$：  矩阵的行数$rowNum = matrix.length$。 矩阵的列数$colNum$：  如果 $rowNum &amp;gt; 0$，则 $colNum = matrix[0].length$。 如果 $rowNum \le 0$，则 $colNum = 0$。   令 $totalRingTemp = Math.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.4-x-%E7%9A%84%E5%B9%B3%E6%96%B9%E6%A0%B9/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.4-x-%E7%9A%84%E5%B9%B3%E6%96%B9%E6%A0%B9/</guid>
+      <description>x 的平方根 #  1 题目 #  实现 int sqrt(int x) 函数。
+计算并返回 x 的平方根，其中 x 是非负整数。
+由于返回类型是整数，结果只保留整数的部分，小数部分将被舍去。
+示例 1:
+输入: 4 输出: 2 示例 2:
+输入: 8 输出: 2 说明: 8 的平方根是 2.82842..., 由于返回类型是整数，小数部分将被舍去。 2 解题思路 #  2.1 暴力解法 #  2.1.1 问题分析 #   暴力解法的基本思路是因为 $i * i = x$，因此 $x / i &amp;gt;= i$ 并且 $x / (i + 1) &amp;lt; (i + 1)$。  2.</description>
+    </item>
+    
+  </channel>
+</rss>
