@@ -12,16 +12,6 @@ cd ${BASE_DIR}/exampleSite
 hugo --themesDir ../themes -b https://books.grayson.top/school-recruitment
 cd ${BASE_DIR}
 
-echo "2. 将静态文件夹名称修改为 school-recruitment"
-rm -f ${BASE_DIR}/exampleSite/public/favicon.png
-cp ${BASE_DIR}/static/favicon.png ${BASE_DIR}/exampleSite/public/
-
-echo "3. 提交本地更新"
-git config --global http.version HTTP/1.1
-git add -A ./
-git pull
-git commit -a -m 自动备份
-git push origin
-
-echo "4. 服务器更新文件"
-ssh root@cloudserver "cd /usr/local/projects/ComputerCookbook-SchoolRecruitment;git pull;rm -rf /www/wwwroot/books.grayson.top/school-recruitment.bak;mv /www/wwwroot/books.grayson.top/school-recruitment /www/wwwroot/books.grayson.top/school-recruitment.bak;cp -R exampleSite/public /www/wwwroot/books.grayson.top/school-recruitment"
+echo "2. 服务器更新文件"
+scp -r ${BASE_DIR}/exampleSite/public root@cloudserver://usr/local/projects/ComputerCookbook-SchoolRecruitment/exampleSite/
+ssh root@cloudserver "cd /usr/local/projects/ComputerCookbook-SchoolRecruitment;git add -A ./;git commit -a -m 自动备份;git push origin;rm -rf /www/wwwroot/books.grayson.top/school-recruitment.bak;mv /www/wwwroot/books.grayson.top/school-recruitment /www/wwwroot/books.grayson.top/school-recruitment.bak;cp -R exampleSite/public /www/wwwroot/books.grayson.top/school-recruitment"
