@@ -1,4 +1,4 @@
-# hugo server --minify --themesDir ... --baseURL=http://localhost:1313/
+# hugo server --minify --themesDir ../themes --baseURL=http://localhost:1313/
 
 baseURL = 'https://school-recruitment.grayson.top/public'
 title = 'Computer Cookbook School Recruitment'
@@ -119,7 +119,7 @@ enableGitInfo = true
   # (Optional, experimental, default false) Enables a drop-down menu for translations only if a translation is present.
   BookTranslatedOnly = false
 
-  [params.gitalk] 
+  [params.gitalk]
     clientID = "9e7c78a42e08edf0c9f9" # Your client ID
     clientSecret = "443826ecf77c94f824c1e4bfba1dbb20ca9abc6a" # Your client secret
     repo = "ComputerCookbook-SchoolRecruitment" # The repo to store comments
