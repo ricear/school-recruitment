@@ -19,6 +19,7 @@ cp ${BASE_DIR}/static/favicon.png ${BASE_DIR}/exampleSite/public/
 echo "3. 提交本地更新"
 git config --global http.version HTTP/1.1
 git add -A ./
+git pull
 git commit -a -m 自动备份
 git push origin
 
