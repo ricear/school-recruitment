@@ -1,15 +1,15 @@
 <p align='center'>
-<a href="https://github.com/wpwbb510582246/ComputerCookbook-SchoolRecruitment/blob/main/LICENSE"><img alt="GitHub" src="https://img.shields.io/github/license/wpwbb510582246/ComputerCookbook-SchoolRecruitment?label=License"></a>
+<a href="https://github.com/graysonwp/ComputerCookbook-SchoolRecruitment/blob/main/LICENSE"><img alt="GitHub" src="https://img.shields.io/github/license/graysonwp/ComputerCookbook-SchoolRecruitment?label=License"></a>
 <img src="https://img.shields.io/badge/build-passing-brightgreen.svg">
 <img src="https://img.shields.io/badge/platform-%20iOS | Android | Mac | Web%20-ff69b4.svg">
 <img src="https://img.shields.io/badge/language-Java-orange.svg">
 <img src="https://img.shields.io/badge/made%20with-=1-blue.svg">
-<a href="https://github.com/wpwbb510582246/ComputerCookbook-SchoolRecruitment/pulls"><img src="https://img.shields.io/badge/PR-Welcome-brightgreen.svg"></a>
-<img src="https://img.shields.io/github/stars/wpwbb510582246/ComputerCookbook-SchoolRecruitment?style=social">
-<img src="https://img.shields.io/github/forks/wpwbb510582246/ComputerCookbook-SchoolRecruitment?style=social">
-<a href="https://github.com/wpwbb510582246/ComputerCookbook-SchoolRecruitment"><img src="https://visitor-badge.laobi.icu/badge?page_id=wpwbb510582246.ComputerCookbook-SchoolRecruitment"></a>
-<a href="https://github.com/wpwbb510582246/ComputerCookbook-SchoolRecruitment/releases"><img src="https://img.shields.io/github/v/release/wpwbb510582246/ComputerCookbook-SchoolRecruitment"></a>
-<a href="https://github.com/wpwbb510582246/ComputerCookbook-SchoolRecruitment"><img src="https://img.shields.io/github/repo-size/wpwbb510582246/ComputerCookbook-SchoolRecruitment"></a>
+<a href="https://github.com/graysonwp/ComputerCookbook-SchoolRecruitment/pulls"><img src="https://img.shields.io/badge/PR-Welcome-brightgreen.svg"></a>
+<img src="https://img.shields.io/github/stars/graysonwp/ComputerCookbook-SchoolRecruitment?style=social">
+<img src="https://img.shields.io/github/forks/graysonwp/ComputerCookbook-SchoolRecruitment?style=social">
+<a href="https://github.com/graysonwp/ComputerCookbook-SchoolRecruitment"><img src="https://visitor-badge.laobi.icu/badge?page_id=graysonwp.ComputerCookbook-SchoolRecruitment"></a>
+<a href="https://github.com/graysonwp/ComputerCookbook-SchoolRecruitment/releases"><img src="https://img.shields.io/github/v/release/graysonwp/ComputerCookbook-SchoolRecruitment"></a>
+<a href="https://github.com/graysonwp/ComputerCookbook-SchoolRecruitment"><img src="https://img.shields.io/github/repo-size/graysonwp/ComputerCookbook-SchoolRecruitment"></a>
 </p>
 
 <p align='center'>
