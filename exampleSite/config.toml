@@ -48,10 +48,6 @@ enableGitInfo = false
   name = "Github"
   url = "https://github.com/graysonwp"
   weight = 20
-[[menu.before]]
-  name = "Statistics"
-  url = "https://www.cnzz.com/stat/website.php?web_id=1280265371"
-  weight = 30
 
 [params]
   # (Optional, default light) Sets color theme: light, dark or auto.
