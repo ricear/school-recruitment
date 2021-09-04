@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="判断对象是否存活的方法 #  判断对象是否存活的方法有两种，分别是 引用计数法、可达性分析算法。
- 注：如无特殊说明，本文所有图的来源为《深入理解 Java 虚拟机 JVM 高级特性与最佳实践》
-   引用计数法
- 引用计数法是指给对象添加一个引用计数器，每当有一个地方引用它时，计数器值就加 1，当引用失效时，计数器值就减 1，任何时刻计数器为 0 的对象就是不可能再被使用的。 缺点是它很难解决对象之间相互循环引用的问题。举个简单的例子，对象 objA 和 obB 都有字段 Instance,赋值令 obja instance=objB 及 obiB. Instance=ojA，除此之外，这两个对象再无任何引用,实际上这两个对象已经不可能再被访问,但是它们因为互相引用着对方，导致它们的引用计数都不为 0，于是引用计数算法无法通知 GC 收集器回收它们。    可达性分析算法
- 主要通过一系列的称为“GC Roots”的对象作为起点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象到 GC Roots 没有任何引用链相连（即从 GC Roots 到这个对象不可达）时，则证明对象是不可用的。     ">
+<meta name="description" content="判断对象是否存活的方法有两种，分别是 引用计数法、可达性分析算法。
+1. 引用计数法 #    引用计数法是指给对象添加一个引用计数器，每当有一个地方 引用它时，计数器值就加 1，当引用失效时，计数器值就减 1，任何时刻计数器为 0 的对象就是不可能再被使用的。
+  缺点是它很难解决对象之间相互循环引用的问题。举个简单的例子，对象 objA 和 obB 都有字段 Instance,赋值令 obja instance=objB 及 obiB. Instance=ojA，除此之外，这两个对象再无任何引用,实际上这两个对象已经不可能再被访问,但是它们因为互相引用着对方，导致它们的引用计数都不为 0，于是引用计数算法无法通知 GC 收集器回收它们，具体代码如下：
+/** * @author peng.wei * @version 1.0 * @date 2021/9/3 16:17 * @Description 引用计数法 GC 测试 */ public class ReferenceCountingGC { public Object instance = null; private static final int _1MB = 1024 * 1024; /** * 这个成员属性的唯一意义就是占点内存，以便能在 GC 日志中看清楚是否有回收过 */ private byte[] bigSize = new byte[2 * _1MB]; public static void main(String[] args) { ReferenceCountingGC objA = new ReferenceCountingGC(); ReferenceCountingGC objB = new ReferenceCountingGC(); objA.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="判断对象是否存活的方法 #  判断对象是否存活的方法有两种，分别是 引用计数法、可达性分析算法。
- 注：如无特殊说明，本文所有图的来源为《深入理解 Java 虚拟机 JVM 高级特性与最佳实践》
-   引用计数法
- 引用计数法是指给对象添加一个引用计数器，每当有一个地方引用它时，计数器值就加 1，当引用失效时，计数器值就减 1，任何时刻计数器为 0 的对象就是不可能再被使用的。 缺点是它很难解决对象之间相互循环引用的问题。举个简单的例子，对象 objA 和 obB 都有字段 Instance,赋值令 obja instance=objB 及 obiB. Instance=ojA，除此之外，这两个对象再无任何引用,实际上这两个对象已经不可能再被访问,但是它们因为互相引用着对方，导致它们的引用计数都不为 0，于是引用计数算法无法通知 GC 收集器回收它们。    可达性分析算法
- 主要通过一系列的称为“GC Roots”的对象作为起点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象到 GC Roots 没有任何引用链相连（即从 GC Roots 到这个对象不可达）时，则证明对象是不可用的。     " />
+<meta property="og:description" content="判断对象是否存活的方法有两种，分别是 引用计数法、可达性分析算法。
+1. 引用计数法 #    引用计数法是指给对象添加一个引用计数器，每当有一个地方 引用它时，计数器值就加 1，当引用失效时，计数器值就减 1，任何时刻计数器为 0 的对象就是不可能再被使用的。
+  缺点是它很难解决对象之间相互循环引用的问题。举个简单的例子，对象 objA 和 obB 都有字段 Instance,赋值令 obja instance=objB 及 obiB. Instance=ojA，除此之外，这两个对象再无任何引用,实际上这两个对象已经不可能再被访问,但是它们因为互相引用着对方，导致它们的引用计数都不为 0，于是引用计数算法无法通知 GC 收集器回收它们，具体代码如下：
+/** * @author peng.wei * @version 1.0 * @date 2021/9/3 16:17 * @Description 引用计数法 GC 测试 */ public class ReferenceCountingGC { public Object instance = null; private static final int _1MB = 1024 * 1024; /** * 这个成员属性的唯一意义就是占点内存，以便能在 GC 日志中看清楚是否有回收过 */ private byte[] bigSize = new byte[2 * _1MB]; public static void main(String[] args) { ReferenceCountingGC objA = new ReferenceCountingGC(); ReferenceCountingGC objB = new ReferenceCountingGC(); objA." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.2-%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E5%AD%98%E6%B4%BB%E7%9A%84%E6%96%B9%E6%B3%95/" /><meta property="article:section" content="docs" />
 
@@ -24,7 +22,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.aea6d96f0a2607e0554a26a0e35b009f9b612c62f43fa70f1c24c528cd1ae7b3.js" integrity="sha256-rqbZbwomB&#43;BVSiag41sAn5thLGL0P6cPHCTFKM0a57M=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.7c5a0c6f7aee3ec02b01f6e3abdc878317cff9628c7528ce8c9961da7e2f7ed2.js" integrity="sha256-fFoMb3ruPsArAfbjq9yHgxfP&#43;WKMdSjOjJlh2n4vftI=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -161,7 +159,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E5%87%91%E9%9B%B6%E9%92%B1%E9%97%AE%E9%A2%98/" class="">1.1.2 凑零钱问题</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="">1.1.2 背包问题</a>
   
 
         </li>
@@ -252,7 +250,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8/" class="">1.1.9 买卖股票</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97%E9%80%9A%E8%A7%A3/" class="">1.1.9 股票问题系列通解</a>
   
 
         </li>
@@ -547,20 +545,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-%E5%85%A8%E6%8E%92%E5%88%97/" class="">1.6.2 全排列</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.3-N%E7%9A%87%E5%90%8E/" class="">1.6.3 N皇后</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-N%E7%9A%87%E5%90%8E/" class="">1.6.2 N皇后</a>
   
 
         </li>
@@ -809,6 +794,71 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">2.3.10 合并两个有序数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/" class="">2.3.11 下一个排列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/" class="">2.3.12 缺失的第一个正数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/" class="">2.3.13 寻找两个正序数组的中位数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/" class="">2.3.14 多数元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.15-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/" class="">2.3.15 最长连续序列</a>
   
 
         </li>
@@ -2596,6 +2646,87 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="toggle"  />
+    <label for="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="flex justify-between">
+      <a role="button" class="">3、结构型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.1-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="">3.1 代理模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.2-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="">3.2 装饰器模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0f94fb8c7e53c880650621fdcc596283" class="toggle"  />
+    <label for="section-0f94fb8c7e53c880650621fdcc596283" class="flex justify-between">
+      <a role="button" class="">4、行为型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/4%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/4.1-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" class="">4.1 策略模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -2810,6 +2941,19 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-AQS/" class="">2.9 Aqs</a>
+  
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -2824,7 +2968,7 @@ https://github.com/alex-shpak/hugo-book
   
     <input type="checkbox" id="section-65e183c484720f91ba3d1676e1ed5a16" class="toggle" checked />
     <label for="section-65e183c484720f91ba3d1676e1ed5a16" class="flex justify-between">
-      <a role="button" class="">3、JVM</a>
+      <a role="button" class="">3、 Jvm</a>
     </label>
   
 
@@ -3018,6 +3162,40 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-78e3fdb9e302e0ddb1abf0723557c671" class="toggle"  />
+    <label for="section-78e3fdb9e302e0ddb1abf0723557c671" class="flex justify-between">
+      <a role="button" class="">4、 Nio</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/4NIO/4.1-%E6%A6%82%E8%BF%B0/" class="">4.1 概述</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -3033,6 +3211,22 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" id="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="toggle"  />
     <label for="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="flex justify-between">
       <a role="button" class="">第六章 Spring全家桶</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-afe35ec73fb23fd24d05388dd4f6d178" class="toggle"  />
+    <label for="section-afe35ec73fb23fd24d05388dd4f6d178" class="flex justify-between">
+      <a role="button" class="">1、 Spring</a>
     </label>
   
 
@@ -3074,6 +3268,45 @@ https://github.com/alex-shpak/hugo-book
   
     <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.3-Spring-AOP/" class="">1.3 Spring Aop</a>
   
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b63cda05fe80f821d31813480ebd8acb" class="toggle"  />
+    <label for="section-b63cda05fe80f821d31813480ebd8acb" class="flex justify-between">
+      <a role="button" class="">2、 Spring Boot</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/2SpringBoot/2.1-SpringSpringBootSpringCloud%E7%9A%84%E8%81%94%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB/" class="">2.1 Spring、 Spring Boot、 Spring Cloud的联系与区别</a>
+  
+
+        </li>
+      
+    
+  </ul>
 
         </li>
       
@@ -3139,7 +3372,13 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#判断对象是否存活的方法">判断对象是否存活的方法</a></li>
+    <li>
+      <ul>
+        <li><a href="#1-引用计数法">1. 引用计数法</a></li>
+        <li><a href="#2-可达性分析算法">2. 可达性分析算法</a></li>
+        <li><a href="#参考文献">参考文献</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
 
@@ -3152,31 +3391,171 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h1 id="判断对象是否存活的方法">
-  判断对象是否存活的方法
-  <a class="anchor" href="#%e5%88%a4%e6%96%ad%e5%af%b9%e8%b1%a1%e6%98%af%e5%90%a6%e5%ad%98%e6%b4%bb%e7%9a%84%e6%96%b9%e6%b3%95">#</a>
-</h1>
-<p>判断对象是否存活的方法有两种，分别是 <code>引用计数法</code>、<code>可达性分析算法</code>。</p>
-<blockquote>
-<p>注：如无特殊说明，本文所有图的来源为《深入理解 Java 虚拟机 JVM 高级特性与最佳实践》</p>
-</blockquote>
-<ul>
+  <article class="markdown"><p>判断对象是否存活的方法有两种，分别是 <code>引用计数法</code>、<code>可达性分析算法</code>。</p>
+<h2 id="1-引用计数法">
+  1. 引用计数法
+  <a class="anchor" href="#1-%e5%bc%95%e7%94%a8%e8%ae%a1%e6%95%b0%e6%b3%95">#</a>
+</h2>
+<ol>
 <li>
-<p><strong>引用计数法</strong></p>
-<ul>
-<li>引用计数法是指给对象添加一个引用计数器，每当有一个地方引用它时，计数器值就加 1，当引用失效时，计数器值就减 1，任何时刻计数器为 0 的对象就是不可能再被使用的。</li>
-<li>缺点是它很难解决对象之间相互循环引用的问题。举个简单的例子，对象 objA 和 obB 都有字段 Instance,赋值令 obja instance=objB 及 obiB. Instance=ojA，除此之外，这两个对象再无任何引用,实际上这两个对象已经不可能再被访问,但是它们因为互相引用着对方，导致它们的引用计数都不为 0，于是引用计数算法无法通知 GC 收集器回收它们。</li>
-</ul>
+<p>引用计数法是指<strong>给对象添加一个引用计数器</strong>，<strong>每当有一个地方
+  <a href="https://notebook.grayson.top/project-34/doc-530">引用</a>它时</strong>，<strong>计数器值就加 1</strong>，<strong>当引用失效时</strong>，<strong>计数器值就减 1</strong>，<strong>任何时刻计数器为 0 的对象就是不可能再被使用的</strong>。</p>
 </li>
 <li>
-<p><strong>可达性分析算法</strong></p>
-<ul>
-<li>主要通过一系列的称为“GC Roots”的对象作为起点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象到 GC Roots 没有任何引用链相连（即从 GC Roots 到这个对象不可达）时，则证明对象是不可用的。</li>
-</ul>
+<p>缺点是它<strong>很难解决对象之间相互循环引用的问题</strong>。举个简单的例子，对象 <code>objA</code> 和 <code>obB</code> 都有字段 <code>Instance</code>,赋值令 <code>obja instance=objB</code> 及 <code>obiB. Instance=ojA</code>，除此之外，这两个对象再无任何引用,实际上这两个对象已经不可能再被访问,但是它们因为互相引用着对方，导致它们的引用计数都不为 0，于是引用计数算法无法通知 GC 收集器回收它们，具体代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * @author peng.wei
+</span><span style="color:#75715e"> * @version 1.0
+</span><span style="color:#75715e"> * @date 2021/9/3 16:17
+</span><span style="color:#75715e"> * @Description 引用计数法 GC 测试
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ReferenceCountingGC</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> Object instance <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> _1MB <span style="color:#f92672">=</span> 1024 <span style="color:#f92672">*</span> 1024<span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 这个成员属性的唯一意义就是占点内存，以便能在 GC 日志中看清楚是否有回收过
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> bigSize <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[</span>2 <span style="color:#f92672">*</span> _1MB<span style="color:#f92672">];</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        ReferenceCountingGC objA <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReferenceCountingGC<span style="color:#f92672">();</span>
+        ReferenceCountingGC objB <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReferenceCountingGC<span style="color:#f92672">();</span>
+        objA<span style="color:#f92672">.</span><span style="color:#a6e22e">instance</span> <span style="color:#f92672">=</span> objB<span style="color:#f92672">;</span>
+        objB<span style="color:#f92672">.</span><span style="color:#a6e22e">instance</span> <span style="color:#f92672">=</span> objA<span style="color:#f92672">;</span>
+
+        objA <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        objB <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+
+        <span style="color:#75715e">//  假设在这行发生 GC，看一下 objA 和 objB 是否能被回收
+</span><span style="color:#75715e"></span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">gc</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>运行结果：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">[GC (System.gc()) [PSYoungGen: 7449K-&gt;679K(38400K)] 7449K-&gt;687K(125952K), 0.0019256 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
+[Full GC (System.gc()) [PSYoungGen: 679K-&gt;0K(38400K)] [ParOldGen: 8K-&gt;577K(87552K)] 687K-&gt;577K(125952K), [Metaspace: 3178K-&gt;3178K(1056768K)], 0.0082725 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] 
+Heap
+ PSYoungGen      total 38400K, used 998K [0x0000000795580000, 0x0000000798000000, 0x00000007c0000000)
+  eden space 33280K, 3% used [0x0000000795580000,0x0000000795679b20,0x0000000797600000)
+  from space 5120K, 0% used [0x0000000797600000,0x0000000797600000,0x0000000797b00000)
+  to   space 5120K, 0% used [0x0000000797b00000,0x0000000797b00000,0x0000000798000000)
+ ParOldGen       total 87552K, used 577K [0x0000000740000000, 0x0000000745580000, 0x0000000795580000)
+  object space 87552K, 0% used [0x0000000740000000,0x0000000740090418,0x0000000745580000)
+ Metaspace       used 3185K, capacity 4556K, committed 4864K, reserved 1056768K
+  class space    used 339K, capacity 392K, committed 512K, reserved 1048576K
+</code></pre></div><p>从运行结果中可以清除看到内存回收日志中包含「7449K -&gt; 687K」，意味着<strong>虚拟机并没有因为这两个对象相互引用就放弃回收他们</strong>，这也从侧面说明了<strong>Java虚拟机并不是通过引用计数算法来判断对象是否存活的</strong>。</p>
 </li>
-</ul>
+</ol>
+<h2 id="2-可达性分析算法">
+  2. 可达性分析算法
+  <a class="anchor" href="#2-%e5%8f%af%e8%be%be%e6%80%a7%e5%88%86%e6%9e%90%e7%ae%97%e6%b3%95">#</a>
+</h2>
+<ol>
+<li>
+<p>主要<strong>通过一系列的称为“GC Roots”的对象作为起点</strong>，<strong>从这些节点开始向下搜索</strong>，<strong>搜索所走过的路径称为引用链</strong>，<strong>当一个对象到 GC Roots 没有任何引用链相连</strong>（即从 GC Roots 到这个对象不可达）时，则<strong>证明对象是不可用的</strong>。</p>
+</li>
+<li>
+<p>如下图所示，对象 <code>object5</code>、<code>object6</code>、<code>object7</code> 虽然互有关联，但是他们到 GC Roots 是不可达的，因此他们会被判定为可回收的对象。</p>
 <p>
-  <img src="../../media/202105//1621914618.1032557.png" alt="" /></p>
+  <img src="../../media/202109/2021-09-03_143542_966399.png" alt="" /></p>
+</li>
+<li>
+<p>在 Java 技术体系里面，固定可作为 GC Roots 的对下那个包括以下几种：</p>
+<ol>
+<li><strong>在虚拟机栈</strong>（栈帧中的本地变量表）<strong>中引用的对象</strong>，譬如<strong>各个线程中被调用的方法堆栈中使用到的参数</strong>、<strong>局部变量</strong>、<strong>临时变量</strong>等。</li>
+<li><strong>在方法区中类静态属性引用的对象</strong>，譬如<strong>Java 类的引用类型静态变量</strong>。</li>
+<li><strong>在方法区中类静态属性引用的对象</strong>，譬如<strong>Java 类的引用类型静态变量</strong>。</li>
+<li><strong>在方法区中常量引用的对象</strong>，譬如<strong>字符串常量池</strong>（String Table）<strong>里的引用</strong>。</li>
+<li><strong>在本地方法栈中 JNI</strong>（通常所说的 Native 方法）<strong>引用的对象</strong>。</li>
+<li><strong>Java 虚拟机内部的引用</strong>，如<strong>基本数据类型对应的 Class 对象</strong>，<strong>一些常驻的异常对象</strong>（比如 NullPointerException、OutOfMemoryError）等，<strong>还有系统类加载器</strong>。</li>
+<li><strong>所有被同步锁</strong>（<code>synchronized</code> 关键字）<strong>持有的对象</strong>。</li>
+<li><strong>反映 Java 虚拟机内部情况的 JMXBean</strong>、<strong>JVMT1 中注册的回调</strong>、<strong>本地代码缓存等</strong>。</li>
+<li>除了这些固定的 GC Roots 集合以外，<strong>根据用户所选用的垃圾收集器以及当前回收的内存区域不同</strong>，还<strong>可以有其他对象临时性地加入</strong>，<strong>共同构成完整 GC Roots 集合</strong>，比如分代收集和局部回收（Partial GC），<strong>如果只针对 Java 堆中某一块区域发起垃圾收集时</strong>（如最典型的只针对新生代的垃圾收集），<strong>必须考虑到内存区域是虚拟机自己的实现细节</strong>（在用户视角里任何内存区域都是不可见的），更不是孤立封闭的，所以<strong>某个区域里的对象完全有可能被位于堆中其他区域的对象所引用</strong>，<strong>这时候就需要将这些关联区域的对象也一并加入 GC Roots 集合中去</strong>，<strong>才能保证可达性分析的正确性</strong>。</li>
+</ol>
+</li>
+<li>
+<p>即使在可达性分析算法中判定为不可达对象，也不是非死不可的，这时候他们还暂时还处于缓刑阶段，<strong>要真正宣告一个对象死亡</strong>，<strong>至少要经历两次标记过程</strong>：</p>
+<ol>
+<li>
+<p><strong>如果对象在进行可达性分析后发现没有与 GC Roots 相连接的引用链</strong>，<strong>那他将会被第一次标记</strong>。</p>
+</li>
+<li>
+<p><strong>随后进行一次筛选</strong>，<strong>筛选的条件是此对象是否有必要执行 <code>finalize()</code> 方法</strong>，<strong>假如对象没有覆盖 <code>finalize()</code> 方法</strong>，<strong>或者 <code>finalize()</code> 已经被虚拟机调用过</strong>，<strong>那么虚拟机将这两种情况都视为「没有必要执行」</strong>。</p>
+</li>
+<li>
+<p><strong>如果这个对象被判定为「有必要执行」<code>finalize()</code> 方法</strong>，<strong>那么该对象会被放置在一个名为 <code>F-Queue</code> 的队列之中</strong>，<strong>并在稍后由一条由虚拟机自动建立的</strong>、<strong>低调度优先级的 <code>Finalizer</code> 线程去执行他们的 <code>finalize()</code> 方法</strong>，这里所说的执行是指<strong>虚拟机会触发这个方法开始运行</strong>，但并<strong>不承诺一定会等待他运行结束</strong>，这样做的原因是，<strong>如果某个对象的 <code>finalize()</code> 方法执行缓慢</strong>，<strong>或者更极端地发生了死循环</strong>，<strong>将很可能导致 <code>F-Queue</code> 队列中的其他对象永久处于等待</strong>，<strong>甚至导致整个内存回收子系统的崩溃</strong>。</p>
+</li>
+<li>
+<p><code>finalize()</code><strong>方法是对象逃脱死亡命运的最后一次机会</strong>，<strong>稍后收集器将对 <code>F-Queue</code> 中的对象进行第二次小规模的标记</strong>，<strong>如果对象要在 <code>finalize()</code> 中成功拯救自己</strong>（只要重新与引用链上的任何一个对象建立关联即可，譬如把自己（<code>this</code> 关键字）赋值给某个类变量或者对象的成员变量），<strong>那么第二次标记时他将被移出「即将回收」的集合</strong>，<strong>如果对象这时候还没有逃脱</strong>，<strong>那基本上他就真的要被回收了</strong>，具体的示例代码如下所示：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * @author peng.wei
+</span><span style="color:#75715e"> * @version 1.0
+</span><span style="color:#75715e"> * @date 2021/9/3 15:56
+</span><span style="color:#75715e"> * @Description GC 回收对象在 finalize() 方法中逃脱测试类
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FinalizeEscapeGC</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> FinalizeEscapeGC SAVE_HOOK <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">isAlive</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Yes, i am still alive.&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">finalize</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> Throwable <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">finalize</span><span style="color:#f92672">();</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;finalize method executed.&#34;</span><span style="color:#f92672">);</span>
+        FinalizeEscapeGC<span style="color:#f92672">.</span><span style="color:#a6e22e">SAVE_HOOK</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+        SAVE_HOOK <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FinalizeEscapeGC<span style="color:#f92672">();</span>
+
+        <span style="color:#75715e">//  对象第一次成功拯救自己
+</span><span style="color:#75715e"></span>        SAVE_HOOK <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">gc</span><span style="color:#f92672">();</span>
+        <span style="color:#75715e">//  因为 Finalizer 线程的优先级很低，所以暂停 0.5 秒，等待他一下
+</span><span style="color:#75715e"></span>        Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">sleep</span><span style="color:#f92672">(</span>500<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>SAVE_HOOK <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            SAVE_HOOK<span style="color:#f92672">.</span><span style="color:#a6e22e">isAlive</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;No, i am dead.&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#75715e">//  第二次拯救自己，却失败了
+</span><span style="color:#75715e"></span>        SAVE_HOOK <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">gc</span><span style="color:#f92672">();</span>
+        <span style="color:#75715e">//  因为 Finalizer 线程的优先级很低，所以暂停 0.5 秒，等待他一下
+</span><span style="color:#75715e"></span>        Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">sleep</span><span style="color:#f92672">(</span>500<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>SAVE_HOOK <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            SAVE_HOOK<span style="color:#f92672">.</span><span style="color:#a6e22e">isAlive</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;No, i am dead.&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>运行结果：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">finalize method executed.
+Yes, i am still alive.
+No, i am dead.
+</code></pre></div><p>从运行结果可以看出：</p>
+<ol>
+<li><code>SAVE_HOOK</code><strong>对象的 <code>finaliz()</code> 方法确实被垃圾收集器触发过</strong>，<strong>并且在被收集前成功逃脱了</strong>。</li>
+<li>另外一个值得注意的地方就是，<strong>代码中有两段完全一样的代码片段</strong>，<strong>执行结果却是一次逃脱成功</strong>，<strong>一次失败了</strong>，这是因为<strong>任何一个对象的 <code>finalize()</code> 方法都只会被系统自动调用一次</strong>，<strong>如果对象面临下一次回收</strong>，<strong>他的 <code>finalize()</code> 方法不会再被执行</strong>，因此<strong>第二段代码的自救行动失败了</strong>。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="参考文献">
+  参考文献
+  <a class="anchor" href="#%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae">#</a>
+</h2>
+<ol>
+<li>《深入理解 Java 虚拟机：JVM 高级特性与最佳实践（第 3 版） - 周志明》</li>
+</ol>
+<p>
+  <img src="/media/202105//1621914618.1032557.png" alt="" /></p>
 </article>
  
       
@@ -3252,7 +3631,13 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#判断对象是否存活的方法">判断对象是否存活的方法</a></li>
+    <li>
+      <ul>
+        <li><a href="#1-引用计数法">1. 引用计数法</a></li>
+        <li><a href="#2-可达性分析算法">2. 可达性分析算法</a></li>
+        <li><a href="#参考文献">参考文献</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
 

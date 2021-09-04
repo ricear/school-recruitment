@@ -27,7 +27,7 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.2-Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</guid>
-      <description>Redis数据类型 #   如无特殊说明，本文内容针对的 Redis 版本为 3.0.0，源码下载地址为 redis-3.0.0。
+      <description>如无特殊说明，本文内容针对的 Redis 版本为 3.0.0，源码下载地址为 redis-3.0.0。
  1 前言 #    Redis 的 key 是顶层模型，他的 value 是扁平化的，所有的 value 都是一个 object，它的结构如下：
 typedef struct redisObject { unsigned [type] 4; unsigned [encoding] 4; unsigned [lru] REDIS_LRU_BITS; int refcount; void *ptr; } robj;   上面的几个字段的意义如下：
  type：数据类型，就是我们熟悉的string、hash、list 等。 encoding：内部编码，其实就是数据结构，指的是当前这个 value 底层是用的什么数据结构，因为同一个数据类型底层也有多种数据结构的实现，所以这里需要指定数据结构。 REDIS_LRU_BITS：当前对象可以保留的时长。 refcount：对象引用计数，用于 GC。 ptr：指针，指向以 encoding 的方式实现这个对象的实际地址。    整个 Redis 的数据结构组织如下图所示：

@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Redis数据类型 #   如无特殊说明，本文内容针对的 Redis 版本为 3.0.0，源码下载地址为 redis-3.0.0。
+<meta name="description" content="如无特殊说明，本文内容针对的 Redis 版本为 3.0.0，源码下载地址为 redis-3.0.0。
  1 前言 #    Redis 的 key 是顶层模型，他的 value 是扁平化的，所有的 value 都是一个 object，它的结构如下：
 typedef struct redisObject { unsigned [type] 4; unsigned [encoding] 4; unsigned [lru] REDIS_LRU_BITS; int refcount; void *ptr; } robj;   上面的几个字段的意义如下：
  type：数据类型，就是我们熟悉的string、hash、list 等。 encoding：内部编码，其实就是数据结构，指的是当前这个 value 底层是用的什么数据结构，因为同一个数据类型底层也有多种数据结构的实现，所以这里需要指定数据结构。 REDIS_LRU_BITS：当前对象可以保留的时长。 refcount：对象引用计数，用于 GC。 ptr：指针，指向以 encoding 的方式实现这个对象的实际地址。    整个 Redis 的数据结构组织如下图所示：
    2 数据类型 #  Redis 中主要有 5 种数据类型，分别是字符串（String）、列表（List）、集合（Set）、有序集合（ZSet）、哈希（Hash）。">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="Redis数据类型 #   如无特殊说明，本文内容针对的 Redis 版本为 3.0.0，源码下载地址为 redis-3.0.0。
+<meta property="og:description" content="如无特殊说明，本文内容针对的 Redis 版本为 3.0.0，源码下载地址为 redis-3.0.0。
  1 前言 #    Redis 的 key 是顶层模型，他的 value 是扁平化的，所有的 value 都是一个 object，它的结构如下：
 typedef struct redisObject { unsigned [type] 4; unsigned [encoding] 4; unsigned [lru] REDIS_LRU_BITS; int refcount; void *ptr; } robj;   上面的几个字段的意义如下：
  type：数据类型，就是我们熟悉的string、hash、list 等。 encoding：内部编码，其实就是数据结构，指的是当前这个 value 底层是用的什么数据结构，因为同一个数据类型底层也有多种数据结构的实现，所以这里需要指定数据结构。 REDIS_LRU_BITS：当前对象可以保留的时长。 refcount：对象引用计数，用于 GC。 ptr：指针，指向以 encoding 的方式实现这个对象的实际地址。    整个 Redis 的数据结构组织如下图所示：
@@ -24,7 +24,7 @@ typedef struct redisObject { unsigned [type] 4; unsigned [encoding] 4; unsigned 
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.aea6d96f0a2607e0554a26a0e35b009f9b612c62f43fa70f1c24c528cd1ae7b3.js" integrity="sha256-rqbZbwomB&#43;BVSiag41sAn5thLGL0P6cPHCTFKM0a57M=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.7c5a0c6f7aee3ec02b01f6e3abdc878317cff9628c7528ce8c9961da7e2f7ed2.js" integrity="sha256-fFoMb3ruPsArAfbjq9yHgxfP&#43;WKMdSjOjJlh2n4vftI=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -161,7 +161,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E5%87%91%E9%9B%B6%E9%92%B1%E9%97%AE%E9%A2%98/" class="">1.1.2 凑零钱问题</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="">1.1.2 背包问题</a>
   
 
         </li>
@@ -252,7 +252,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8/" class="">1.1.9 买卖股票</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97%E9%80%9A%E8%A7%A3/" class="">1.1.9 股票问题系列通解</a>
   
 
         </li>
@@ -547,20 +547,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-%E5%85%A8%E6%8E%92%E5%88%97/" class="">1.6.2 全排列</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.3-N%E7%9A%87%E5%90%8E/" class="">1.6.3 N皇后</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-N%E7%9A%87%E5%90%8E/" class="">1.6.2 N皇后</a>
   
 
         </li>
@@ -809,6 +796,71 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">2.3.10 合并两个有序数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/" class="">2.3.11 下一个排列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/" class="">2.3.12 缺失的第一个正数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/" class="">2.3.13 寻找两个正序数组的中位数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/" class="">2.3.14 多数元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.15-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/" class="">2.3.15 最长连续序列</a>
   
 
         </li>
@@ -2596,6 +2648,87 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="toggle"  />
+    <label for="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="flex justify-between">
+      <a role="button" class="">3、结构型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.1-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="">3.1 代理模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.2-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="">3.2 装饰器模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0f94fb8c7e53c880650621fdcc596283" class="toggle"  />
+    <label for="section-0f94fb8c7e53c880650621fdcc596283" class="flex justify-between">
+      <a role="button" class="">4、行为型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/4%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/4.1-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" class="">4.1 策略模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -2810,6 +2943,19 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-AQS/" class="">2.9 Aqs</a>
+  
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -2824,7 +2970,7 @@ https://github.com/alex-shpak/hugo-book
   
     <input type="checkbox" id="section-65e183c484720f91ba3d1676e1ed5a16" class="toggle"  />
     <label for="section-65e183c484720f91ba3d1676e1ed5a16" class="flex justify-between">
-      <a role="button" class="">3、JVM</a>
+      <a role="button" class="">3、 Jvm</a>
     </label>
   
 
@@ -3018,6 +3164,40 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-78e3fdb9e302e0ddb1abf0723557c671" class="toggle"  />
+    <label for="section-78e3fdb9e302e0ddb1abf0723557c671" class="flex justify-between">
+      <a role="button" class="">4、 Nio</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/4NIO/4.1-%E6%A6%82%E8%BF%B0/" class="">4.1 概述</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -3033,6 +3213,22 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" id="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="toggle"  />
     <label for="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="flex justify-between">
       <a role="button" class="">第六章 Spring全家桶</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-afe35ec73fb23fd24d05388dd4f6d178" class="toggle"  />
+    <label for="section-afe35ec73fb23fd24d05388dd4f6d178" class="flex justify-between">
+      <a role="button" class="">1、 Spring</a>
     </label>
   
 
@@ -3074,6 +3270,45 @@ https://github.com/alex-shpak/hugo-book
   
     <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.3-Spring-AOP/" class="">1.3 Spring Aop</a>
   
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b63cda05fe80f821d31813480ebd8acb" class="toggle"  />
+    <label for="section-b63cda05fe80f821d31813480ebd8acb" class="flex justify-between">
+      <a role="button" class="">2、 Spring Boot</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/2SpringBoot/2.1-SpringSpringBootSpringCloud%E7%9A%84%E8%81%94%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB/" class="">2.1 Spring、 Spring Boot、 Spring Cloud的联系与区别</a>
+  
+
+        </li>
+      
+    
+  </ul>
 
         </li>
       
@@ -3139,7 +3374,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#redis数据类型">Redis数据类型</a>
+    <li>
       <ul>
         <li><a href="#1-前言">1 前言</a></li>
         <li><a href="#2-数据类型">2 数据类型</a>
@@ -3234,6 +3469,8 @@ https://github.com/alex-shpak/hugo-book
                         <li><a href="#25422-跳表">2.5.4.2.2 跳表</a></li>
                       </ul>
                     </li>
+                    <li><a href="#2543-跳表与平衡树哈希表的比较">2.5.4.3 跳表与平衡树、哈希表的比较</a></li>
+                    <li><a href="#2544-redis-为什么使用跳表而不用平衡树作为集合的实现">2.5.4.4 Redis 为什么使用跳表而不用平衡树作为集合的实现</a></li>
                   </ul>
                 </li>
               </ul>
@@ -3255,11 +3492,7 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h1 id="redis数据类型">
-  Redis数据类型
-  <a class="anchor" href="#redis%e6%95%b0%e6%8d%ae%e7%b1%bb%e5%9e%8b">#</a>
-</h1>
-<blockquote>
+  <article class="markdown"><blockquote>
 <p>如无特殊说明，本文内容针对的 Redis 版本为 <code>3.0.0</code>，源码下载地址为
   <a href="https://github.com/redis/redis/archive/refs/tags/3.0.0.zip">redis-3.0.0</a>。</p>
 </blockquote>
@@ -3882,8 +4115,51 @@ redis&gt; HGETALL website
   <a class="anchor" href="#23425-%e8%a7%a3%e5%86%b3%e9%94%ae%e5%80%bc%e5%86%b2%e7%aa%81">#</a>
 </h6>
 <ol>
-<li>Redis 的哈希表<strong>使用链地址法来解决键值冲突问题</strong>，<strong>每个哈希表节点都有一个 <code>next</code> 指针</strong>，<strong>多个哈希表节点可以构成一个单向链表</strong>，<strong>被分配到同一个索引上的多个节点可以用这个单向链表连接起来</strong>，<strong>这就解决了键值冲突问题</strong>。</li>
-<li>因为<code>dictEntry</code><strong>节点组成的链表没有指向链表表尾的指针</strong>，所以<strong>为了速度考虑</strong>，程序总是<strong>将新节点添加到链表的表头位置</strong>，<strong>排在其它已有节点的前面</strong>。</li>
+<li>
+<p>Redis 的哈希表<strong>使用链地址法来解决键值冲突问题</strong>，<strong>每个哈希表节点都有一个 <code>next</code> 指针</strong>，<strong>多个哈希表节点可以构成一个单向链表</strong>，<strong>被分配到同一个索引上的多个节点可以用这个单向链表连接起来</strong>，<strong>这就解决了键值冲突问题</strong>。</p>
+</li>
+<li>
+<p>因为 <code>dictEntry</code><strong>节点组成的链表没有指向链表表尾的指针</strong>，所以<strong>为了速度考虑</strong>，程序总是<strong>将新节点添加到链表的表头位置</strong>，<strong>排在其它已有节点的前面</strong>。</p>
+<blockquote>
+<p>常见的解决键值冲突的方法主要有以下几种：</p>
+<ol>
+<li><strong>开放定址法</strong>：
+<ol>
+<li>
+<p>也叫<strong>再散列法</strong>，<strong>当关键字 $key$ 的哈希地址 $p = H(key)$ 出现冲突时</strong>，<strong>以 $p$ 为基础</strong>，<strong>产生另一个哈希地址 $p_1$</strong>，<strong>如果 $p_1$ 仍然冲突</strong>，<strong>再以 $p_1$ 为基础产生另一个哈希地址 $p_2$</strong>，&hellip;，<strong>直到找出一个不冲突的哈希地址 $p_i$</strong>，<strong>将相应程序存入其中</strong>。</p>
+</li>
+<li>
+<p>通常都是用以下公式计算：</p>
+<p>$$
+H(i) = (H(key) + d_i) % m \space i = 1, 2,&hellip;, n
+$$</p>
+<ol>
+<li>其中 $H(key)$ <strong>为哈希函数</strong>，$m$ <strong>为表长</strong>，$d_i$ <strong>为增量序列</strong>，<strong>增量序列的取值方式不同</strong>，<strong>相应的再散列方式也不同</strong>，主要有三种：
+<ol>
+<li><strong>线性探测再散列</strong>：<strong>冲突发生时</strong>，<strong>顺序查看表中下一单元</strong>，<strong>直到找出一个空单元或查遍全表</strong>。</li>
+<li><strong>二次探测再散列</strong>：<strong>冲突发生时</strong>，<strong>在表的右边进行跳跃式探测</strong>，<strong>直到找到空单元</strong>。</li>
+<li><strong>伪随机探测再散列</strong>。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><strong>链地址法</strong>：
+<ol>
+<li>这种方法的基本思想是<strong>将所有哈希地址为 $i$ 的元素构成一个称为同义词链的单链表</strong>，<strong>并将单链表的头指针存在哈希表的第 $i$ 个单元中</strong>，因而<strong>查找</strong>、<strong>插入和删除主要在同义词链中进行</strong>。</li>
+<li><strong>链地址法适用于经常进行插入和删除的情况</strong>，例如<code>HashMap</code> 就是利用这种方法解决 Hash 冲突的。</li>
+</ol>
+</li>
+<li><strong>再哈希法</strong>：
+<ol>
+<li><strong>多写几个哈希函数</strong>，<strong>算出来一个 <code>hashcode</code> 重复的就用另一个哈希函数算</strong>，<strong>直到算出来不一样</strong>。</li>
+</ol>
+</li>
+<li><strong>建立一个公共溢出区域</strong>，就是<strong>把冲突的都放在另一个地方</strong>，<strong>不在表里面</strong>。</li>
+</ol>
+</blockquote>
+</li>
 </ol>
 <h6 id="23426-rehash">
   2.3.4.2.6 rehash
@@ -4113,7 +4389,7 @@ redis&gt; HGETALL website
 </h6>
 <ol>
 <li>
-<p>跳表节点的实现由 <code>src/redis.h/zskiplistNode</code>结构定义：</p>
+<p>跳表节点的实现由 <code>src/redis.h/zskiplistNode</code> 结构定义：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">zskiplistNode</span> {
     robj <span style="color:#f92672">*</span>obj;  <span style="color:#75715e">/*成员对象*/</span>
     <span style="color:#66d9ef">double</span> score;   <span style="color:#75715e">/*分值*/</span>
@@ -4131,10 +4407,10 @@ redis&gt; HGETALL website
 <p>跳表节点的 <code>level</code><strong>数组可以包含多个元素</strong>，<strong>每一个元素都包含一个指向其他节点的指针</strong>，<strong>程序可以通过这些层来加快访问其他节点的速度</strong>，一般来说，<strong>层的数量越多</strong>，<strong>访问其他节点的速度就越快</strong>。</p>
 </li>
 <li>
-<p><strong>每次创建一个新跳表节点的时候</strong>，<strong>程序都根据幂次定律</strong>（越大的数出现的概率越小）<strong>随机生成一个介于1和32之间的值作为 <code>level</code>数组的大小</strong>，<strong>这个大小就是层的高度</strong>。</p>
+<p><strong>每次创建一个新跳表节点的时候</strong>，<strong>程序都根据幂次定律</strong>（越大的数出现的概率越小）<strong>随机生成一个介于 1 和 32 之间的值作为 <code>level</code> 数组的大小</strong>，<strong>这个大小就是层的高度</strong>。</p>
 </li>
 <li>
-<p>下图分别展示了三个高度为1层、3层和5层的节点：</p>
+<p>下图分别展示了三个高度为 1 层、3 层和 5 层的节点：</p>
 <p>
   <img src="../../../media/202107/2021-07-26_144034.png" alt="" /></p>
 </li>
@@ -4160,18 +4436,18 @@ redis&gt; HGETALL website
 <li><strong>层的跨度用于记录两个节点之间的距离</strong>：
 <ol>
 <li><strong>两个节点之间的跨度越大</strong>，<strong>他们相距得就越远</strong>。</li>
-<li><strong>指向 <code>NULL</code>的所有前进指针的跨度都为0</strong>，<strong>因为他们没有连向任何节点</strong>。</li>
+<li><strong>指向 <code>NULL</code> 的所有前进指针的跨度都为 0</strong>，<strong>因为他们没有连向任何节点</strong>。</li>
 </ol>
 </li>
 <li><strong>跨度主要用来计算排位</strong>（Rank）<strong>的</strong>，<strong>在查找某个节点的过程中</strong>，<strong>将沿途访问过的所有层的跨度累计起来</strong>，<strong>得到的结果就是目标节点在跳跃表中的排位</strong>，例如：
 <ol>
 <li>
-<p>下图用虚线标记了在跳跃表中查找分值为3.0、成员对象为$o3$的节点时沿途经历的层，并且层的跨度为3，所以目标节点在跳跃表中的排位为3。</p>
+<p>下图用虚线标记了在跳跃表中查找分值为 3.0、成员对象为 $o3$ 的节点时沿途经历的层，并且层的跨度为 3，所以目标节点在跳跃表中的排位为 3。</p>
 <p>
   <img src="../../../media/202107/2021-07-26_145948.png" alt="" /></p>
 </li>
 <li>
-<p>下图用虚线标记了在跳跃表中查找分值为2.0、成员对象为$o2$的节点时沿途经历的层，在查找节点的过程中，程序经过了两个跨度为1的节点，因此可以计算出，目标节点在跳跃表中的排位为2。</p>
+<p>下图用虚线标记了在跳跃表中查找分值为 2.0、成员对象为 $o2$ 的节点时沿途经历的层，在查找节点的过程中，程序经过了两个跨度为 1 的节点，因此可以计算出，目标节点在跳跃表中的排位为 2。</p>
 <p>
   <img src="../../../media/202107/2021-07-26_150258.png" alt="" /></p>
 </li>
@@ -4186,7 +4462,7 @@ redis&gt; HGETALL website
 <p><strong>节点的后退指针用于从表尾向表头方向访问节点</strong>，<strong>与可以一次跳过多个节点的前进指针不同</strong>，<strong>因为每个节点只有一个后退指针</strong>，<strong>所以每次只能后退至前一个节点</strong>。</p>
 </li>
 <li>
-<p>下图用虚线展示了如何<strong>从表尾向表头遍历跳表中的所有节点</strong>，<strong>程序首先通过跳表的 <code>tail</code>指针访问表尾节点</strong>，<strong>然后通过后退指针访问倒数第二个节点</strong>，<strong>之后再沿着后退指针访问倒数第三个节点</strong>，<strong>再之后遇到指向 <code>NULL</code>的后退指针</strong>，<strong>于是访问结束</strong>。</p>
+<p>下图用虚线展示了如何<strong>从表尾向表头遍历跳表中的所有节点</strong>，<strong>程序首先通过跳表的 <code>tail</code> 指针访问表尾节点</strong>，<strong>然后通过后退指针访问倒数第二个节点</strong>，<strong>之后再沿着后退指针访问倒数第三个节点</strong>，<strong>再之后遇到指向 <code>NULL</code> 的后退指针</strong>，<strong>于是访问结束</strong>。</p>
 <p>
   <img src="../../../media/202107/2021-07-26_155255.png" alt="" /></p>
 </li>
@@ -4196,16 +4472,16 @@ redis&gt; HGETALL website
 <p><strong>分值和成员</strong>：</p>
 <ol>
 <li>
-<p><strong>节点的分值是一个 <code>double</code>类型的浮点数</strong>，<strong>跳表中的所有节点都按分值从小到大来排序</strong>。</p>
+<p><strong>节点的分值是一个 <code>double</code> 类型的浮点数</strong>，<strong>跳表中的所有节点都按分值从小到大来排序</strong>。</p>
 </li>
 <li>
-<p><strong>节点的成员是一个指针</strong>，<strong>他指向一个字符串对象</strong>，<strong>而字符串对象则保存着一个SDS值</strong>。</p>
+<p><strong>节点的成员是一个指针</strong>，<strong>他指向一个字符串对象</strong>，<strong>而字符串对象则保存着一个 SDS 值</strong>。</p>
 </li>
 <li>
 <p><strong>在同一个跳表中</strong>，<strong>各个节点保存的成员对象必须是唯一的</strong>，<strong>但是多个节点保存的分值却是可以相同的</strong>，<strong>分值相同的节点将按照成员对象在字典中的大小来进行排序</strong>，<strong>成员对象较小的节点会排在前面</strong>（靠近表头的方向），<strong>而成员对象较大的节点则会排在后面</strong>（靠近表尾的方向）。</p>
 </li>
 <li>
-<p>如下图所示，三个跳表节点都保存了相同的分值10086.0，保存成员对象$o1$的节点排在保存成员对象$o2$和$o3$节点之前，而保存成员对象$o2$的节点又排在保存成员对象$o3$的节点之前，由此可见，$o1$、$o2$、$o3$三个成员对象在字典中的排序为$o1 \lt o2 \lt o3$。</p>
+<p>如下图所示，三个跳表节点都保存了相同的分值 10086.0，保存成员对象 $o1$ 的节点排在保存成员对象 $o2$ 和 $o3$ 节点之前，而保存成员对象 $o2$ 的节点又排在保存成员对象 $o3$ 的节点之前，由此可见，$o1$、$o2$、$o3$ 三个成员对象在字典中的排序为 $o1 \lt o2 \lt o3$。</p>
 <p>
   <img src="../../../media/202107/2021-07-26_160619.png" alt="" /></p>
 </li>
@@ -4223,12 +4499,12 @@ redis&gt; HGETALL website
   <img src="../../../media/202107/2021-07-26_160844.png" alt="" /></p>
 </li>
 <li>
-<p><strong>但通过使用一个 <code>zskiplist</code>结构来持有这些节点</strong>，<strong>程序可以更方便地对整个跳表进行处理</strong>，比如<strong>快速访问跳表的表头结点和表尾节点</strong>，或者<strong>快速地获取跳表节点的数量</strong>（即跳表的长度）<strong>等信息</strong>，如下图所示：</p>
+<p><strong>但通过使用一个 <code>zskiplist</code> 结构来持有这些节点</strong>，<strong>程序可以更方便地对整个跳表进行处理</strong>，比如<strong>快速访问跳表的表头结点和表尾节点</strong>，或者<strong>快速地获取跳表节点的数量</strong>（即跳表的长度）<strong>等信息</strong>，如下图所示：</p>
 <p>
   <img src="../../../media/202107/2021-07-26_161226.png" alt="" /></p>
 </li>
 <li>
-<p><code>zskiplist</code>的结构定义如下：</p>
+<p><code>zskiplist</code> 的结构定义如下：</p>
 <pre><code>typedef struct zskiplist {
     struct zskiplistNode *header, *tail;    /*表头结点和表尾节点*/
     unsigned long length;   /*表中节点的数量*/
@@ -4236,6 +4512,24 @@ redis&gt; HGETALL website
 } zskiplist;
 </code></pre></li>
 </ol>
+<h5 id="2543-跳表与平衡树哈希表的比较">
+  2.5.4.3 跳表与平衡树、哈希表的比较
+  <a class="anchor" href="#2543-%e8%b7%b3%e8%a1%a8%e4%b8%8e%e5%b9%b3%e8%a1%a1%e6%a0%91%e5%93%88%e5%b8%8c%e8%a1%a8%e7%9a%84%e6%af%94%e8%be%83">#</a>
+</h5>
+<ol>
+<li><strong>跳表和各种平衡树</strong>（如 AVL、红黑树）<strong>的元素是有序排列的</strong>，而<strong>哈希表不是有序的</strong>，因此，<strong>在哈希表上只能做单个 <code>key</code> 的查找</strong>，<strong>不适宜做范围查找</strong>，所谓范围查找，指的是<strong>查找那些大小在指定的两个值之间的所有节点</strong>。</li>
+<li><strong>在做范围查找的时候</strong>，<strong>平衡树比跳表操作要复杂</strong>，<strong>在平衡树上</strong>，<strong>我们找到指定范围的小值之后</strong>，<strong>还需要以中序遍历的顺序继续寻找其他不超过大值的节点</strong>，<strong>如果不对平衡树进行一定的改造</strong>，<strong>这里的中序遍历并不容易实现</strong>，<strong>而在跳表上进行范围查找就非常简单</strong>，<strong>只需要在找到小值之后</strong>，<strong>对第一层链表进行若干步的遍历就可以实现</strong>。</li>
+<li><strong>平衡树的插入和删除操作可能引发子树的调整</strong>，<strong>逻辑复杂</strong>，<strong>而跳表的插入和删除只需要修改相邻接点的指针</strong>，<strong>操作简单又快速</strong>。</li>
+<li><strong>从内存占用上来说</strong>，<strong>跳表比平衡树更灵活一些</strong>，<strong>一般来说</strong>，<strong>平衡树每个节点包含 2 个指针</strong>（分别指向左右子树），<strong>而跳表每个节点包含的指针数目平均为 $\frac{1}{1-p}$</strong>，<strong>具体取决于参数 $p$</strong>，<strong>如果向 Redis 里的实现一样</strong>，<strong>取 $p = \frac{1}{4}$</strong>，<strong>那么平均每个节点包含 1.33 个指针</strong>，<strong>比平衡树更有优势</strong>。</li>
+<li><strong>查找单个 <code>key</code></strong>，<strong>跳表和平衡树的时间复杂度都为 $O(logn)$</strong>，<strong>大体相当</strong>，<strong>而哈希表在保持较低的哈希值冲突概率的前提下</strong>，<strong>查找时间复杂度接近 $O(1)$</strong>，<strong>性能更高一些</strong>，所以我们平常使用的各种<code>Map</code> 或<code>dictionary</code> 结构，大都是基于哈希表实现的。</li>
+<li><strong>从算法实现难度上来比较</strong>，<strong>跳表比平衡树要简单的多</strong>。</li>
+</ol>
+<h5 id="2544-redis-为什么使用跳表而不用平衡树作为集合的实现">
+  2.5.4.4 Redis 为什么使用跳表而不用平衡树作为集合的实现
+  <a class="anchor" href="#2544-redis-%e4%b8%ba%e4%bb%80%e4%b9%88%e4%bd%bf%e7%94%a8%e8%b7%b3%e8%a1%a8%e8%80%8c%e4%b8%8d%e7%94%a8%e5%b9%b3%e8%a1%a1%e6%a0%91%e4%bd%9c%e4%b8%ba%e9%9b%86%e5%90%88%e7%9a%84%e5%ae%9e%e7%8e%b0">#</a>
+</h5>
+<p>可以参考
+  <a href="/school-recruitment/#2-5-4-3-%e8%b7%b3%e8%a1%a8%e4%b8%8e%e5%b9%b3%e8%a1%a1%e6%a0%91-%e5%93%88%e5%b8%8c%e8%a1%a8%e7%9a%84%e6%af%94%e8%be%83">2.5.4.3 跳表与平衡树、哈希表的比较</a>，然后从<strong>内存占用</strong>和<strong>算法复杂度</strong>两个角度来分析。</p>
 <h2 id="参考文献">
   参考文献
   <a class="anchor" href="#%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae">#</a>
@@ -4250,6 +4544,10 @@ redis&gt; HGETALL website
 <li>
   <a href="https://zhuanlan.zhihu.com/p/141184020">Redis 数据类型及使用场景</a>。</li>
 <li>redis 设计与实现（第二版）。</li>
+<li>
+  <a href="https://juejin.cn/post/6844903446475177998">Redis 为什么用跳表而不用平衡树？</a></li>
+<li>
+  <a href="https://xiaorui2.github.io/2019/06/25/Hash%E5%86%B2%E7%AA%81%E7%9A%84%E5%87%A0%E7%A7%8D%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95">Hash 冲突的几种解决方法</a>。</li>
 </ol>
 </article>
  
@@ -4326,7 +4624,7 @@ redis&gt; HGETALL website
   
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#redis数据类型">Redis数据类型</a>
+    <li>
       <ul>
         <li><a href="#1-前言">1 前言</a></li>
         <li><a href="#2-数据类型">2 数据类型</a>
@@ -4421,6 +4719,8 @@ redis&gt; HGETALL website
                         <li><a href="#25422-跳表">2.5.4.2.2 跳表</a></li>
                       </ul>
                     </li>
+                    <li><a href="#2543-跳表与平衡树哈希表的比较">2.5.4.3 跳表与平衡树、哈希表的比较</a></li>
+                    <li><a href="#2544-redis-为什么使用跳表而不用平衡树作为集合的实现">2.5.4.4 Redis 为什么使用跳表而不用平衡树作为集合的实现</a></li>
                   </ul>
                 </li>
               </ul>

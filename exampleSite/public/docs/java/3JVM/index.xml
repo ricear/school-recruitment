@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>3、JVM on Computer Cookbook School Recruitment</title>
+    <title>Computer Cookbook School Recruitment</title>
     <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/</link>
-    <description>Recent content in 3、JVM on Computer Cookbook School Recruitment</description>
+    <description>Recent content on Computer Cookbook School Recruitment</description>
     <generator>Hugo -- gohugo.io</generator><atom:link href="https://books.grayson.top/school-recruitment/docs/java/3JVM/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title></title>
@@ -21,11 +21,10 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.2-%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E5%AD%98%E6%B4%BB%E7%9A%84%E6%96%B9%E6%B3%95/</guid>
-      <description>判断对象是否存活的方法 #  判断对象是否存活的方法有两种，分别是 引用计数法、可达性分析算法。
- 注：如无特殊说明，本文所有图的来源为《深入理解 Java 虚拟机 JVM 高级特性与最佳实践》
-   引用计数法
- 引用计数法是指给对象添加一个引用计数器，每当有一个地方引用它时，计数器值就加 1，当引用失效时，计数器值就减 1，任何时刻计数器为 0 的对象就是不可能再被使用的。 缺点是它很难解决对象之间相互循环引用的问题。举个简单的例子，对象 objA 和 obB 都有字段 Instance,赋值令 obja instance=objB 及 obiB. Instance=ojA，除此之外，这两个对象再无任何引用,实际上这两个对象已经不可能再被访问,但是它们因为互相引用着对方，导致它们的引用计数都不为 0，于是引用计数算法无法通知 GC 收集器回收它们。    可达性分析算法
- 主要通过一系列的称为“GC Roots”的对象作为起点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象到 GC Roots 没有任何引用链相连（即从 GC Roots 到这个对象不可达）时，则证明对象是不可用的。     </description>
+      <description>判断对象是否存活的方法有两种，分别是 引用计数法、可达性分析算法。
+1. 引用计数法 #    引用计数法是指给对象添加一个引用计数器，每当有一个地方 引用它时，计数器值就加 1，当引用失效时，计数器值就减 1，任何时刻计数器为 0 的对象就是不可能再被使用的。
+  缺点是它很难解决对象之间相互循环引用的问题。举个简单的例子，对象 objA 和 obB 都有字段 Instance,赋值令 obja instance=objB 及 obiB. Instance=ojA，除此之外，这两个对象再无任何引用,实际上这两个对象已经不可能再被访问,但是它们因为互相引用着对方，导致它们的引用计数都不为 0，于是引用计数算法无法通知 GC 收集器回收它们，具体代码如下：
+/** * @author peng.wei * @version 1.0 * @date 2021/9/3 16:17 * @Description 引用计数法 GC 测试 */ public class ReferenceCountingGC { public Object instance = null; private static final int _1MB = 1024 * 1024; /** * 这个成员属性的唯一意义就是占点内存，以便能在 GC 日志中看清楚是否有回收过 */ private byte[] bigSize = new byte[2 * _1MB]; public static void main(String[] args) { ReferenceCountingGC objA = new ReferenceCountingGC(); ReferenceCountingGC objB = new ReferenceCountingGC(); objA.</description>
     </item>
     
     <item>
@@ -95,12 +94,12 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.8-JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/</guid>
-      <description>JVM内存结构 #  1 概述 #  JVM 内部使用Java 内存模型，在逻辑上将内存划分为线程栈（Thread Stacks）和堆内存（Heap）两个部分，如下图所示：
+      <description>1 概述 #  JVM 内部使用Java 内存模型，在逻辑上将内存划分为线程栈（Thread Stacks）和堆内存（Heap）两个部分，如下图所示：
  1.1 线程栈 #  JVM 中，每个正在运行的线程，都有自己的线程栈。
  线程栈包含了当前正在执行的方法链或调用链上的所有方法的状态信息， 所以线程栈又被称为方法栈或调用栈。 线程栈里面保存了调用链上正在执行的所有方法中的局部变量：  每个线程都只能访问自己的线程栈。 每个线程都不能访问其他线程的局部变量。   即使两个线程正在执行完全相同的代码，但每个线程都会在自己的线程栈内创建对应代码中声明的局部变量，所以每个线程都有一份自己的局部变量副本：  所有原生类型的局部变量都存储在线程栈中，因此对其他线程是不可见的。 线程可以将一个原生变量值的副本传给另一个线程，但不能共享原生局部变量本身。    1.2 堆内存 #  堆内存又称为共享堆，堆中的所有对象，可以被所有线程访问，只要他们能拿到对象的引用地址：
  如果一个线程可以访问某个对象时，也就可以访问该对象的成员变量。 如果两个线程同时调用某个对象的同一个方法，则他们都可以访问到这个对象的成员变量，但每个线程的局部变量副本是独立的。  虽然各个线程自己使用的局部变量都在自己的栈上，但是大家可以共享堆上的对象，各个不同线程访问同一个对象实例的基础类型的成员变量，会给每个线程一个变量的副本。
  1.3 总结 #   如果是原生数据类型的局部变量，那么他的内容就全部保留在线程栈中。 如果是对象引用，在对象的引用地址保存在栈中，而实际的对象内容保存在堆中。 对象的成员变量与对象本身一起存储在堆上，不管成员变量的类型是原生数值，还是对象引用。 类的静态变量则和类定义一样都保存在堆中。  总结一下：
- 原始数据类型的局部变量和对象引用地址在栈上。 对象、对象成员与类定义、静态变量在堆上。   2 线程栈 #    每启动一个线程，JVM 就会在栈空间分配对应的线程栈。 线程栈也叫做Java 方法栈，如果使用了JNI（Java Native Interface）方法，则会分配一个单独的本地方法栈（Native Stack）。 线程执行过程中，一般会有多个方法组成调用栈（Stack Trace），比如 A 调用 B，B 调用 C&amp;hellip;&amp;hellip;。每执行到一个方法，就会创建对应的栈帧（Frame）。  栈帧是一个逻辑上的概念，具体的大小在一个方法完成后基本上就能确定。 比如返回值需要有一个空间存放；每个局部变量都需要对应的地址空间；此外还有给指令使用的操作数栈；以及Class 指针（标识这个栈帧对应的是哪个类的方法，指向非堆里面的 Class 对象）。     3 堆 #    堆内存是所有线程共用的内存空间，理论上大家都可以访问。 逻辑上的 Java 堆划分为堆（Heap）和堆外（Non-Heap）两个部分：  3.</description>
+ 原始数据类型的局部变量和对象引用地址在栈上。 对象、对象成员与类定义、静态变量在堆上。   2 线程栈 #    每启动一个线程，JVM 就会在栈空间分配对应的线程栈。 线程栈也叫做Java 方法栈，如果使用了JNI（Java Native Interface）方法，则会分配一个单独的本地方法栈（Native Stack）。 线程执行过程中，一般会有多个方法组成调用栈（Stack Trace），比如 A 调用 B，B 调用 C&amp;hellip;&amp;hellip;。每执行到一个方法，就会创建对应的栈帧（Frame）。  栈帧是一个逻辑上的概念，具体的大小在一个方法完成后基本上就能确定。 比如返回值需要有一个空间存放；每个局部变量都需要对应的地址空间；此外还有给指令使用的操作数栈；以及Class 指针（标识这个栈帧对应的是哪个类的方法，指向非堆里面的 Class 对象）。     3 堆 #    堆内存是所有线程共用的内存空间，理论上大家都可以访问。 逻辑上的 Java 堆划分为 堆（Heap）和 堆外（Non-Heap）两个部分：  3.</description>
     </item>
     
     <item>

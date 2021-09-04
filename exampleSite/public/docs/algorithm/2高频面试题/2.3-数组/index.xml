@@ -154,5 +154,79 @@
  nums1.length == m + n nums2.</description>
     </item>
     
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/</guid>
+      <description>1 题目 #  实现获取 下一个排列 的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列（即，组合出下一个更大的整数）。
+如果不存在下一个更大的排列，则将数字重新排列成最小的排列（即升序排列）。
+必须 原地 修改，只允许使用额外常数空间。
+示例 1：
+输入：nums = [1,2,3] 输出：[1,3,2] 示例 2：
+输入：nums = [3,2,1] 输出：[1,2,3] 示例 3：
+输入：nums = [1,1,5] 输出：[1,5,1] 示例 4：
+输入：nums = [1] 输出：[1] 提示：
+ 1 &amp;lt;= nums.length &amp;lt;= 100 0 &amp;lt;= nums[i] &amp;lt;= 100  2 问题分析 #   这道题可以按照 维基百科上的解题思路来解决，具体如下：  先找出最大的索引 $k$，满足 $nums[k] &amp;lt; nums[k + 1]$，如果不存在，就翻转整个数组。 再找出另一个最大索引 $l$，满足 $nums[l] &amp;gt; nums[k]$。 交换 $nums[l]$ 和 $nums[k]$。 最后反转 $nums[k+1]$ 后面的元素。    3 参考代码 #  /** * 31.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/</guid>
+      <description>1 题目 #  给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
+请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。 示例 1：
+输入：nums = [1,2,0] 输出：3 示例 2：
+输入：nums = [3,4,-1,1] 输出：2 示例 3：
+输入：nums = [7,8,9,11,12] 输出：1 提示：
+ 1 &amp;lt;= nums.length &amp;lt;= 5 * 105 -231 &amp;lt;= nums[i] &amp;lt;= 231 - 1  2 解题思路 #  2.1 哈希表 #  2.1.1 问题分析 #   对于一个长度为$N$的数组，其中没有出现的最小正整数只能在$[1, N + 1]$中，这是因为如果$[1, N]$都出现了，那么答案是$N + 1$，否则答案是$[1, N]$中没有出现的最小正整数。 因此，我们有了一种将数组设计成哈希表的思路：  我们对数组进行遍历，对于遍历到的数$x$，如果他在$[1, N]$的范围内，那么就将数组中的第$x - 1$个位置（数组下标从0开始）打上标记。 在遍历结束之后，如果所有位置都被打了标记，那么答案是$N + 1$，否则答案是最小的没有打上标记的位置加1。   由于我们只在意$[1, N]$的数，因此我们可以先对数组进行遍历，把不在$[1, N]$范围内的数修改成任意一个大于$N$的数（例如$N + 1$），这样一来，数组中的所有数就都是正数了，因此，我们可以将标记表示为负号。 具体的算法流程如下：   将数组中所有小于等于0的数修改为$N + 1$。</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</guid>
+      <description>1 题目 #  给定两个大小分别为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。请你找出并返回这两个正序数组的 中位数 。
+示例 1：
+输入：nums1 = [1,3], nums2 = [2] 输出：2.00000 解释：合并数组 = [1,2,3] ，中位数 2 示例 2：
+输入：nums1 = [1,2], nums2 = [3,4] 输出：2.50000 解释：合并数组 = [1,2,3,4] ，中位数 (2 + 3) / 2 = 2.5 示例 3：
+输入：nums1 = [0,0], nums2 = [0,0] 输出：0.00000 示例 4：
+输入：nums1 = [], nums2 = [1] 输出：1.00000 示例 5：
+输入：nums1 = [2], nums2 = [] 输出：2.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/</guid>
+      <description>1 题目 #  给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
+你可以假设数组是非空的，并且给定的数组总是存在多数元素。
+示例 1：
+输入：[3,2,3] 输出：3 示例 2：
+输入：[2,2,1,1,1,2,2] 输出：2 进阶：
+ 尝试设计时间复杂度为 O(n)、空间复杂度为 O(1) 的算法解决此问题。  2 解题思路 #  2.1 计数 #  2.1.1 问题分析 #   最原始的思路是通过一个 $map$，其中 $key$为数组中的元素，$value$为对应元素出现的次数，添加完元素后，如果当前元素的出现次数大于 $\frac{n}{2}$，则该元素即为多数元素，直接返回即可。  2.1.2 参考代码 #  /** * 169. 多数元素（版本 1：计数） * @param nums 数组 * @return 数组中出现次数 大于 ⌊ n/2 ⌋ 的元素 */ public int majorityElementV1(int[] nums) { Map&amp;lt;Integer, Integer&amp;gt; map = new HashMap&amp;lt;&amp;gt;(); int m = nums.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.15-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.15-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</guid>
+      <description>1 题目 #  给定一个未排序的整数数组 nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。
+请你设计并实现时间复杂度为 O(n) 的算法解决此问题。
+示例 1：
+输入：nums = [100,4,200,1,3,2] 输出：4 解释：最长数字连续序列是 [1, 2, 3, 4]。它的长度为 4。 示例 2：
+输入：nums = [0,3,7,2,5,8,4,6,0,1] 输出：9 提示：
+ 0 &amp;lt;= nums.length &amp;lt;= 105 -109 &amp;lt;= nums[i] &amp;lt;= 109  2 解题思路 #  2.1 哈希表 #  2.1.1 问题分析 #   有意题目要求的时间复杂度为 $O(n)$，因此我们可以使用哈希表来解决这个问题。 我们使用哈希表来存储每个端点值对应连续区间的长度，其中 $key$为端点值，$value$为对应连续区间的长度。 然后按以下步骤计算每个端点值对应连续区间的长度：  若该端点已经在哈希表中存在，则直接跳过即可。 否则：  计算出该端点左右两个相邻端点 $nums[i] - 1$ 和 $nums[i] + 1$ 的连续区间的长度分别为 $left$ 和 $right$。 则当前端点对应连续区间的长度$currentLength$为 $left + right + 1$，然后更新最后的结果值 $res$ 为所有已计算端点连续区间长度的最大值。 更新当前端点 $nums[i]$ 及所在连续区间两边端点 $nums[i] - left$ 和 $nums[i] + right$ 的连续区间的长度为当前端点对应连续区间的长度 $currentLength$。       2.</description>
+    </item>
+    
   </channel>
 </rss>

@@ -3,13 +3,19 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="回溯算法解题框架 #  1 含义 #   回溯算法其实就是我们常说的DFS算法，本质上就是一种暴力穷举算法。 解决一个回溯问题，实际上就是一个决策树的遍历过程，我们只需要思考 3 个问题：  路径： 也就是已经做出的选择。 选择列表： 也就是当前可以做的选择。 约束条件： 也就是到达决策树底层，无法再做选择的条件。    2 框架 #  回溯算法的核心就是for 循环里面的递归，即在递归调用之前【做选择】，在递归调用之后【撤销选择】。
-result = [] def backtrack(路径, 选择列表): if 满足结束条件: result.add(路径) return for 选择 in 选择列表: 做选择 backtrack(路径, 选择列表) 撤销选择 3 应用场景 #  回溯算法的应用场景主要包括以下几个方面：
-  全排列。  N皇后。  4 参考文献 #    回溯算法解题套路框架。  ">
+<meta name="description" content="1 含义 #    回溯算法建立在 DFS 基础之上，与 DFS 的主要不同在于：
+ DFS 是一个劲的往某一个方向搜索，等到到达一个方向的终点时，才恢复状态，回溯上一层。 回溯算法在达到结束条件后，就恢复状态，回溯上一层。    当问题需要回头，以此来查出所有的解的时候，使用回溯算法，即满足结束条件或者发现不是正确路径的时候（走不通），要撤销选择，回退到上一个状态，继续尝试，直到找出所有解为止。
+  解决一个回溯算法时主要按照以下步骤：
+ 画出递归树，找到状态变量（回溯函数的参数），这一部非常重要。 根据题意，确定结束条件。 找准选择列表（与函数参数相关），与第一步紧密关联。 判断是否需要剪枝。 做出选择，递归调用，进入下一层。 撤销选择。    回溯算法的核心就是for 循环里面的递归，即在递归调用之前【做选择】，在递归调用之后【撤销选择】，解题框架如下：
+result = [] def backtrack(路径, 选择列表): if 满足结束条件: result.add(路径) return for 选择 in 选择列表: 做选择 backtrack(路径, 选择列表) 撤销选择   2 应用场景 #  回溯算法的应用场景主要包括以下几个方面：
+  子集、组合。  全排列。 搜索。   需要注意的是，子集、组合与排列是不同性质的概念，子集、组合是无关顺序的，而排列是和元素顺序有关的，例如 [1, 2] 和 [2, 1] 是同一个组合（子集），但是是两种不一样的排列，因此被分为两类问题。">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="回溯算法解题框架 #  1 含义 #   回溯算法其实就是我们常说的DFS算法，本质上就是一种暴力穷举算法。 解决一个回溯问题，实际上就是一个决策树的遍历过程，我们只需要思考 3 个问题：  路径： 也就是已经做出的选择。 选择列表： 也就是当前可以做的选择。 约束条件： 也就是到达决策树底层，无法再做选择的条件。    2 框架 #  回溯算法的核心就是for 循环里面的递归，即在递归调用之前【做选择】，在递归调用之后【撤销选择】。
-result = [] def backtrack(路径, 选择列表): if 满足结束条件: result.add(路径) return for 选择 in 选择列表: 做选择 backtrack(路径, 选择列表) 撤销选择 3 应用场景 #  回溯算法的应用场景主要包括以下几个方面：
-  全排列。  N皇后。  4 参考文献 #    回溯算法解题套路框架。  " />
+<meta property="og:description" content="1 含义 #    回溯算法建立在 DFS 基础之上，与 DFS 的主要不同在于：
+ DFS 是一个劲的往某一个方向搜索，等到到达一个方向的终点时，才恢复状态，回溯上一层。 回溯算法在达到结束条件后，就恢复状态，回溯上一层。    当问题需要回头，以此来查出所有的解的时候，使用回溯算法，即满足结束条件或者发现不是正确路径的时候（走不通），要撤销选择，回退到上一个状态，继续尝试，直到找出所有解为止。
+  解决一个回溯算法时主要按照以下步骤：
+ 画出递归树，找到状态变量（回溯函数的参数），这一部非常重要。 根据题意，确定结束条件。 找准选择列表（与函数参数相关），与第一步紧密关联。 判断是否需要剪枝。 做出选择，递归调用，进入下一层。 撤销选择。    回溯算法的核心就是for 循环里面的递归，即在递归调用之前【做选择】，在递归调用之后【撤销选择】，解题框架如下：
+result = [] def backtrack(路径, 选择列表): if 满足结束条件: result.add(路径) return for 选择 in 选择列表: 做选择 backtrack(路径, 选择列表) 撤销选择   2 应用场景 #  回溯算法的应用场景主要包括以下几个方面：
+  子集、组合。  全排列。 搜索。   需要注意的是，子集、组合与排列是不同性质的概念，子集、组合是无关顺序的，而排列是和元素顺序有关的，例如 [1, 2] 和 [2, 1] 是同一个组合（子集），但是是两种不一样的排列，因此被分为两类问题。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.1-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E8%A7%A3%E9%A2%98%E6%A1%86%E6%9E%B6/" /><meta property="article:section" content="docs" />
 
@@ -20,7 +26,7 @@ result = [] def backtrack(路径, 选择列表): if 满足结束条件: result.a
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.aea6d96f0a2607e0554a26a0e35b009f9b612c62f43fa70f1c24c528cd1ae7b3.js" integrity="sha256-rqbZbwomB&#43;BVSiag41sAn5thLGL0P6cPHCTFKM0a57M=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.7c5a0c6f7aee3ec02b01f6e3abdc878317cff9628c7528ce8c9961da7e2f7ed2.js" integrity="sha256-fFoMb3ruPsArAfbjq9yHgxfP&#43;WKMdSjOjJlh2n4vftI=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -157,7 +163,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E5%87%91%E9%9B%B6%E9%92%B1%E9%97%AE%E9%A2%98/" class="">1.1.2 凑零钱问题</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="">1.1.2 背包问题</a>
   
 
         </li>
@@ -248,7 +254,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8/" class="">1.1.9 买卖股票</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97%E9%80%9A%E8%A7%A3/" class="">1.1.9 股票问题系列通解</a>
   
 
         </li>
@@ -543,20 +549,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-%E5%85%A8%E6%8E%92%E5%88%97/" class="">1.6.2 全排列</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.3-N%E7%9A%87%E5%90%8E/" class="">1.6.3 N皇后</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-N%E7%9A%87%E5%90%8E/" class="">1.6.2 N皇后</a>
   
 
         </li>
@@ -805,6 +798,71 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">2.3.10 合并两个有序数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/" class="">2.3.11 下一个排列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/" class="">2.3.12 缺失的第一个正数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/" class="">2.3.13 寻找两个正序数组的中位数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/" class="">2.3.14 多数元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.15-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/" class="">2.3.15 最长连续序列</a>
   
 
         </li>
@@ -2592,6 +2650,87 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="toggle"  />
+    <label for="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="flex justify-between">
+      <a role="button" class="">3、结构型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.1-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="">3.1 代理模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.2-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="">3.2 装饰器模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0f94fb8c7e53c880650621fdcc596283" class="toggle"  />
+    <label for="section-0f94fb8c7e53c880650621fdcc596283" class="flex justify-between">
+      <a role="button" class="">4、行为型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/4%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/4.1-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" class="">4.1 策略模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -2806,6 +2945,19 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-AQS/" class="">2.9 Aqs</a>
+  
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -2820,7 +2972,7 @@ https://github.com/alex-shpak/hugo-book
   
     <input type="checkbox" id="section-65e183c484720f91ba3d1676e1ed5a16" class="toggle"  />
     <label for="section-65e183c484720f91ba3d1676e1ed5a16" class="flex justify-between">
-      <a role="button" class="">3、JVM</a>
+      <a role="button" class="">3、 Jvm</a>
     </label>
   
 
@@ -3014,6 +3166,40 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-78e3fdb9e302e0ddb1abf0723557c671" class="toggle"  />
+    <label for="section-78e3fdb9e302e0ddb1abf0723557c671" class="flex justify-between">
+      <a role="button" class="">4、 Nio</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/4NIO/4.1-%E6%A6%82%E8%BF%B0/" class="">4.1 概述</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -3029,6 +3215,22 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" id="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="toggle"  />
     <label for="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="flex justify-between">
       <a role="button" class="">第六章 Spring全家桶</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-afe35ec73fb23fd24d05388dd4f6d178" class="toggle"  />
+    <label for="section-afe35ec73fb23fd24d05388dd4f6d178" class="flex justify-between">
+      <a role="button" class="">1、 Spring</a>
     </label>
   
 
@@ -3070,6 +3272,45 @@ https://github.com/alex-shpak/hugo-book
   
     <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.3-Spring-AOP/" class="">1.3 Spring Aop</a>
   
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b63cda05fe80f821d31813480ebd8acb" class="toggle"  />
+    <label for="section-b63cda05fe80f821d31813480ebd8acb" class="flex justify-between">
+      <a role="button" class="">2、 Spring Boot</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/2SpringBoot/2.1-SpringSpringBootSpringCloud%E7%9A%84%E8%81%94%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB/" class="">2.1 Spring、 Spring Boot、 Spring Cloud的联系与区别</a>
+  
+
+        </li>
+      
+    
+  </ul>
 
         </li>
       
@@ -3135,12 +3376,57 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#回溯算法解题框架">回溯算法解题框架</a>
+    <li>
       <ul>
         <li><a href="#1-含义">1 含义</a></li>
-        <li><a href="#2-框架">2 框架</a></li>
-        <li><a href="#3-应用场景">3 应用场景</a></li>
-        <li><a href="#4-参考文献">4 参考文献</a></li>
+        <li><a href="#2-应用场景">2 应用场景</a>
+          <ul>
+            <li><a href="#21-子集组合">2.1 子集、组合</a>
+              <ul>
+                <li><a href="#211-子集httpsleetcode-cncomproblemssubsets">2.1.1 <a href="https://leetcode-cn.com/problems/subsets">子集</a></a>
+                  <ul>
+                    <li><a href="#2111-问题分析">2.1.1.1 问题分析</a></li>
+                    <li><a href="#2112-参考代码">2.1.1.2 参考代码</a></li>
+                  </ul>
+                </li>
+                <li><a href="#212-子集-iihttpsleetcode-cncomproblemssubsets-ii">2.1.2 <a href="https://leetcode-cn.com/problems/subsets-ii">子集 II</a></a>
+                  <ul>
+                    <li><a href="#2121-问题分析">2.1.2.1 问题分析</a></li>
+                    <li><a href="#2122-参考代码">2.1.2.2 参考代码</a></li>
+                  </ul>
+                </li>
+                <li><a href="#213-组合总和httpsleetcode-cncomproblemscombination-sum">2.1.3 <a href="https://leetcode-cn.com/problems/combination-sum">组合总和</a></a>
+                  <ul>
+                    <li><a href="#2131-问题分析">2.1.3.1 问题分析</a></li>
+                    <li><a href="#2132-参考代码">2.1.3.2 参考代码</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#22-全排列">2.2 全排列</a>
+              <ul>
+                <li><a href="#221-全排列httpsleetcode-cncomproblemspermutations">2.2.1 <a href="https://leetcode-cn.com/problems/permutations">全排列</a></a>
+                  <ul>
+                    <li><a href="#2211-问题分析">2.2.1.1 问题分析</a></li>
+                    <li><a href="#2212-参考代码">2.2.1.2 参考代码</a></li>
+                  </ul>
+                </li>
+                <li><a href="#222-全排列-iihttpsleetcode-cncomproblemspermutations-ii">2.2.2 <a href="https://leetcode-cn.com/problems/permutations-ii">全排列 II</a></a>
+                  <ul>
+                    <li><a href="#2221-问题分析">2.2.2.1 问题分析</a></li>
+                    <li><a href="#2222-参考代码">2.2.2.2 参考代码</a></li>
+                    <li><a href="#2223-扩展题目">2.2.2.3 扩展题目</a>
+                      <ul>
+                        <li><a href="#22231-字符串的排列httpsleetcode-cncomproblemszi-fu-chuan-de-pai-lie-lcof">2.2.2.3.1 <a href="https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof">字符串的排列</a></a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#参考文献">参考文献</a></li>
       </ul>
     </li>
   </ul>
@@ -3155,57 +3441,651 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h1 id="回溯算法解题框架">
-  回溯算法解题框架
-  <a class="anchor" href="#%e5%9b%9e%e6%ba%af%e7%ae%97%e6%b3%95%e8%a7%a3%e9%a2%98%e6%a1%86%e6%9e%b6">#</a>
-</h1>
-<h2 id="1-含义">
+  <article class="markdown"><h2 id="1-含义">
   1 含义
   <a class="anchor" href="#1-%e5%90%ab%e4%b9%89">#</a>
 </h2>
 <ol>
-<li>回溯算法其实就是我们常说的<strong>DFS</strong>算法，本质上就是一种<strong>暴力穷举</strong>算法。</li>
-<li>解决一个回溯问题，实际上就是一个决策树的遍历过程，我们只需要思考 3 个问题：
+<li>
+<p>回溯算法<strong>建立在 DFS 基础之上</strong>，与 DFS 的主要不同在于：</p>
 <ol>
-<li><strong>路径：</strong> 也就是<strong>已经做出的选择</strong>。</li>
-<li><strong>选择列表：</strong> 也就是<strong>当前可以做的选择</strong>。</li>
-<li><strong>约束条件：</strong> 也就是<strong>到达决策树底层</strong>，<strong>无法再做选择的条件</strong>。</li>
+<li>DFS 是<strong>一个劲的往某一个方向搜索</strong>，<strong>等到到达一个方向的终点时</strong>，才<strong>恢复状态</strong>，<strong>回溯上一层</strong>。</li>
+<li>回溯算法在<strong>达到结束条件后</strong>，就<strong>恢复状态</strong>，<strong>回溯上一层</strong>。</li>
 </ol>
 </li>
+<li>
+<p>当<strong>问题需要回头</strong>，<strong>以此来查出所有的解的时候</strong>，<strong>使用回溯算法</strong>，即<strong>满足结束条件或者发现不是正确路径的时候</strong>（走不通），<strong>要撤销选择</strong>，<strong>回退到上一个状态</strong>，<strong>继续尝试</strong>，<strong>直到找出所有解为止</strong>。</p>
+</li>
+<li>
+<p>解决一个回溯算法时主要按照以下步骤：</p>
+<ol>
+<li><strong>画出递归树</strong>，<strong>找到状态变量</strong>（回溯函数的参数），这一部非常重要。</li>
+<li><strong>根据题意</strong>，<strong>确定结束条件</strong>。</li>
+<li><strong>找准选择列表</strong>（与函数参数相关），与第一步紧密关联。</li>
+<li><strong>判断是否需要剪枝</strong>。</li>
+<li><strong>做出选择</strong>，<strong>递归调用</strong>，<strong>进入下一层</strong>。</li>
+<li><strong>撤销选择</strong>。</li>
 </ol>
-<h2 id="2-框架">
-  2 框架
-  <a class="anchor" href="#2-%e6%a1%86%e6%9e%b6">#</a>
-</h2>
-<p>回溯算法的核心就是<strong>for 循环里面的递归</strong>，即<strong>在递归调用之前【做选择】</strong>，<strong>在递归调用之后【撤销选择】</strong>。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">result <span style="color:#f92672">=</span> <span style="color:#f92672">[]</span>
-def <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span>路径<span style="color:#f92672">,</span> 选择列表<span style="color:#f92672">):</span>
-    <span style="color:#66d9ef">if</span> 满足结束条件<span style="color:#f92672">:</span>
-        result<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>路径<span style="color:#f92672">)</span>
+</li>
+<li>
+<p>回溯算法的核心就是<strong>for 循环里面的递归</strong>，即<strong>在递归调用之前【做选择】</strong>，<strong>在递归调用之后【撤销选择】</strong>，解题框架如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">result <span style="color:#f92672">=</span> []
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">backtrack</span>(路径, 选择列表):
+    <span style="color:#66d9ef">if</span> 满足结束条件:
+        result<span style="color:#f92672">.</span>add(路径)
         <span style="color:#66d9ef">return</span>
 
-    <span style="color:#66d9ef">for</span> 选择 in 选择列表<span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">for</span> 选择 <span style="color:#f92672">in</span> 选择列表:
         做选择
-        <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span>路径<span style="color:#f92672">,</span> 选择列表<span style="color:#f92672">)</span>
+        backtrack(路径, 选择列表)
         撤销选择
-</code></pre></div><h2 id="3-应用场景">
-  3 应用场景
-  <a class="anchor" href="#3-%e5%ba%94%e7%94%a8%e5%9c%ba%e6%99%af">#</a>
+</code></pre></div></li>
+</ol>
+<h2 id="2-应用场景">
+  2 应用场景
+  <a class="anchor" href="#2-%e5%ba%94%e7%94%a8%e5%9c%ba%e6%99%af">#</a>
 </h2>
 <p>回溯算法的应用场景主要包括以下几个方面：</p>
 <ol>
 <li>
-  <a href="https://notebook.grayson.top/project-21/doc-738">全排列</a>。</li>
+  <a href="/school-recruitment/#2-1-%e5%ad%90%e9%9b%86-%e7%bb%84%e5%90%88">子集、组合</a>。</li>
 <li>
-  <a href="https://notebook.grayson.top/project-21/doc-741">N皇后</a>。</li>
+  <a href="/school-recruitment/#2-2-1-%e5%85%a8%e6%8e%92%e5%88%97">全排列</a>。</li>
+<li>搜索。</li>
 </ol>
-<h2 id="4-参考文献">
-  4 参考文献
-  <a class="anchor" href="#4-%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae">#</a>
+<blockquote>
+<p>需要注意的是，<strong>子集</strong>、<strong>组合与排列是不同性质的概念</strong>，<strong>子集</strong>、<strong>组合是无关顺序的</strong>，而<strong>排列是和元素顺序有关的</strong>，例如 <code>[1, 2]</code> 和 <code>[2, 1]</code> 是同一个组合（子集），但是是两种不一样的排列，因此被分为两类问题。</p>
+</blockquote>
+<h3 id="21-子集组合">
+  2.1 子集、组合
+  <a class="anchor" href="#21-%e5%ad%90%e9%9b%86%e7%bb%84%e5%90%88">#</a>
+</h3>
+2.1.1 <h4 id="211-子集httpsleetcode-cncomproblemssubsets">
+  
+  <a href="https://leetcode-cn.com/problems/subsets">子集</a>
+  <a class="anchor" href="#211-%e5%ad%90%e9%9b%86httpsleetcode-cncomproblemssubsets">#</a>
+</h4>
+<h5 id="2111-问题分析">
+  2.1.1.1 问题分析
+  <a class="anchor" href="#2111-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
+</h5>
+<ol>
+<li><strong>递归树</strong>：
+  <img src="../../../media/202108/2021-08-20_1948440.2591370108797909.png" alt="子集问题递归树.png" />
+<ol>
+<li>
+<p>观察上图可得<strong>选择列表里的数</strong>，<strong>都是选择路径</strong>（红色框）<strong>后面的数</strong>，比如 <code>[1]</code> 这条路径，他后面的选择列表只有 <code>2、3</code>，<code>[2]</code> 这条路径后面只有 3 这个选择，那么<strong>这个时候</strong>，就<strong>应该使用一个参数 <code>start</code></strong>，<strong>来标识当前的选择列表的起始位置</strong>，<strong>也就是标识每一层的状态</strong>，因为被形象的称为<strong>状态变量</strong>，<strong>最终函数签名如下</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// nums 为题目中给的数组
+</span><span style="color:#75715e">// track 为路径结果，要把每一条 path 加入结果集
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">)</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li><strong>找结束条件</strong>：
+<ol>
+<li>
+<p><strong>此题非常特殊</strong>，<strong>所有路径都应该加入结果集</strong>，所以<strong>不存在结束条件</strong>。</p>
+</li>
+<li>
+<p><strong>当 <code>start</code> 参数越过数组边界的时候</strong>，<strong>程序就自己跳过下一层递归了</strong>，因此<strong>不需要手写结束条件</strong>，<strong>直接加入结果集</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// res 为结果集，是全局变量，到时候需要返回
+</span><span style="color:#75715e"></span>LinkedList list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">);</span>
+res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>list<span style="color:#f92672">);</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li><strong>找选择列表</strong>：
+<ol>
+<li>
+<p>在 1 中已经提过，<strong>子问题的选择列表</strong>，<strong>是上一条选择路径之后的数</strong>，即</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> start<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li><strong>判断是否需要剪枝</strong>：
+<ol>
+<li><strong>从递归树中看到</strong>，<strong>路径没有重复的</strong>，<strong>也没有不符合条件的</strong>，所以<strong>不需要剪枝</strong>。</li>
+</ol>
+</li>
+<li><strong>做出选择</strong>：
+<ol>
+<li>
+<p>即<strong>将节点添加到路径中</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li><strong>撤销选择</strong>：
+<ol>
+<li>
+<p>即<strong>将节点从路径中移除</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
+</code></pre></div></li>
+</ol>
+</li>
+</ol>
+<h5 id="2112-参考代码">
+  2.1.1.2 参考代码
+  <a class="anchor" href="#2112-%e5%8f%82%e8%80%83%e4%bb%a3%e7%a0%81">#</a>
+</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//  最后结果
+</span><span style="color:#75715e"></span>List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 78. 子集
+</span><span style="color:#75715e"> * @param nums  数组
+</span><span style="color:#75715e"> * @return  该数组所有可能的子集
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">subsets</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+    backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 回溯法求解子集问题
+</span><span style="color:#75715e"> * @param nums  数组
+</span><span style="color:#75715e"> * @param track 路径
+</span><span style="color:#75715e"> * @param start 起始位置
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//  将路径添加到结果列表中
+</span><span style="color:#75715e"></span>    LinkedList list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">);</span>
+    res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>list<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> start<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//  做选择：将节点添加到路径中
+</span><span style="color:#75715e"></span>        track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+        backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>
+        <span style="color:#75715e">//  撤销选择：将节点从路径中移除
+</span><span style="color:#75715e"></span>        track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>2.1.2 <h4 id="212-子集-iihttpsleetcode-cncomproblemssubsets-ii">
+  
+  <a href="https://leetcode-cn.com/problems/subsets-ii">子集 II</a>
+  <a class="anchor" href="#212-%e5%ad%90%e9%9b%86-iihttpsleetcode-cncomproblemssubsets-ii">#</a>
+</h4>
+<h5 id="2121-问题分析">
+  2.1.2.1 问题分析
+  <a class="anchor" href="#2121-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
+</h5>
+<ol>
+<li><strong>递归树</strong>：
+  <img src="../../../media/202108/2021-08-20_2007080.467171720456268.png" alt="在这里插入图片描述" />
+<ol>
+<li>从图中可以发现，<strong>树中出现了大量重复的集合</strong>，找结束条件和选择列表与
+  <a href="/school-recruitment/#2-1-1-%e5%ad%90%e9%9b%86">2.1.1 子集</a>一样，不再赘述，我们直接看判断是否需要剪枝。</li>
+</ol>
+</li>
+<li><strong>判断是否需要剪枝</strong>
+<ol>
+<li>
+<p>因为<strong>数组中有重复元素</strong>，而<strong>这些重复元素可能并不在一起</strong>（<strong>回溯算法中时通过数组中前后元素是否一致来判断子集是否重复的</strong>），从而<strong>可能导致后面结果出现重复的子集</strong>，因此<strong>需要先对子集进行排序</strong>，<strong>使得重复的元素都在一起</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">);</span>
+</code></pre></div></li>
+<li>
+<p>我们<strong>需要取出重复的集合</strong>，即<strong>需要剪枝</strong>，<strong>把递归树上的某些分支减掉</strong>，观察上图不难发现，<strong>应该去除当前选择列表中</strong>，<strong>与上一个数重复的那个数</strong>，<strong>引出的分支</strong>，如 <code>2、2</code> 这个选择列表，第二个 <code>2</code> 是最后重复的，应该去除这个 <code>2</code> 引出的分值，即下图中红色大框中的分支：</p>
+<p>
+  <img src="../../../media/202108/2021-08-20_2015040.40159480363834765.png" alt="在这里插入图片描述" /></p>
+</li>
+<li>
+<p>因此，在遍历时需要对当前遍历的节点进行判断，如果 $i &gt; start$ 并且 $nums[i] == nums[i - 1]$，那么就需要进行下一个遍历：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> start <span style="color:#f92672">&amp;&amp;</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">continue</span><span style="color:#f92672">;}</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>做出选择和撤销选择与
+  <a href="/school-recruitment/#2-1-1-%e5%ad%90%e9%9b%86">2.1.1 子集</a>一样，这里不再赘述。</li>
+</ol>
+<h5 id="2122-参考代码">
+  2.1.2.2 参考代码
+  <a class="anchor" href="#2122-%e5%8f%82%e8%80%83%e4%bb%a3%e7%a0%81">#</a>
+</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//  最后结果
+</span><span style="color:#75715e"></span>List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 90. 子集 II
+</span><span style="color:#75715e"> * @param nums  数组
+</span><span style="color:#75715e"> * @return  该数组所有可能的子集
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">subsetsWithDup</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+    <span style="color:#75715e">//  因为数组中有重复元素，而这些重复元素可能并不在一起（回溯算法中时通过数组中前后元素是否一致来判断子集是否重复的），从而可能导致后面结果出现重复的子集，因此需要先对子集进行排序，使得重复的元素都在一起
+</span><span style="color:#75715e"></span>    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">);</span>
+    backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 回溯法解决子集问题
+</span><span style="color:#75715e"> * @param nums  数组
+</span><span style="color:#75715e"> * @param track 路径
+</span><span style="color:#75715e"> * @param start 起始位置
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    LinkedList list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">);</span>
+    res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>list<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> start<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> start <span style="color:#f92672">&amp;&amp;</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">continue</span><span style="color:#f92672">;}</span>
+        <span style="color:#75715e">//  做选择：将节点添加到路径中
+</span><span style="color:#75715e"></span>        track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+        backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>
+        <span style="color:#75715e">//  撤销选择：将节点从路径中移除
+</span><span style="color:#75715e"></span>        track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>2.1.3 <h4 id="213-组合总和httpsleetcode-cncomproblemscombination-sum">
+  
+  <a href="https://leetcode-cn.com/problems/combination-sum">组合总和</a>
+  <a class="anchor" href="#213-%e7%bb%84%e5%90%88%e6%80%bb%e5%92%8chttpsleetcode-cncomproblemscombination-sum">#</a>
+</h4>
+<h5 id="2131-问题分析">
+  2.1.3.1 问题分析
+  <a class="anchor" href="#2131-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
+</h5>
+<ol>
+<li>
+<p><strong>递归树</strong>（绿色箭头上面的是路径，红色框的为结果，黄色框的为选择列表）：
+  <img src="../../../media/202108/2021-08-20_2036250.1406137970451541.png" alt="在这里插入图片描述" /></p>
+<ol>
+<li>
+<p>从上面可以看出，<strong>组合问题和子集问题一样</strong>，<code>1、2</code> 和 <code>2、1</code> 是同一个组合，因此<strong>需要引入 <code>start</code> 参数标识</strong>，<strong>表示每个状态中选择列表的起始位置</strong>，另外，<strong>每个状态还需要一个 <code>sum</code> 变量</strong>，<strong>来记录当前路径的和</strong>，函数签名如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> candidates<span style="color:#f92672">,</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> sum<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> target<span style="color:#f92672">)</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p><strong>找结束条件</strong>：</p>
+<ol>
+<li>
+<p>由题意可得，<strong>当路径总和等于 <code>target</code> 的时候</strong>，就应该<strong>把路径加入结果集</strong>，<strong>并返回</strong>，<strong>当路径总和大于 <code>target</code> 的时候</strong>，<strong>直接返回</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">==</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">);</span>
+    res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>list<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">&gt;</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p><strong>找选择列表</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> start<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> candidates<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span>
+</code></pre></div></li>
+<li>
+<p><strong>判断是否需要剪枝</strong>：</p>
+<ol>
+<li>
+<p>从 1 中的递归树中发现，<strong>当前状态的 <code>sum</code> 大于 <code>target</code> 的时候</strong>，<strong>就应该剪枝</strong>，<strong>不用再递归下去了</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">&gt;</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p><strong>做出选择</strong>：</p>
+<ol>
+<li>
+<p>题目中说<strong>可以无限次被选择</strong>，那么 <code>i</code><strong>就不用 <code>+1</code></strong>，即<strong>下一层的选择列表</strong>，<strong>从自身开始</strong>，并且<strong>需要更新当前状态的 <code>sum</code></strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>candidates<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+backtrack<span style="color:#f92672">(</span>candidates<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> sum <span style="color:#f92672">+</span> candidates<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> target<span style="color:#f92672">);</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p><strong>撤销选择</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
+</code></pre></div></li>
+</ol>
+<h5 id="2132-参考代码">
+  2.1.3.2 参考代码
+  <a class="anchor" href="#2132-%e5%8f%82%e8%80%83%e4%bb%a3%e7%a0%81">#</a>
+</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//  最后结果
+</span><span style="color:#75715e"></span>List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 39. 组合总和
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param candidates 数组
+</span><span style="color:#75715e"> * @param target     目标和
+</span><span style="color:#75715e"> * @return candidates 中所有可以使数字和为目标数 target 的唯一组合
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">combinationSum</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> candidates<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+		backtrack<span style="color:#f92672">(</span>candidates<span style="color:#f92672">,</span> list<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> target<span style="color:#f92672">);</span>
+		<span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 回溯法求解组合总和问题
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param candidates 数组
+</span><span style="color:#75715e"> * @param track      路径
+</span><span style="color:#75715e"> * @param start      起始位置
+</span><span style="color:#75715e"> * @param sum        路径中的元素和
+</span><span style="color:#75715e"> * @param target     目标和
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> candidates<span style="color:#f92672">,</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> sum<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#75715e">/**
+</span><span style="color:#75715e">		 * 判断结束条件:
+</span><span style="color:#75715e">		 *  如果当前路径中元素和与目标和相等，则将路径添加到结果列表中
+</span><span style="color:#75715e">		 *  如果当前路径中元素和大于目标和，则直接返回
+</span><span style="color:#75715e">		 */</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">==</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">);</span>
+				res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>list<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+		<span style="color:#f92672">}</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">&gt;</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				<span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+		<span style="color:#f92672">}</span>
+
+		<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> start<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> candidates<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+				<span style="color:#75715e">//  做选择：将节点添加到路径中
+</span><span style="color:#75715e"></span>				track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>candidates<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+				backtrack<span style="color:#f92672">(</span>candidates<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> sum <span style="color:#f92672">+</span> candidates<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> target<span style="color:#f92672">);</span>
+				<span style="color:#75715e">//  撤销选择：将节点从路径中移除
+</span><span style="color:#75715e"></span>				track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
+		<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="22-全排列">
+  2.2 全排列
+  <a class="anchor" href="#22-%e5%85%a8%e6%8e%92%e5%88%97">#</a>
+</h3>
+2.2.1 <h4 id="221-全排列httpsleetcode-cncomproblemspermutations">
+  
+  <a href="https://leetcode-cn.com/problems/permutations">全排列</a>
+  <a class="anchor" href="#221-%e5%85%a8%e6%8e%92%e5%88%97httpsleetcode-cncomproblemspermutations">#</a>
+</h4>
+<h5 id="2211-问题分析">
+  2.2.1.1 问题分析
+  <a class="anchor" href="#2211-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
+</h5>
+<ol>
+<li>
+<p><strong>递归树</strong>（最下面的叶子节点，红色框中的就是要求的结果）：
+  <img src="../../../media/202108/2021-08-22_1951100.19782743043057216.png" alt="在这里插入图片描述" /></p>
+<ol>
+<li>
+<p>绘制递归树的过程中，<strong>如果我们选择了某个数</strong>，<strong>那么他的下一层的选择列表就是除去这个数以外的其他数</strong>，比如，第一次选择了 2，那么他的下一层的选择列表只有 1 和 3；如果选择了 3，那么他的下一层的选择列表只有 1 和 2，那么这个时候就要<strong>引入一个 <code>used</code> 数组来记录使用过的数字</strong>，算法签名如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used<span style="color:#f92672">)</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p><strong>找结束条件</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> track<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+     res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">));</span>
+     <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p><strong>找准选择列表</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span>
+</code></pre></div></li>
+<li>
+<p><strong>判断是否需要剪枝</strong>：</p>
+<ol>
+<li>
+<p>如果当前节点已经使用过，则直接遍历下一个节点：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>used<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p><strong>做出选择</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
+</code></pre></div></li>
+<li>
+<p><strong>撤销选择</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
+used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</code></pre></div></li>
+</ol>
+<h5 id="2212-参考代码">
+  2.2.1.2 参考代码
+  <a class="anchor" href="#2212-%e5%8f%82%e8%80%83%e4%bb%a3%e7%a0%81">#</a>
+</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//  最后结果
+</span><span style="color:#75715e"></span>List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 回溯算法解决全排列问题
+</span><span style="color:#75715e"> *  @param nums 数组
+</span><span style="color:#75715e"> * @param track 路径
+</span><span style="color:#75715e"> * @param used  是否使用过标识
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> track<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+				res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">));</span>
+				<span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+		<span style="color:#f92672">}</span>
+
+		<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+				<span style="color:#75715e">/**
+</span><span style="color:#75715e">				 * 剪枝：
+</span><span style="color:#75715e">				 *  1. 如果使用过，则遍历下一个节点
+</span><span style="color:#75715e">				 */</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>used<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+						<span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+				<span style="color:#f92672">}</span>
+				track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+				used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+				backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
+				track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
+				used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+		<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 46. 全排列
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums 数组
+</span><span style="color:#75715e"> * @return 数组元素的全排列
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">permute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#75715e">//  记录【路径】
+</span><span style="color:#75715e"></span>		LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+		<span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
+		backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
+		<span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>2.2.2 <h4 id="222-全排列-iihttpsleetcode-cncomproblemspermutations-ii">
+  
+  <a href="https://leetcode-cn.com/problems/permutations-ii">全排列 II</a>
+  <a class="anchor" href="#222-%e5%85%a8%e6%8e%92%e5%88%97-iihttpsleetcode-cncomproblemspermutations-ii">#</a>
+</h4>
+<h5 id="2221-问题分析">
+  2.2.2.1 问题分析
+  <a class="anchor" href="#2221-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
+</h5>
+<ol>
+<li><strong>递归树</strong>：
+  <img src="../../../media/202108/2021-08-22_2010350.651348149784578.png" alt="在这里插入图片描述" />
+<ol>
+<li>可以看到，有两组是重复的，这是因为在<strong>选了第二个 2 后</strong>，<strong>又选了第一个 2</strong>，从而<strong>导致最右边整条分支都是重复的</strong>：
+  <img src="../../../media/202108/2021-08-22_2013540.367251238752221.png" alt="在这里插入图片描述" /></li>
+<li>找结束条件和选择列表和前面差不多，这里不再赘述。</li>
+</ol>
+</li>
+<li><strong>判断是否需要剪枝</strong>：
+<ol>
+<li>
+<p>有了前面
+  <a href="/school-recruitment/#2-1-%e5%ad%90%e9%9b%86-%e7%bb%84%e5%90%88">子集、组合</a>问题的判重经验，同样首先<strong>要对题目中给出的 $nums$ 数组排序</strong>，<strong>让重复的元素并列排在一起</strong>，在 <code>if(i &gt; start &amp;&amp; nums[i]==nums[i-1])</code> 基础上修改为 <code>if(i &gt; 0 &amp;&amp; nums[i]==nums[i-1] &amp;&amp; !used[i-1])</code>，语义为<strong>当 $i$ 可以选第一个元素之后的元素时</strong>，<strong>判断当前元素是否和上一个元素相同</strong>，<strong>如果相同</strong>，<strong>再判断上一个元素是否能用</strong>，<strong>如果上一个元素不能用</strong>，那么<strong>该分支一定是重复的</strong>，<strong>应该剪去</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> used<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+      <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p>做出选择和撤销选择和上面类似，这里不再赘述。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h5 id="2222-参考代码">
+  2.2.2.2 参考代码
+  <a class="anchor" href="#2222-%e5%8f%82%e8%80%83%e4%bb%a3%e7%a0%81">#</a>
+</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//  最终结果
+</span><span style="color:#75715e"></span>List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 47. 全排列 II
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums 数组
+</span><span style="color:#75715e"> * @return 所有不重复的全排列
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">permuteUnique</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+		<span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
+		<span style="color:#75715e">//  因为数组中有重复元素，而这些重复元素可能并不在一起（回溯算法中时通过数组中前后元素是否一致来判断子集是否重复的），从而可能导致后面结果出现重复的子集，因此需要先对子集进行排序，使得重复的元素都在一起
+</span><span style="color:#75715e"></span>		Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">);</span>
+		backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
+		<span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 回溯法解决全排列问题
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums  数组
+</span><span style="color:#75715e"> * @param track 路径
+</span><span style="color:#75715e"> * @param used  是否使用过标识
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>track<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+				List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">);</span>
+				res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>list<span style="color:#f92672">);</span>
+				<span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+		<span style="color:#f92672">}</span>
+
+		<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+				<span style="color:#75715e">/**
+</span><span style="color:#75715e">				 * 剪枝：
+</span><span style="color:#75715e">				 *  1. 如果使用过，则遍历下一个节点
+</span><span style="color:#75715e">				 *  2. 如果当前节点和上一个节点的值相等，且上一个节点已经使用过，则当前排列全排列一定为重复的全排列，直接遍历下一个节点
+</span><span style="color:#75715e">				 */</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>used<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+						<span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+				<span style="color:#f92672">}</span>
+				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> used<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+						<span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+				<span style="color:#f92672">}</span>
+				track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+				used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+				backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
+				used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+				track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
+		<span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h5 id="2223-扩展题目">
+  2.2.2.3 扩展题目
+  <a class="anchor" href="#2223-%e6%89%a9%e5%b1%95%e9%a2%98%e7%9b%ae">#</a>
+</h5>
+2.2.2.3.1 <h6 id="22231-字符串的排列httpsleetcode-cncomproblemszi-fu-chuan-de-pai-lie-lcof">
+  
+  <a href="https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof">字符串的排列</a>
+  <a class="anchor" href="#22231-%e5%ad%97%e7%ac%a6%e4%b8%b2%e7%9a%84%e6%8e%92%e5%88%97httpsleetcode-cncomproblemszi-fu-chuan-de-pai-lie-lcof">#</a>
+</h6>
+<ol>
+<li>这个题目和
+  <a href="/school-recruitment/#2-2-2-%e5%85%a8%e6%8e%92%e5%88%97-II">全排列 II</a>类似，需要注意的是<strong>字符串转数组</strong>和<strong>List 转数组</strong>的问题：
+<ol>
+<li>
+<p><strong>字符串转数组</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> arr <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">();</span>
+</code></pre></div></li>
+<li>
+<p><strong>List 转数组</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+res<span style="color:#f92672">.</span><span style="color:#a6e22e">toArray</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> String<span style="color:#f92672">[</span>res<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()]);</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>参考代码：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//  最后结果
+</span><span style="color:#75715e"></span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 剑指 Offer 38. 字符串的排列
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s 字符串
+</span><span style="color:#75715e"> * @return 字符串中字符的所有排列
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> String<span style="color:#f92672">[]</span> <span style="color:#a6e22e">permutation</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+     StringBuffer buffer <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuffer<span style="color:#f92672">();</span>
+     <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()];</span>
+     <span style="color:#75715e">//  因为数组中有重复元素，而这些重复元素可能并不在一起（回溯算法中时通过数组中前后元素是否一致来判断子集是否重复的），从而可能导致后面结果出现重复的子集，因此需要先对子集进行排序，使得重复的元素都在一起
+</span><span style="color:#75715e"></span>     <span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> arr <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">();</span>
+     Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">);</span>
+     backtrack<span style="color:#f92672">(</span>arr<span style="color:#f92672">,</span> buffer<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
+     <span style="color:#66d9ef">return</span> res<span style="color:#f92672">.</span><span style="color:#a6e22e">toArray</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> String<span style="color:#f92672">[</span>res<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()]);</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 回溯法解决字符串的排列问题
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param arr    数组
+</span><span style="color:#75715e"> * @param buffer 路径
+</span><span style="color:#75715e"> * @param used   是否使用过标识
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> arr<span style="color:#f92672">,</span> StringBuffer buffer<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+     <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+             res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+             <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+     <span style="color:#f92672">}</span>
+
+     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+             <span style="color:#75715e">/**
+</span><span style="color:#75715e">              * 剪枝：
+</span><span style="color:#75715e">              *  1. 如果使用过，则遍历下一个节点
+</span><span style="color:#75715e">              *  2. 如果当前节点和上一个节点的值相等，且上一个节点已经使用过，则当前排列全排列一定为重复的全排列，直接遍历下一个节点
+</span><span style="color:#75715e">              */</span>
+             <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>used<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+                     <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+             <span style="color:#f92672">}</span>
+             <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> arr<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> used<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+                     <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+             <span style="color:#f92672">}</span>
+             buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+             used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+             backtrack<span style="color:#f92672">(</span>arr<span style="color:#f92672">,</span> buffer<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
+             used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+             buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">deleteCharAt</span><span style="color:#f92672">(</span>buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+     <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+</ol>
+<h2 id="参考文献">
+  参考文献
+  <a class="anchor" href="#%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae">#</a>
 </h2>
 <ol>
 <li>
   <a href="https://labuladong.gitbook.io/algo/mu-lu-ye-3/mu-lu-ye/hui-su-suan-fa-xiang-jie-xiu-ding-ban">回溯算法解题套路框架</a>。</li>
+<li>
+  <a href="https://leetcode-cn.com/problems/subsets/solution/c-zong-jie-liao-hui-su-wen-ti-lei-xing-dai-ni-gao-">C++ 总结了回溯问题类型 带你搞懂回溯算法(大量例题)</a>。</li>
+<li>
+  <a href="https://leetcode-cn.com/problems/subsets">78. 子集</a>。</li>
+<li>
+  <a href="https://leetcode-cn.com/problems/subsets-ii">90. 子集 II</a>。</li>
+<li>
+  <a href="https://leetcode-cn.com/problems/combination-sum">39. 组合总和</a>。</li>
+<li>
+  <a href="https://leetcode-cn.com/problems/permutations">46. 全排列</a>。</li>
+<li>
+  <a href="https://leetcode-cn.com/problems/permutations-ii">47. 全排列 II</a>。</li>
+<li>
+  <a href="https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof">剑指 Offer 38. 字符串的排列</a>。</li>
 </ol>
 </article>
  
@@ -3282,12 +4162,57 @@ def <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</s
   
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#回溯算法解题框架">回溯算法解题框架</a>
+    <li>
       <ul>
         <li><a href="#1-含义">1 含义</a></li>
-        <li><a href="#2-框架">2 框架</a></li>
-        <li><a href="#3-应用场景">3 应用场景</a></li>
-        <li><a href="#4-参考文献">4 参考文献</a></li>
+        <li><a href="#2-应用场景">2 应用场景</a>
+          <ul>
+            <li><a href="#21-子集组合">2.1 子集、组合</a>
+              <ul>
+                <li><a href="#211-子集httpsleetcode-cncomproblemssubsets">2.1.1 <a href="https://leetcode-cn.com/problems/subsets">子集</a></a>
+                  <ul>
+                    <li><a href="#2111-问题分析">2.1.1.1 问题分析</a></li>
+                    <li><a href="#2112-参考代码">2.1.1.2 参考代码</a></li>
+                  </ul>
+                </li>
+                <li><a href="#212-子集-iihttpsleetcode-cncomproblemssubsets-ii">2.1.2 <a href="https://leetcode-cn.com/problems/subsets-ii">子集 II</a></a>
+                  <ul>
+                    <li><a href="#2121-问题分析">2.1.2.1 问题分析</a></li>
+                    <li><a href="#2122-参考代码">2.1.2.2 参考代码</a></li>
+                  </ul>
+                </li>
+                <li><a href="#213-组合总和httpsleetcode-cncomproblemscombination-sum">2.1.3 <a href="https://leetcode-cn.com/problems/combination-sum">组合总和</a></a>
+                  <ul>
+                    <li><a href="#2131-问题分析">2.1.3.1 问题分析</a></li>
+                    <li><a href="#2132-参考代码">2.1.3.2 参考代码</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#22-全排列">2.2 全排列</a>
+              <ul>
+                <li><a href="#221-全排列httpsleetcode-cncomproblemspermutations">2.2.1 <a href="https://leetcode-cn.com/problems/permutations">全排列</a></a>
+                  <ul>
+                    <li><a href="#2211-问题分析">2.2.1.1 问题分析</a></li>
+                    <li><a href="#2212-参考代码">2.2.1.2 参考代码</a></li>
+                  </ul>
+                </li>
+                <li><a href="#222-全排列-iihttpsleetcode-cncomproblemspermutations-ii">2.2.2 <a href="https://leetcode-cn.com/problems/permutations-ii">全排列 II</a></a>
+                  <ul>
+                    <li><a href="#2221-问题分析">2.2.2.1 问题分析</a></li>
+                    <li><a href="#2222-参考代码">2.2.2.2 参考代码</a></li>
+                    <li><a href="#2223-扩展题目">2.2.2.3 扩展题目</a>
+                      <ul>
+                        <li><a href="#22231-字符串的排列httpsleetcode-cncomproblemszi-fu-chuan-de-pai-lie-lcof">2.2.2.3.1 <a href="https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof">字符串的排列</a></a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#参考文献">参考文献</a></li>
       </ul>
     </li>
   </ul>

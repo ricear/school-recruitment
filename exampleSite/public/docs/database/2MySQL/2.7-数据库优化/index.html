@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="数据库优化 #  1 SQL 语句的优化 #   优化 SQL 语句时可以按照以下的步骤来进行：
+<meta name="description" content="1 优化方法 #  1.1 SQL 语句的优化 #   优化 SQL 语句时可以按照以下的步骤来进行：
  首先分析慢查询日志，这里面记录了响应时间超过阈值 long_query_time 的 SQL 语句，通过日志找出 IO 大的 SQL 以及发现未命中索引的 SQL。 然后使用 EXPLAIN 对慢查询 SQL 进行分析，通过EXPLAIN 命令可以得到表的读取顺序、数据读取操作的操作类型、哪些索引可以使用、哪些索引被实际使用、表之间的引用以及被扫描的行数等问题。     应尽量避免在 WHERE 子句中使用 !=、&lt;、&gt;操作符或对字段进行 null 值判断，否则数据库引擎将放弃使用索引而进行全表扫描。
   只返回必要的列，最好不要用 SELECT * 语句。
   只返回必要的行，使用 LIMIT 语句来限制返回的数据。
@@ -11,7 +11,7 @@
 select * from tag join tag_post on tag_post.tag_id=tag.id join post on tag_post.post_id=post.id where tag.tag=&#39;mysql&#39;; 可以分解成下面这些查询来代替：
 select * from tag where tag=&#39;mysql&#39;; select * from tag_post where tag_id=1234; select * from post where id in(123,456,567,9989,8909); 这种用分解关联查询的方式重构查询具有如下优势：">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="数据库优化 #  1 SQL 语句的优化 #   优化 SQL 语句时可以按照以下的步骤来进行：
+<meta property="og:description" content="1 优化方法 #  1.1 SQL 语句的优化 #   优化 SQL 语句时可以按照以下的步骤来进行：
  首先分析慢查询日志，这里面记录了响应时间超过阈值 long_query_time 的 SQL 语句，通过日志找出 IO 大的 SQL 以及发现未命中索引的 SQL。 然后使用 EXPLAIN 对慢查询 SQL 进行分析，通过EXPLAIN 命令可以得到表的读取顺序、数据读取操作的操作类型、哪些索引可以使用、哪些索引被实际使用、表之间的引用以及被扫描的行数等问题。     应尽量避免在 WHERE 子句中使用 !=、&lt;、&gt;操作符或对字段进行 null 值判断，否则数据库引擎将放弃使用索引而进行全表扫描。
   只返回必要的列，最好不要用 SELECT * 语句。
   只返回必要的行，使用 LIMIT 语句来限制返回的数据。
@@ -28,7 +28,7 @@ select * from tag where tag=&#39;mysql&#39;; select * from tag_post where tag_id
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.aea6d96f0a2607e0554a26a0e35b009f9b612c62f43fa70f1c24c528cd1ae7b3.js" integrity="sha256-rqbZbwomB&#43;BVSiag41sAn5thLGL0P6cPHCTFKM0a57M=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.7c5a0c6f7aee3ec02b01f6e3abdc878317cff9628c7528ce8c9961da7e2f7ed2.js" integrity="sha256-fFoMb3ruPsArAfbjq9yHgxfP&#43;WKMdSjOjJlh2n4vftI=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -165,7 +165,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E5%87%91%E9%9B%B6%E9%92%B1%E9%97%AE%E9%A2%98/" class="">1.1.2 凑零钱问题</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="">1.1.2 背包问题</a>
   
 
         </li>
@@ -256,7 +256,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8/" class="">1.1.9 买卖股票</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97%E9%80%9A%E8%A7%A3/" class="">1.1.9 股票问题系列通解</a>
   
 
         </li>
@@ -551,20 +551,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-%E5%85%A8%E6%8E%92%E5%88%97/" class="">1.6.2 全排列</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.3-N%E7%9A%87%E5%90%8E/" class="">1.6.3 N皇后</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-N%E7%9A%87%E5%90%8E/" class="">1.6.2 N皇后</a>
   
 
         </li>
@@ -813,6 +800,71 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">2.3.10 合并两个有序数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/" class="">2.3.11 下一个排列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/" class="">2.3.12 缺失的第一个正数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/" class="">2.3.13 寻找两个正序数组的中位数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/" class="">2.3.14 多数元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.15-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/" class="">2.3.15 最长连续序列</a>
   
 
         </li>
@@ -2600,6 +2652,87 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="toggle"  />
+    <label for="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="flex justify-between">
+      <a role="button" class="">3、结构型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.1-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="">3.1 代理模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.2-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="">3.2 装饰器模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0f94fb8c7e53c880650621fdcc596283" class="toggle"  />
+    <label for="section-0f94fb8c7e53c880650621fdcc596283" class="flex justify-between">
+      <a role="button" class="">4、行为型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/4%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/4.1-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" class="">4.1 策略模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -2814,6 +2947,19 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-AQS/" class="">2.9 Aqs</a>
+  
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -2828,7 +2974,7 @@ https://github.com/alex-shpak/hugo-book
   
     <input type="checkbox" id="section-65e183c484720f91ba3d1676e1ed5a16" class="toggle"  />
     <label for="section-65e183c484720f91ba3d1676e1ed5a16" class="flex justify-between">
-      <a role="button" class="">3、JVM</a>
+      <a role="button" class="">3、 Jvm</a>
     </label>
   
 
@@ -3022,6 +3168,40 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-78e3fdb9e302e0ddb1abf0723557c671" class="toggle"  />
+    <label for="section-78e3fdb9e302e0ddb1abf0723557c671" class="flex justify-between">
+      <a role="button" class="">4、 Nio</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/4NIO/4.1-%E6%A6%82%E8%BF%B0/" class="">4.1 概述</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -3037,6 +3217,22 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" id="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="toggle"  />
     <label for="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="flex justify-between">
       <a role="button" class="">第六章 Spring全家桶</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-afe35ec73fb23fd24d05388dd4f6d178" class="toggle"  />
+    <label for="section-afe35ec73fb23fd24d05388dd4f6d178" class="flex justify-between">
+      <a role="button" class="">1、 Spring</a>
     </label>
   
 
@@ -3078,6 +3274,45 @@ https://github.com/alex-shpak/hugo-book
   
     <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.3-Spring-AOP/" class="">1.3 Spring Aop</a>
   
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b63cda05fe80f821d31813480ebd8acb" class="toggle"  />
+    <label for="section-b63cda05fe80f821d31813480ebd8acb" class="flex justify-between">
+      <a role="button" class="">2、 Spring Boot</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/2SpringBoot/2.1-SpringSpringBootSpringCloud%E7%9A%84%E8%81%94%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB/" class="">2.1 Spring、 Spring Boot、 Spring Cloud的联系与区别</a>
+  
+
+        </li>
+      
+    
+  </ul>
 
         </li>
       
@@ -3143,13 +3378,22 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#数据库优化">数据库优化</a>
+    <li>
       <ul>
-        <li><a href="#1-sql-语句的优化">1 SQL 语句的优化</a></li>
-        <li><a href="#2-索引的优化">2 索引的优化</a></li>
-        <li><a href="#3-数据库表结构的优化">3 数据库表结构的优化</a></li>
-        <li><a href="#4-系统配置的优化">4 系统配置的优化</a></li>
-        <li><a href="#5-硬件的优化">5 硬件的优化</a></li>
+        <li><a href="#1-优化方法">1 优化方法</a>
+          <ul>
+            <li><a href="#11-sql-语句的优化">1.1 SQL 语句的优化</a></li>
+            <li><a href="#12-索引的优化">1.2 索引的优化</a></li>
+            <li><a href="#13-数据库表结构的优化">1.3 数据库表结构的优化</a></li>
+            <li><a href="#14-系统配置的优化">1.4 系统配置的优化</a></li>
+            <li><a href="#15-硬件的优化">1.5 硬件的优化</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-场景示例">2 场景示例</a>
+          <ul>
+            <li><a href="#21-mysql-处理千万级数据分页查询的优化方案">2.1 MySQL 处理千万级数据分页查询的优化方案</a></li>
+          </ul>
+        </li>
         <li><a href="#参考文献">参考文献</a></li>
       </ul>
     </li>
@@ -3165,14 +3409,14 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h1 id="数据库优化">
-  数据库优化
-  <a class="anchor" href="#%e6%95%b0%e6%8d%ae%e5%ba%93%e4%bc%98%e5%8c%96">#</a>
-</h1>
-<h2 id="1-sql-语句的优化">
-  1 SQL 语句的优化
-  <a class="anchor" href="#1-sql-%e8%af%ad%e5%8f%a5%e7%9a%84%e4%bc%98%e5%8c%96">#</a>
+  <article class="markdown"><h2 id="1-优化方法">
+  1 优化方法
+  <a class="anchor" href="#1-%e4%bc%98%e5%8c%96%e6%96%b9%e6%b3%95">#</a>
 </h2>
+<h3 id="11-sql-语句的优化">
+  1.1 SQL 语句的优化
+  <a class="anchor" href="#11-sql-%e8%af%ad%e5%8f%a5%e7%9a%84%e4%bc%98%e5%8c%96">#</a>
+</h3>
 <blockquote>
 <p>优化 SQL 语句时可以按照以下的步骤来进行：</p>
 <ol>
@@ -3214,18 +3458,18 @@ https://github.com/alex-shpak/hugo-book
 </ol>
 </li>
 </ol>
-<h2 id="2-索引的优化">
-  2 索引的优化
-  <a class="anchor" href="#2-%e7%b4%a2%e5%bc%95%e7%9a%84%e4%bc%98%e5%8c%96">#</a>
-</h2>
+<h3 id="12-索引的优化">
+  1.2 索引的优化
+  <a class="anchor" href="#12-%e7%b4%a2%e5%bc%95%e7%9a%84%e4%bc%98%e5%8c%96">#</a>
+</h3>
 <ol>
 <li><strong>注意会引起索引失效的情况</strong>，以及<strong>在适合的地方建立索引</strong>，具体可参考
   <a href="https://notebook.grayson.top/project-37/doc-720">2.1 索引</a>。</li>
 </ol>
-<h2 id="3-数据库表结构的优化">
-  3 数据库表结构的优化
-  <a class="anchor" href="#3-%e6%95%b0%e6%8d%ae%e5%ba%93%e8%a1%a8%e7%bb%93%e6%9e%84%e7%9a%84%e4%bc%98%e5%8c%96">#</a>
-</h2>
+<h3 id="13-数据库表结构的优化">
+  1.3 数据库表结构的优化
+  <a class="anchor" href="#13-%e6%95%b0%e6%8d%ae%e5%ba%93%e8%a1%a8%e7%bb%93%e6%9e%84%e7%9a%84%e4%bc%98%e5%8c%96">#</a>
+</h3>
 <ol>
 <li><strong>设计表时遵循
   <a href="https://notebook.grayson.top/project-37/doc-748">三范式</a></strong>。</li>
@@ -3463,21 +3707,21 @@ mysql&gt; <span style="color:#66d9ef">select</span> e, char_length<span style="c
 </li>
 </ol>
 </li>
-<li>进行**
-  <a href="https://notebook.grayson.top/project-37/doc-761">分库分表</a>**。</li>
+<li>进行
+  <a href="https://notebook.grayson.top/project-37/doc-761"><strong>分库分表</strong></a>。</li>
 </ol>
 </li>
 </ol>
-<h2 id="4-系统配置的优化">
-  4 系统配置的优化
-  <a class="anchor" href="#4-%e7%b3%bb%e7%bb%9f%e9%85%8d%e7%bd%ae%e7%9a%84%e4%bc%98%e5%8c%96">#</a>
-</h2>
+<h3 id="14-系统配置的优化">
+  1.4 系统配置的优化
+  <a class="anchor" href="#14-%e7%b3%bb%e7%bb%9f%e9%85%8d%e7%bd%ae%e7%9a%84%e4%bc%98%e5%8c%96">#</a>
+</h3>
 <ol>
 <li><strong>操作系统</strong>：
 <ol>
 <li>
-<p><strong>增加TCP支持的队列数</strong>（网络方面的配置，要修改 <code>/etc/sysctl.conf</code>）：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">#增加tcp支持的队列数
+<p><strong>增加 TCP 支持的队列数</strong>（网络方面的配置，要修改 <code>/etc/sysctl.conf</code>）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">#增加 tcp 支持的队列数
 net.ipv4.tcp_max_syn_backlog = 65535
 #减少断开连接时，资源回收
 net.ipv4.tcp_max_tw_buckets = 8000
@@ -3487,28 +3731,120 @@ net.ipv4.tcp_fin_timeout = 10
 </code></pre></div></li>
 </ol>
 </li>
-<li><strong>MySQL配置文件优化</strong>：
+<li><strong>MySQL 配置文件优化</strong>：
 <ol>
-<li><code>innodb_buffer_pool_size</code>：配置<strong>缓冲池大小</strong>，如果数据库中<strong>只有 <code>innodb</code>表</strong>，则<strong>推荐配置量为总内存的75%</strong>。</li>
+<li><code>innodb_buffer_pool_size</code>：配置<strong>缓冲池大小</strong>，如果数据库中<strong>只有 <code>innodb</code> 表</strong>，则<strong>推荐配置量为总内存的 75%</strong>。</li>
 <li><code>innodb_buffer_pool_instances</code>：配置<strong>缓冲池的个数</strong>，<strong>默认只有一个缓冲池</strong>。</li>
 <li><code>innodb_log_buffer_size</code>：配置<strong>日志缓冲大小</strong>，<strong>由于日志最长每秒钟就会刷新一次</strong>，<strong>所以一般不用太大</strong>。</li>
 <li><code>innodb_flush_log_at_trx_commit</code>：配置<strong>数据多久将变更刷新到磁盘</strong>，具体可参考
   <a href="https://notebook.grayson.top/project-37/doc-740/#2-2-%E5%90%AB%E4%B9%89">2.2 含义</a>。</li>
-<li><code>innodb_read_io_threads</code>：配置<strong>读的IO进程数</strong>，<strong>默认为4</strong>。</li>
-<li><code>innodb_write_io_threads</code>：配置<strong>写的IO进程数</strong>，<strong>默认为4</strong>。</li>
+<li><code>innodb_read_io_threads</code>：配置<strong>读的 IO 进程数</strong>，<strong>默认为 4</strong>。</li>
+<li><code>innodb_write_io_threads</code>：配置<strong>写的 IO 进程数</strong>，<strong>默认为 4</strong>。</li>
 <li><code>innodb_file_per_table</code>：配置<strong>每一个表是否使用独立的表空间</strong>，具体可参考
   <a href="https://notebook.grayson.top/project-37/doc-740/#2-5-Log-Group-%E5%92%8C-Redo-Log-File">2.5 Log Group 和 Redo Log File</a>。</li>
 </ol>
 </li>
 </ol>
-<h2 id="5-硬件的优化">
-  5 硬件的优化
-  <a class="anchor" href="#5-%e7%a1%ac%e4%bb%b6%e7%9a%84%e4%bc%98%e5%8c%96">#</a>
-</h2>
+<h3 id="15-硬件的优化">
+  1.5 硬件的优化
+  <a class="anchor" href="#15-%e7%a1%ac%e4%bb%b6%e7%9a%84%e4%bc%98%e5%8c%96">#</a>
+</h3>
 <ol>
 <li><strong>使用固态硬盘</strong>。</li>
-<li><strong>使用多核且高频的CPU</strong>。</li>
+<li><strong>使用多核且高频的 CPU</strong>。</li>
 <li><strong>增大内存</strong>。</li>
+</ol>
+<h2 id="2-场景示例">
+  2 场景示例
+  <a class="anchor" href="#2-%e5%9c%ba%e6%99%af%e7%a4%ba%e4%be%8b">#</a>
+</h2>
+<h3 id="21-mysql-处理千万级数据分页查询的优化方案">
+  2.1 MySQL 处理千万级数据分页查询的优化方案
+  <a class="anchor" href="#21-mysql-%e5%a4%84%e7%90%86%e5%8d%83%e4%b8%87%e7%ba%a7%e6%95%b0%e6%8d%ae%e5%88%86%e9%a1%b5%e6%9f%a5%e8%af%a2%e7%9a%84%e4%bc%98%e5%8c%96%e6%96%b9%e6%a1%88">#</a>
+</h3>
+<ol>
+<li>
+<p>使用分页查询时我们<strong>一般使用 <code>limit</code> 关键词</strong>，对于<strong>小的偏移量</strong>，<strong>直接使用 <code>limit</code> 来查询没有什么问题</strong>，但<strong>随着数据量的增大</strong>，<strong>越往后分页</strong>，<code>limit</code><strong>语句的偏移量就会越大</strong>，<strong>速度也会明显变慢</strong>，这是因为<strong>每次都要取出大量的数据</strong>，然后<strong>把大部分的数据抛弃</strong>，<strong>只留下后面一下部分的数据</strong>，<strong>性能较差</strong>。</p>
+</li>
+<li>
+<p>假如有一张表，表的相关信息如下：</p>
+<ol>
+<li><strong>表名</strong>：<code>order</code>，订单表。</li>
+<li><strong>字段情况</strong>：该表一共 37 个字段，不包含<code>text</code> 等大型数据，最大为<code>varchar(500)</code>，<code>id</code> 字段为索引，且为递增。</li>
+<li><strong>数据量</strong>：5709294。</li>
+</ol>
+</li>
+<li>
+<p>假设现在有如下查询：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">where</span> user_id <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span> <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> id <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">100000</span>, <span style="color:#ae81ff">100</span>;
+</code></pre></div><p>该查询大约耗时 14 秒多，耗时较长。</p>
+</li>
+<li>
+<p>可以按照如下方式进行优化：</p>
+<ol>
+<li><strong>使用
+  <a href="/school-recruitment/#6-4-1-%e8%a6%86%e7%9b%96%e7%b4%a2%e5%bc%95">覆盖索引</a></strong>：
+<ol>
+<li>
+<p>假设我们<strong>只需要查询 <code>order_type</code> 和 <code>order_amt</code> 两个字段</strong>，<strong>可以建立联合索引</strong>（<code>order_type</code>、<code>order_amt</code>），这样<strong>可以让查询走
+  <a href="/school-recruitment/#6-2-2-%e8%81%94%e5%90%88%e7%b4%a2%e5%bc%95">联合索引</a></strong>，<strong>加快性能</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">select</span> order_type, order_amt <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">100000</span>, <span style="color:#ae81ff">100</span>;
+</code></pre></div></li>
+<li>
+<p>但是我们这个表有 37 个字段，这么优化明显<strong>不合适</strong>，而且这种<strong>加快性能的效果并不明显</strong>。</p>
+</li>
+</ol>
+</li>
+<li><strong>将</strong><code>offset</code><strong>计算出来后将主键索引作为</strong><code>where</code><strong>条件</strong>：
+<ol>
+<li>
+<p>假如<strong>数据表的 <code>id</code>是连续递增的</strong>，可以<strong>直接将对应的 <code>offset</code>计算出来</strong>，<strong>作为 <code>where</code>条件</strong>，这样<strong>可以利用主键索引</strong>，<strong>性能提升非常明显</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#75715e">-- 方式一
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> order_type, order_amt <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">where</span> id <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">100000</span> <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">100</span>;
+<span style="color:#75715e">-- 方式二
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> order_type, order_amt <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">where</span> id <span style="color:#66d9ef">between</span> <span style="color:#ae81ff">100000</span> <span style="color:#66d9ef">and</span> <span style="color:#ae81ff">100100</span> <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">100</span>;
+</code></pre></div></li>
+<li>
+<p>但是这种方案存在严重问题，<strong>可能存在部分数据被删过</strong>，<strong>导致 <code>id</code>不连续</strong>，所以上面<strong>查出来的数据并不是我们想要的</strong>。</p>
+</li>
+</ol>
+</li>
+<li><strong>每次分页查询记录上一次分页最后一条 <code>id</code></strong>：
+<ol>
+<li>
+<p>我们可以在<strong>每次分页查询的时候记录上一次分页最后一条 <code>id</code></strong>，然后在<strong>查询的时候直接根据上一次分页最后一条 <code>id</code>来进行查询</strong>即可，此时就算 <code>id</code>不连续也没问题，但是必须自增，由于数据库主键我们一般设置成连续自增，所以这种方式<strong>可以大幅度提升性能</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">where</span> id <span style="color:#f92672">&gt;=</span> <span style="color:#960050;background-color:#1e0010">上一页最大</span>id <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">100</span>;
+</code></pre></div></li>
+</ol>
+</li>
+<li><strong>使用子查询</strong>：
+<ol>
+<li>
+<p>上面的一种方法<strong>每次都需要记录上一次分页的最大 <code>id</code></strong>，<strong>比较麻烦</strong>，我们可以<strong>使用子查询代替</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#75715e">-- 方式一
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">where</span> id <span style="color:#66d9ef">in</span> (<span style="color:#66d9ef">select</span> id <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">100000</span>, <span style="color:#ae81ff">100</span>);
+<span style="color:#75715e">-- 方式二
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">where</span> id <span style="color:#f92672">&gt;=</span> (<span style="color:#66d9ef">select</span> id <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">100000</span>, <span style="color:#ae81ff">1</span>) <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">100</span>;
+<span style="color:#75715e">-- 方式三
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">order</span> t1 <span style="color:#66d9ef">join</span> (<span style="color:#66d9ef">select</span> id <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">100000</span>, <span style="color:#ae81ff">1</span>) t2 <span style="color:#66d9ef">on</span> t1.id <span style="color:#f92672">&gt;=</span> t2.id <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">100</span>;
+</code></pre></div></li>
+<li>
+<p>这种方式之所以能够大幅度优化性能，主要在于：</p>
+<ol>
+<li><strong>直接分页</strong>，<strong>不会走索引</strong>，<strong>全表扫描</strong>，其实是<strong>遍历主键索引树</strong>，但是<strong>每次都需要把对应行的数据取出来</strong>，<strong>要取100100条数据</strong>，<strong>然后丢弃前100000条</strong>，<strong>太耗性能</strong>，可以通过<code>explain</code>执行计划查看对应索引情况。</li>
+<li><strong>使用子查询</strong>，<strong>会走主键索引</strong>，<strong>虽然也是遍历主键索引树</strong>，<strong>但是只取 <code>id</code></strong>，<strong>不需要取整行数据</strong>，<strong>最后外层查询拿到对应的100条 <code>id</code></strong>，<strong>查询对应数据即可</strong>，<strong>通过数据索引字段定位后</strong>，<strong>大大减少了查询的数据量</strong>，<strong>效率自然大大提升</strong>。</li>
+<li><strong>上述使用 <code>in</code></strong>、<code>where</code><strong>条件和 <code>join</code></strong>，<strong>差别不大</strong>。</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><strong>业务优化</strong>：
+<ol>
+<li><strong>一般来说翻页不会超过20页</strong>，<strong>可以通过限制翻页的数量来解决这个问题</strong>，像百度分页最多只展示76页，还有一种方式，就是<strong>使用滚动</strong>，和微博一样，没有翻页，只能不断下拉，就是<strong>使用之前记录上一页最大 <code>offset</code>那个方法就可以做到</strong>。</li>
+</ol>
+</li>
+</ol>
+</li>
 </ol>
 <h2 id="参考文献">
   参考文献
@@ -3539,6 +3875,8 @@ net.ipv4.tcp_fin_timeout = 10
   <a href="https://www.cnblogs.com/printN/p/7463737.html">MySQL 中 TEXT 与 BLOB 字段类型的区别</a>。</li>
 <li>
   <a href="https://www.jianshu.com/p/586860446c6e">MySql 系统配置优化</a>。</li>
+<li>
+  <a href="https://cxyzjd.com/article/LJJZJ/103074816">MySQL 大数据量分页 limit 优化_LJJZJ 的博客-程序员宅基地</a>。</li>
 </ol>
 </article>
  
@@ -3615,13 +3953,22 @@ net.ipv4.tcp_fin_timeout = 10
   
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#数据库优化">数据库优化</a>
+    <li>
       <ul>
-        <li><a href="#1-sql-语句的优化">1 SQL 语句的优化</a></li>
-        <li><a href="#2-索引的优化">2 索引的优化</a></li>
-        <li><a href="#3-数据库表结构的优化">3 数据库表结构的优化</a></li>
-        <li><a href="#4-系统配置的优化">4 系统配置的优化</a></li>
-        <li><a href="#5-硬件的优化">5 硬件的优化</a></li>
+        <li><a href="#1-优化方法">1 优化方法</a>
+          <ul>
+            <li><a href="#11-sql-语句的优化">1.1 SQL 语句的优化</a></li>
+            <li><a href="#12-索引的优化">1.2 索引的优化</a></li>
+            <li><a href="#13-数据库表结构的优化">1.3 数据库表结构的优化</a></li>
+            <li><a href="#14-系统配置的优化">1.4 系统配置的优化</a></li>
+            <li><a href="#15-硬件的优化">1.5 硬件的优化</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-场景示例">2 场景示例</a>
+          <ul>
+            <li><a href="#21-mysql-处理千万级数据分页查询的优化方案">2.1 MySQL 处理千万级数据分页查询的优化方案</a></li>
+          </ul>
+        </li>
         <li><a href="#参考文献">参考文献</a></li>
       </ul>
     </li>

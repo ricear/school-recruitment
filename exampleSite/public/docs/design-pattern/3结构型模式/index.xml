@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Computer Cookbook School Recruitment</title>
+    <link>https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/</link>
+    <description>Recent content on Computer Cookbook School Recruitment</description>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.1-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.1-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/</guid>
+      <description>1 含义 #    代理模式是指通过代理控制对象的访问，可以在这个对象调用方法之前、调用方法之后去处理/添加新的功能。
+  代码在原有代码乃至原业务流程都不修改的情况下，直接在业务流程中切入新代码，增加新功能。
+ 关于代理，以下小例子可以帮助我们理解代理的含义：
+ 游戏代练 游戏代练这件事就是一个代理模式，所谓代练，就是 Proxy，也即代理类，代理的流程是我们把自己的账号交给代练人员，让他们帮我们打怪升级，而我们只需提供账号即可，代练人员那边，他所要做的就是登陆我们的账号，然后替我们打游戏，从第三者的角度看，我们这个角色在打怪升级，但这个第三者并不知道是不是我们本人在打游戏，他只能看到我们这个账号正在打怪升级，但并不需要知道后面打游戏的是谁，这就是代理模式，由他人代理玩游戏。 邀请明星 假设我们现在要邀请明星来上节目，我们应该先给他的经纪人打电话，然后再由经纪人通知到该明星，这里经纪人充当的就是代理的角色。     2 应用场景 #   当不想访问某个对象或访问某个对象存在困难时，就可以为这个对象创建一个代理，通过代理来间接的访问这个对象。 如果原始对象有不同的访问权限，可以使用代理控制对原始对象的访问，保护原始对象。 在访问原始对象时执行一些自己的附加条件。 为某个对象在不同的地址空间提供局部代理，使得系统可以将服务端的实现隐藏，客户端不必考虑服务端的存在。 具体应用场景主要包括Spring AOP、日志打印、异常处理、事务控制、权限控制。  3 分类 #  代理模式主要分为静态代理模式和动态代理模式两类，其中动态代理模式可分为 JDK 动态代理和 cglib 动态代理两种。
+3.1 静态代理 #  3.1.1 含义 #   静态代理是由程序员或工具生成代理类的源码，再编译代理类。 所谓静态也就是在程序运行之前就已经存在代理类的字节码文件，代理类和委托类的关系在运行前就确定了。  3.1.2 类图 #    Subject：抽象主题类，定义了代理对象和真实对象的共同接口方法，既可以是接口，也可以是抽象类。 RealSubject：真实主题类，该类可以称为被委托类或被代理类，该类定义了代理对象所表示的真实对象，实现了 Subject 接口，而 Client端通过代理类间接的调用真实主题类的方法，由其执行真实的业务逻辑。 ProxySubject：代理类，该类也被称为委托类或代理类，该类中持有一个真实主题类的引用，同样实现了 Subject 接口，在其实现的接口方法中调用真实主题类中相应的接口方法，以此起到代理的作用。 Client：客户端，使用代理。   相关近义词：</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.2-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.2-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/</guid>
+      <description>1 含义 #   装饰器模式又称为包装模式，主要以对客户端透明的方式，在不改变对象结构的情况下，可以动态地扩展器功能。  不同于继承，组合可以在运行时进行，所以称之为「动态扩展」，比如在按钮点击时进行一些 log 日志的打印，在绘制 text 文本框时，额外绘制一个滚动条和边框等。
+  装饰器模式是继承关系的一个替代方案，可以在不使用创造更多子类的情况下，扩展对象的功能，就增加功能来说，相比生成子类更加灵活。  组合比继承更加灵活是因为当可拓展的功能很多时，继承方案会产生大量的子类，而组合可以提前写好处理函数，在需要时动态构造，显然更加灵活。
+  具体的示例如下：  相框：  照片 + 相框 = 带相框的照片，这背后就是一种装饰器模式，照片具有看的功能，相框具有装饰功能，在我们看照片的基础上，还能看到精心设计的相框，增加了美感，同时相框还可以增加照片的保存时间与安全性。 相框与照片是一种组合关系，任何照片都可以放到相框中，而不是每个照片生成一个特定的相框，显然，组合的方式更加灵活。   带有缓存的文件读写：  假如我们有一个类 FileIO 用来读写文件，但是没有缓存能力，一眼看上去好像新建一个CachedFileIO 用起来更加方便，而CachedIO 的用法是new CachedIO(new FileIO()) 稍微麻烦些。 但如果我们增加一个网络读写类NetworkIO，一个数据库读写类DBIO，此时，继承的方式会使子类数量急速膨胀 ，而组合的方式则非常灵活，生成一个支持缓存的网络读写器，只需要 new CachedIO(new NetworkIO()) 即可，这就是组合灵活的地方。 当然，为了实现这个能力，CachedIO需要与 FileIO、CachedFileIO、CachedIO 继承自同一个类，具备相同的接口。   搭建平台的组件 wrapper：  装饰器模式别名也叫wrapper，wrapper 也经常在前端搭建场景中遇到，当搭建平台加载一个组件时，希望拓展其基础能力，一般会使用 wrapper 层对组件进行嵌套，wrapper 层就是在不改变 API 的基础上，对第三方组件进行增强。      2 结构 #    抽象构件（Component）角色：定义一个抽象接口以规范准备接收扩展功能的目标对象。 具体构件（ConrecteComponent）角色：实现抽象构件，负责具体的行为实现。 抽象装饰（Decorator）角色：实现抽象构件，并包含具体构件的实例，可以通过其子类扩展具体构件的功能。 具体装饰（ConcreteDecoratorA 和 ConcreteDecoratorB）角色：继承抽象装饰角色，传入具体构件对象给到父类，重写抽象构件的方法，在重写的方法里面给具体构件对象添加附加的责任。  3 示例 #    现在有这么一个场景：</description>
+    </item>
+    
+  </channel>
+</rss>

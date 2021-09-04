@@ -1,0 +1,4333 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="1 含义 #   AQS 全称是AbstractQueuedSynchronizer，即抽象对象同步器。 AQS 定义了两种资源共享模式：  独占式：  只能有一个线程占有锁资源，其他竞争资源的线程，在竞争失败后都会进入到等待队列中，等待占有锁资源的线程释放锁，然后再重新被唤醒竞争资源，例如 ReentrantLock 实现的就是独占式的锁资源。   共享式：  允许多个线程同时获取锁，并发访问共享资源，ReentrantWriteLock 和 CountDownLatch 等就是实现的这种模式。     AQS 内部维护了一个 volatile的 state 变量和一个 FIFO（先进先出）的队列：   state：
+ 代表的是竞争资源的标识。 AQS 中提供了三种操作 state 的方法： protected final int getState() { return state; } protected final void setState(int newState) { state = newState; } protected final boolean compareAndSetState(int expect, int update) { // See below for intrinsics setup to support this  return unsafe.">
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
+<meta property="og:description" content="1 含义 #   AQS 全称是AbstractQueuedSynchronizer，即抽象对象同步器。 AQS 定义了两种资源共享模式：  独占式：  只能有一个线程占有锁资源，其他竞争资源的线程，在竞争失败后都会进入到等待队列中，等待占有锁资源的线程释放锁，然后再重新被唤醒竞争资源，例如 ReentrantLock 实现的就是独占式的锁资源。   共享式：  允许多个线程同时获取锁，并发访问共享资源，ReentrantWriteLock 和 CountDownLatch 等就是实现的这种模式。     AQS 内部维护了一个 volatile的 state 变量和一个 FIFO（先进先出）的队列：   state：
+ 代表的是竞争资源的标识。 AQS 中提供了三种操作 state 的方法： protected final int getState() { return state; } protected final void setState(int newState) { state = newState; } protected final boolean compareAndSetState(int expect, int update) { // See below for intrinsics setup to support this  return unsafe." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-AQS/" /><meta property="article:section" content="docs" />
+
+
+
+<title>2.9 Aqs | Computer Cookbook School Recruitment</title>
+<link rel="manifest" href="/school-recruitment/manifest.json">
+<link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
+  <script defer src="/school-recruitment/flexsearch.min.js"></script>
+  <script defer src="/school-recruitment/en.search.min.7c5a0c6f7aee3ec02b01f6e3abdc878317cff9628c7528ce8c9961da7e2f7ed2.js" integrity="sha256-fFoMb3ruPsArAfbjq9yHgxfP&#43;WKMdSjOjJlh2n4vftI=" crossorigin="anonymous"></script>
+
+  <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+
+  <a href="https://github.com/wpwbb510582246/ComputerCookbook-SchoolRecruitment" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#64CEAA; color:#fff; position: absolute; top: 0; border: 0; right: 0;z-index: 100;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a href="/school-recruitment/"><span>Computer Cookbook School Recruitment</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="https://www.grayson.top" target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/graysonwp" target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+<hr>
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-353f7a5578fa41dbc42c73ea30fe2255" class="toggle"  />
+    <label for="section-353f7a5578fa41dbc42c73ea30fe2255" class="flex justify-between">
+      <a role="button" class="">第一章 算法</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e0c159ebe8e8b165cd558008fb5f5074" class="toggle"  />
+    <label for="section-e0c159ebe8e8b165cd558008fb5f5074" class="flex justify-between">
+      <a role="button" class="">1、算法框架</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a9fe725cb6a0f216530b1ac2b85e3b7a" class="toggle"  />
+    <label for="section-a9fe725cb6a0f216530b1ac2b85e3b7a" class="flex justify-between">
+      <a role="button" class="">1.1 动态规划</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.1-%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97/" class="">1.1.1 斐波那契数列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="">1.1.2 背包问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.3-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="">1.1.3 贪心算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.4-%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/" class="">1.1.4 最长递增子序列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.5-%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB/" class="">1.1.5 编辑距离</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.6-%E9%AB%98%E6%A5%BC%E6%89%94%E9%B8%A1%E8%9B%8B/" class="">1.1.6 高楼扔鸡蛋</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.7-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E5%BA%8F%E5%88%97/" class="">1.1.7 最长回文子序列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.8-%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%92%8C/" class="">1.1.8 最大子序和</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97%E9%80%9A%E8%A7%A3/" class="">1.1.9 股票问题系列通解</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.10-%E6%9C%80%E9%95%BF%E9%87%8D%E5%A4%8D%E5%AD%90%E6%95%B0%E7%BB%84/" class="">1.1.10 最长重复子数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.11-%E6%9C%80%E9%95%BF%E6%9C%89%E6%95%88%E6%8B%AC%E5%8F%B7/" class="">1.1.11 最长有效括号</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e36081c41f3a4d8d8355cae83c46c9b8" class="toggle"  />
+    <label for="section-e36081c41f3a4d8d8355cae83c46c9b8" class="flex justify-between">
+      <a role="button" class="">1.2 二分查找</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/1.2.1-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E6%A1%86%E6%9E%B6/" class="">1.2.1 二分查找框架</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/1.2.2-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">1.2.2 搜索旋转排序数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/1.2.3-%E5%A6%82%E4%BD%95%E8%BF%90%E7%94%A8%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95/" class="">1.2.3 如何运用二分查找算法</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2ac9691c4865fdec0880b3cb638bc594" class="toggle"  />
+    <label for="section-2ac9691c4865fdec0880b3cb638bc594" class="flex justify-between">
+      <a role="button" class="">1.3 数据结构</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.1-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/" class="">1.3.1 反转链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.2-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACk%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0/" class="">1.3.2 数组中的第k个最大元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.3-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/" class="">1.3.3 二叉树的最近公共祖先</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6c6359aa6ff642b64a85093d9888f8ad" class="toggle"  />
+    <label for="section-6c6359aa6ff642b64a85093d9888f8ad" class="flex justify-between">
+      <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.4-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" class="">1.4 排序算法</a>
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9b9f975ded87a304ee48569c44f19492" class="toggle"  />
+    <label for="section-9b9f975ded87a304ee48569c44f19492" class="flex justify-between">
+      <a role="button" class="">1.5 二叉树</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.1-%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86/" class="">1.5.1 二叉树遍历</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.2-%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/" class="">1.5.2 岛屿问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.3-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" class="">1.5.3 平衡二叉树</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.4-%E4%BA%8C%E5%8F%89%E6%A0%91%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98/" class="">1.5.4 二叉树路径问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.5-%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/" class="">1.5.5 构造二叉树</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-4571e95d0021653ce2d27ee4b0838ca0" class="toggle"  />
+    <label for="section-4571e95d0021653ce2d27ee4b0838ca0" class="flex justify-between">
+      <a role="button" class="">1.6 回溯算法</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.1-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E8%A7%A3%E9%A2%98%E6%A1%86%E6%9E%B6/" class="">1.6.1 回溯算法解题框架</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-N%E7%9A%87%E5%90%8E/" class="">1.6.2 N皇后</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-8b579ed4452b6a8d2017a24343689b5c" class="toggle"  />
+    <label for="section-8b579ed4452b6a8d2017a24343689b5c" class="flex justify-between">
+      <a role="button" class="">2、高频面试题</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5a653711e83b11abc9ab6143b1a9fd64" class="toggle"  />
+    <label for="section-5a653711e83b11abc9ab6143b1a9fd64" class="flex justify-between">
+      <a role="button" class="">2.1 数学</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.1-%E5%BF%AB%E9%80%9F%E6%A8%A1%E5%B9%82%E7%AE%97%E6%B3%95/" class="">2.1.1 快速模幂算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.2-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/" class="">2.1.2 搜索二维矩阵</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.3-%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/" class="">2.1.3 螺旋矩阵</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.4-x-%E7%9A%84%E5%B9%B3%E6%96%B9%E6%A0%B9/" class="">2.1.4 X 的平方根</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5c279474332677699cd0b53888bd51ba" class="toggle"  />
+    <label for="section-5c279474332677699cd0b53888bd51ba" class="flex justify-between">
+      <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" class="">2.2 二分查找</a>
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e057e8659d2f838952397ed15d20f46c" class="toggle"  />
+    <label for="section-e057e8659d2f838952397ed15d20f46c" class="flex justify-between">
+      <a role="button" class="">2.3 数组</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.1-%E5%88%A0%E9%99%A4%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E9%A1%B9/" class="">2.3.1 删除有序数组中的重复项</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.2-%E6%89%BE%E5%87%BA%E6%95%B0%E7%BB%84%E6%B8%B8%E6%88%8F%E7%9A%84%E8%B5%A2%E5%AE%B6/" class="">2.3.2 找出数组游戏的赢家</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.4-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%B6%88%E5%A4%B1%E7%9A%84%E5%85%83%E7%B4%A0/" class="">2.3.4 如何寻找消失的元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.5-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E7%BC%BA%E5%A4%B1%E5%92%8C%E9%87%8D%E5%A4%8D%E7%9A%84%E5%85%83%E7%B4%A0/" class="">2.3.5 如何寻找缺失和重复的元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.6-%E6%9C%80%E5%A4%A7%E6%95%B0/" class="">2.3.6 最大数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.7-%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/" class="">2.3.7 二维数组中的查找</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.8-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/" class="">2.3.8 两数之和</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.9-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" class="">2.3.9 三数之和</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">2.3.10 合并两个有序数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/" class="">2.3.11 下一个排列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/" class="">2.3.12 缺失的第一个正数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/" class="">2.3.13 寻找两个正序数组的中位数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/" class="">2.3.14 多数元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.15-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/" class="">2.3.15 最长连续序列</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b0bb9f9be9775f7e7856b63f7c5be80e" class="toggle"  />
+    <label for="section-b0bb9f9be9775f7e7856b63f7c5be80e" class="flex justify-between">
+      <a role="button" class="">2.4 字符串</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.1-%E6%9E%84%E9%80%A0-K-%E4%B8%AA%E5%9B%9E%E6%96%87%E5%AD%97%E7%AC%A6%E4%B8%B2/" class="">2.4.1 构造 K 个回文字符串</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.2-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%9C%80%E5%9B%9E%E4%B8%B2/" class="">2.4.2 如何寻找最 回 串</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.3-%E5%A6%82%E4%BD%95%E5%88%A4%E5%AE%9A%E6%8B%AC%E5%8F%B7%E7%9A%84%E5%90%88%E6%B3%95%E6%80%A7/" class="">2.4.3 如何判定括号的合法性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.4-%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E6%8D%A2%E6%95%B4%E6%95%B0-atoi/" class="">2.4.4 字符串转换整数 (Atoi)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.5-%E9%95%BF%E5%BA%A6%E4%B8%BA3%E7%9A%84%E4%B8%8D%E5%90%8C%E5%9B%9E%E6%96%87%E5%AD%90%E5%BA%8F%E5%88%97/" class="">2.4.5 长度为3的不同回文子序列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.6-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/" class="">2.4.6 无重复字符的最长子串</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.7-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E5%8A%A0/" class="">2.4.7 字符串相加</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.8-%E7%BF%BB%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%87%8C%E7%9A%84%E5%8D%95%E8%AF%8D/" class="">2.4.8 翻转字符串里的单词</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c2cc4653d849ecb4e8d0df9162693740" class="toggle"  />
+    <label for="section-c2cc4653d849ecb4e8d0df9162693740" class="flex justify-between">
+      <a role="button" class="">2.5 链表</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.1-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8-II/" class="">2.5.1 环形链表 Ii</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.2-%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E5%88%A4%E6%96%AD%E5%9B%9E%E6%96%87%E9%93%BE%E8%A1%A8/" class="">2.5.2 如何高效判断回文链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.3-K-%E4%B8%AA%E4%B8%80%E7%BB%84%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" class="">2.5.3 K 个一组翻转链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.4-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/" class="">2.5.4 相交链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.5-%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E8%8A%82%E7%82%B9/" class="">2.5.5 链表中倒数第k个节点</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.6-%E5%90%88%E5%B9%B6K%E4%B8%AA%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/" class="">2.5.6 合并 K个升序链表</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-95a636b3d00f4ce42d96beeef34d9742" class="toggle"  />
+    <label for="section-95a636b3d00f4ce42d96beeef34d9742" class="flex justify-between">
+      <a role="button" class="">2.6 二叉树</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.1-%E5%9C%A8%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E5%88%86%E9%85%8D%E7%A1%AC%E5%B8%81/" class="">2.6.1 在二叉树中分配硬币</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.2-%E5%B0%86%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E8%BD%AC%E6%8D%A2%E4%B8%BA%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/" class="">2.6.2 将有序数组转换为二叉搜索树</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.4-%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91/" class="">2.6.4 重建二叉树</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.5-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E8%B7%AF%E5%BE%84%E5%92%8C/" class="">2.6.5 二叉树中的最大路径和</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2dca4a28932da6fd2ab80d6adf86f380" class="toggle"  />
+    <label for="section-2dca4a28932da6fd2ab80d6adf86f380" class="flex justify-between">
+      <a role="button" class="">2.7 队列</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.7-%E9%98%9F%E5%88%97/2.7.1-%E7%94%A8%E6%A0%88%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97/" class="">2.7.1 用栈实现队列</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9868fca37e026543bb4220219b385440" class="toggle"  />
+    <label for="section-9868fca37e026543bb4220219b385440" class="flex justify-between">
+      <a role="button" class="">2.8 动态规划</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.8-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/2.8.1-%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E8%A7%A3%E5%86%B3%E6%8E%A5%E9%9B%A8%E6%B0%B4%E9%97%AE%E9%A2%98/" class="">2.8.1 如何高效解决接雨水问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.8-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/2.8.2-%E6%9C%80%E5%B0%91%E4%BE%A7%E8%B7%B3%E6%AC%A1%E6%95%B0/" class="">2.8.2 最少侧跳次数</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2b868ec58580c16b57b76d0e583b5ec9" class="toggle"  />
+    <label for="section-2b868ec58580c16b57b76d0e583b5ec9" class="flex justify-between">
+      <a role="button" class="">2.9 设计</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.9-%E8%AE%BE%E8%AE%A1/2.9.1-%E5%AE%9E%E7%8E%B0-Trie-%E5%89%8D%E7%BC%80%E6%A0%91/" class="">2.9.1 实现 Trie (前缀树)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.9-%E8%AE%BE%E8%AE%A1/2.9.2-LRU-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/" class="">2.9.2 Lru 缓存机制</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0922907dd56f7a4a192db7338c0e7143" class="toggle"  />
+    <label for="section-0922907dd56f7a4a192db7338c0e7143" class="flex justify-between">
+      <a role="button" class="">第二章 计算机基础</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e090ea075956ea0a88f3be27eb8b8174" class="toggle"  />
+    <label for="section-e090ea075956ea0a88f3be27eb8b8174" class="flex justify-between">
+      <a role="button" class="">1、计算机网络</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-043e7911fd2d67fbc52b823c1516a0d8" class="toggle"  />
+    <label for="section-043e7911fd2d67fbc52b823c1516a0d8" class="flex justify-between">
+      <a role="button" class="">1.1 传输层： Tcp和 UDP</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.1-%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B/" class="">1.1.1 三次握手</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.2-%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/" class="">1.1.2 四次挥手</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.3-%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/" class="">1.1.3 流量控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.5-%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/" class="">1.1.5 拥塞控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.6-TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.1.6 Tcp和 Udp的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.7-TCP%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7/" class="">1.1.7 Tcp如何保证传输的可靠性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.8-TCP%E9%95%BF%E8%BF%9E%E6%8E%A5%E5%92%8C%E7%9F%AD%E8%BF%9E%E6%8E%A5/" class="">1.1.8 Tcp长连接和短连接</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c1e479729a89ea5ddbe8dd67b5f3ed4e" class="toggle"  />
+    <label for="section-c1e479729a89ea5ddbe8dd67b5f3ed4e" class="flex justify-between">
+      <a role="button" class="">1.2 应用层：HTTP和HTTPS</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.1-HTTP%E5%92%8CHTTPS%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.2.1 Http和 HTTP S的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.2-GET%E5%92%8CPOST%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.2.2 Get和 Post的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.3-Session%E4%B8%8ECookie%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.2.3 Session与 Cookie的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.4-%E4%BB%8E%E8%BE%93%E5%85%A5%E7%BD%91%E5%9D%80%E5%88%B0%E8%8E%B7%E5%BE%97%E9%A1%B5%E9%9D%A2%E7%9A%84%E8%BF%87%E7%A8%8B%E8%B6%8A%E8%AF%A6%E7%BB%86%E8%B6%8A%E5%A5%BD/" class="">1.2.4 从输入网址到获得页面的过程（越详细越好）</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.5-HTTP%E8%AF%B7%E6%B1%82%E6%9C%89%E5%93%AA%E4%BA%9B%E5%B8%B8%E8%A7%81%E7%9A%84%E7%8A%B6%E6%80%81%E7%A0%81/" class="">1.2.5 Http请求有哪些常见的状态码</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.6-%E4%BB%80%E4%B9%88%E6%98%AFRIP%E7%AE%97%E6%B3%95%E6%98%AF%E4%BB%80%E4%B9%88/" class="">1.2.6 什么是 Rip，算法是什么</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.7-HTTP1.0HTTP1.1%E5%92%8CHTTP2.0%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB/" class="">1.2.7 Http1.0、 Http1.1和 Http2.0的主要区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.8-DNS/" class="">1.2.8 DNS</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.9-HTTPS%E5%8A%A0%E5%AF%86%E5%92%8C%E8%AE%A4%E8%AF%81%E8%BF%87%E7%A8%8B/" class="">1.2.9 HTTP S加密和认证过程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.10-%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB/" class="">1.2.10 常见网络攻击</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.11-REST/" class="">1.2.11 Rest</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.3-%E8%AE%A1%E7%AE%97%E5%85%B6%E7%BD%91%E7%BB%9C%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" class="">1.3 计算其网络体系结构</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9a70073e95afd0aa2b7107f6cb77a3ce" class="toggle"  />
+    <label for="section-9a70073e95afd0aa2b7107f6cb77a3ce" class="flex justify-between">
+      <a role="button" class="">1.4 网络层协议</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.1-IP%E5%9C%B0%E5%9D%80%E7%9A%84%E5%88%86%E7%B1%BB/" class="">1.4.1 Ip地址的分类</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.2-%E5%88%92%E5%88%86%E5%AD%90%E7%BD%91/" class="">1.4.2 划分子网</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.3-%E4%BB%80%E4%B9%88%E6%98%AFARP%E5%8D%8F%E8%AE%AE/" class="">1.4.3 什么是 Arp协议</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.4-NAT%E5%8D%8F%E8%AE%AE/" class="">1.4.4 Nat协议</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-09f7d8995bc26810475d1c56597a312e" class="toggle"  />
+    <label for="section-09f7d8995bc26810475d1c56597a312e" class="flex justify-between">
+      <a role="button" class="">2、操作系统</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2f767bf946d6dc8ddeda6b6435471e5b" class="toggle"  />
+    <label for="section-2f767bf946d6dc8ddeda6b6435471e5b" class="flex justify-between">
+      <a role="button" class="">2.1 进程和线程</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.1.1 进程和线程的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.2-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" class="">2.1.2 进程间通信方式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.3-%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98/" class="">2.1.3 进程同步问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.4-%E8%BF%9B%E7%A8%8B%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E7%8A%B6%E6%80%81/" class="">2.1.4 进程有哪几种状态</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.5-%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5/" class="">2.1.5 进程调度策略</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.6-%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B/" class="">2.1.6 僵尸进程和孤儿进程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.7-%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/" class="">2.1.7 线程同步</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.8-%E5%8D%8F%E7%A8%8B/" class="">2.1.8 协程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.9-%E5%BC%82%E5%B8%B8%E6%8E%A7%E5%88%B6%E6%B5%81/" class="">2.1.9 异常控制流</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.10-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" class="">2.1.10 Io多路复用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.11-%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/" class="">2.1.11 用户态和内核态</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.2-%E6%AD%BB%E9%94%81/" class="">2.2 死锁</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b2b1a78994c9898abed1b08fef134abd" class="toggle"  />
+    <label for="section-b2b1a78994c9898abed1b08fef134abd" class="flex justify-between">
+      <a role="button" class="">2.3 内存管理</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.1-%E5%88%86%E9%A1%B5%E5%92%8C%E5%88%86%E6%AE%B5/" class="">2.3.1 分页和分段</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.2-%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/" class="">2.3.2 虚拟内存</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.3-%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95/" class="">2.3.3 页面置换算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.4-%E5%B1%80%E9%83%A8%E6%80%A7%E5%8E%9F%E7%90%86/" class="">2.3.4 局部性原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.5-%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA/" class="">2.3.5 缓冲区溢出</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.4-%E7%A3%81%E7%9B%98%E8%B0%83%E5%BA%A6/" class="">2.4 磁盘调度</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e28cc33fe5745d14abf4a0147d0624a5" class="toggle"  />
+    <label for="section-e28cc33fe5745d14abf4a0147d0624a5" class="flex justify-between">
+      <a role="button" class="">第三章 数据库</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6fd3cab540793410b1ce567d790deadc" class="toggle"  />
+    <label for="section-6fd3cab540793410b1ce567d790deadc" class="flex justify-between">
+      <a role="button" class="">1、数据库基础</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.1-%E4%BA%8B%E5%8A%A1%E7%9A%84%E6%A6%82%E5%BF%B5%E5%92%8C%E7%89%B9%E6%80%A7/" class="">1.1 事务的概念和特性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.2-%E9%94%81/" class="">1.2 锁</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.3-%E9%94%81%E5%8D%8F%E8%AE%AE/" class="">1.3 锁协议</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.4-%E4%BA%8B%E5%8A%A1%E6%97%A5%E5%BF%97/" class="">1.4 事务日志</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.5-MVCC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">1.5 Mvcc实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-12290256fbd76ac6014c39648c5827fe" class="toggle"  />
+    <label for="section-12290256fbd76ac6014c39648c5827fe" class="flex justify-between">
+      <a role="button" class="">1.6 基础知识</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.1-%E4%B8%89%E8%8C%83%E5%BC%8F/" class="">1.6.1 三范式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.2-%E5%A4%9A%E8%A1%A8%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F/" class="">1.6.2 多表连接方式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.3-%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" class="">1.6.3 存储过程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.4-DELETETRUNCATE%E5%92%8CDROP%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.6.4 Delete、 Truncate和 Drop的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.5-%E8%A7%A6%E5%8F%91%E5%99%A8/" class="">1.6.5 触发器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.6-%E8%A7%86%E5%9B%BE/" class="">1.6.6 视图</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d1b14978df09adfe15777e58b9b435ec" class="toggle"  />
+    <label for="section-d1b14978df09adfe15777e58b9b435ec" class="flex justify-between">
+      <a role="button" class="">2、 My SQL</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.1-%E7%B4%A2%E5%BC%95/" class="">2.1 索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.2-B-%E6%A0%91B&#43;%E6%A0%91%E7%B4%A2%E5%BC%95%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/" class="">2.2 B 树、 B 树索引算法原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.3-%E7%B4%A2%E5%BC%95%E7%BB%84%E7%BB%87%E8%A1%A8/" class="">2.3 索引组织表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.4-InnoDB%E5%92%8CMyISAM%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.4 Inno Db和 My Isam的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.5-Checkpoint%E6%8A%80%E6%9C%AF/" class="">2.5 Checkpoint技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.6-%E5%AE%95%E6%9C%BA%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%90%86/" class="">2.6 宕机恢复原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.7-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%98%E5%8C%96/" class="">2.7 数据库优化</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.8-%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/" class="">2.8 分库分表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.9-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/" class="">2.9 一致性哈希算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.10-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" class="">2.10 主从复制</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-53f351d3e26dfa58c34e937b76a0c4ce" class="toggle"  />
+    <label for="section-53f351d3e26dfa58c34e937b76a0c4ce" class="flex justify-between">
+      <a role="button" class="">3、 Redis</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-356f36d039b40fdb10be19d36f2f2793" class="toggle"  />
+    <label for="section-356f36d039b40fdb10be19d36f2f2793" class="flex justify-between">
+      <a role="button" class="">3.1 概述</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.1-Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BF%AB/" class="">3.1.1 Redis为什么这么快</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.2-Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="">3.1.2 Redis数据类型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.3-%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6/" class="">3.1.3 持久化机制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.4-%E8%BF%87%E6%9C%9F%E6%9C%BA%E5%88%B6%E5%92%8C%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" class="">3.1.4 过期机制和内存淘汰策略</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.2-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" class="">3.2 线程模型</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-4731e97839509d5614da88af39acf326" class="toggle"  />
+    <label for="section-4731e97839509d5614da88af39acf326" class="flex justify-between">
+      <a role="button" class="">3.3 分布式问题</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.3-%E5%88%86%E5%B8%83%E5%BC%8F%E9%97%AE%E9%A2%98/3.3.1-Redis%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="">3.3.1 Redis实现分布式锁</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-555105a060edfd5dfac44ac6d49d31e5" class="toggle"  />
+    <label for="section-555105a060edfd5dfac44ac6d49d31e5" class="flex justify-between">
+      <a role="button" class="">3.4 缓存异常</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.4-%E7%BC%93%E5%AD%98%E5%BC%82%E5%B8%B8/3.4.1-%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/" class="">3.4.1 缓存穿透、缓存击穿、缓存雪崩</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f0d841e400bf38796a65a65ef72b420e" class="toggle"  />
+    <label for="section-f0d841e400bf38796a65a65ef72b420e" class="flex justify-between">
+      <a role="button" class="">第四章 设计模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/1%E6%A6%82%E8%BF%B0/" class="">1、概述</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e796a2fc1bf6b4e9454f5a191dd15040" class="toggle"  />
+    <label for="section-e796a2fc1bf6b4e9454f5a191dd15040" class="flex justify-between">
+      <a role="button" class="">2、创建型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/2%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/2.1-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="">2.1 单例模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/2%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/2.2-%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" class="">2.2 工厂模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/2%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/2.3-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="">2.3 代理模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="toggle"  />
+    <label for="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="flex justify-between">
+      <a role="button" class="">3、结构型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.1-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="">3.1 代理模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.2-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="">3.2 装饰器模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0f94fb8c7e53c880650621fdcc596283" class="toggle"  />
+    <label for="section-0f94fb8c7e53c880650621fdcc596283" class="flex justify-between">
+      <a role="button" class="">4、行为型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/4%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/4.1-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" class="">4.1 策略模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-eca69da21de5b0cd25d8421dec09a327" class="toggle" checked />
+    <label for="section-eca69da21de5b0cd25d8421dec09a327" class="flex justify-between">
+      <a role="button" class="">第五章 Java</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a64d861c08691e8f06f1178d4d28cf04" class="toggle"  />
+    <label for="section-a64d861c08691e8f06f1178d4d28cf04" class="flex justify-between">
+      <a role="button" class="">1、 Java基础</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.1-StringStringBuffer%E5%92%8CStringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.1 String、 String Buffer和 String Builder的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.2-HashMap%E5%92%8CConcurrentHashMap%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">1.2 Hash Map和 Concurrent Hash Map实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.3-ArrayList%E5%92%8CLinkedList%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">1.3 Array List和 Linked List实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.4-%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="">1.4 深拷贝与浅拷贝</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-21d6c85d1bc3cd657a462ac4b09f9d02" class="toggle" checked />
+    <label for="section-21d6c85d1bc3cd657a462ac4b09f9d02" class="flex justify-between">
+      <a role="button" class="">2、 Java多线程</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.1-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7/" class="">2.1 并发编程的三大特性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.2-%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92/" class="">2.2 指令重排</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.3-Volatile%E5%8E%9F%E7%90%86/" class="">2.3 Volatile原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.4-CAS%E5%8E%9F%E7%90%86/" class="">2.4 Cas原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.5-Java%E7%9A%844%E7%A7%8D%E5%BC%95%E7%94%A8%E7%BA%A7%E5%88%AB/" class="">2.5 Java的4种引用级别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.6-Java%E4%B8%AD%E7%9A%84%E9%94%81/" class="">2.6 Java中的锁</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.7-Synchronized%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.7 Synchronized实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.8-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.8 线程池实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-AQS/" class=" active">2.9 Aqs</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-65e183c484720f91ba3d1676e1ed5a16" class="toggle"  />
+    <label for="section-65e183c484720f91ba3d1676e1ed5a16" class="flex justify-between">
+      <a role="button" class="">3、 Jvm</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.1-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F/" class="">3.1 运行时数据区域</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.2-%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E5%AD%98%E6%B4%BB%E7%9A%84%E6%96%B9%E6%B3%95/" class="">3.2 判断对象是否存活的方法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.3-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95/" class="">3.3 垃圾收集算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.4-%E7%B1%BB%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%92%8C%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/" class="">3.4 类的生命周期和加载过程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.5-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%97%B6%E6%9C%BA/" class="">3.5 类加载时机</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.6-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E7%9A%84%E7%A7%8D%E7%B1%BB/" class="">3.6 类加载器的种类</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.7-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E7%9A%84%E7%89%B9%E7%82%B9/" class="">3.7 类加载机制的特点</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.8-JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" class="">3.8 Jvm内存结构</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.9-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95%E6%9C%89%E5%93%AA%E4%BA%9B/" class="">3.9 常见的垃圾收集算法有哪些</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.10-%E6%8C%87%E9%92%88%E7%A2%B0%E6%92%9E%E5%92%8C%E7%A9%BA%E9%97%B2%E5%88%97%E8%A1%A8/" class="">3.10 指针碰撞和空闲列表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.11-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E6%9C%89%E5%93%AA%E4%BA%9B/" class="">3.11 常见的垃圾收集器有哪些</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.12-%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E4%B8%8E%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">3.12 内存溢出与内存泄漏的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.13-%E5%B8%B8%E7%94%A8%E7%9A%84JVM%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E6%9C%89%E5%93%AA%E4%BA%9B/" class="">3.13 常用的 Jvm启动参数有哪些</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.14-%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/" class="">3.14 反射机制</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-78e3fdb9e302e0ddb1abf0723557c671" class="toggle"  />
+    <label for="section-78e3fdb9e302e0ddb1abf0723557c671" class="flex justify-between">
+      <a role="button" class="">4、 Nio</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/4NIO/4.1-%E6%A6%82%E8%BF%B0/" class="">4.1 概述</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="toggle"  />
+    <label for="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="flex justify-between">
+      <a role="button" class="">第六章 Spring全家桶</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-afe35ec73fb23fd24d05388dd4f6d178" class="toggle"  />
+    <label for="section-afe35ec73fb23fd24d05388dd4f6d178" class="flex justify-between">
+      <a role="button" class="">1、 Spring</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.1-%E6%A6%82%E8%BF%B0/" class="">1.1 概述</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.2-Spring-IOC/" class="">1.2 Spring Ioc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.3-Spring-AOP/" class="">1.3 Spring Aop</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b63cda05fe80f821d31813480ebd8acb" class="toggle"  />
+    <label for="section-b63cda05fe80f821d31813480ebd8acb" class="flex justify-between">
+      <a role="button" class="">2、 Spring Boot</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/2SpringBoot/2.1-SpringSpringBootSpringCloud%E7%9A%84%E8%81%94%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB/" class="">2.1 Spring、 Spring Boot、 Spring Cloud的联系与区别</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/school-recruitment/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>2.9 Aqs</strong>
+
+  <label for="toc-control">
+    
+    <img src="/school-recruitment/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"> </script>
+  <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })</script>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-含义">1 含义</a></li>
+        <li><a href="#2-源码分析">2 源码分析</a>
+          <ul>
+            <li><a href="#21-独占模式">2.1 独占模式</a>
+              <ul>
+                <li><a href="#211-node">2.1.1 Node</a></li>
+                <li><a href="#212-reentrantlock">2.1.2 ReentrantLock</a>
+                  <ul>
+                    <li><a href="#2121-加锁过程">2.1.2.1 加锁过程</a></li>
+                    <li><a href="#2122-释放锁过程">2.1.2.2 释放锁过程</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#22-共享模式">2.2 共享模式</a>
+              <ul>
+                <li><a href="#221-countdownlatch">2.2.1 CountDownLatch</a>
+                  <ul>
+                    <li><a href="#2211-获取资源">2.2.1.1 获取资源</a></li>
+                    <li><a href="#2212-释放资源">2.2.1.2 释放资源</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#参考文献">参考文献</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h2 id="1-含义">
+  1 含义
+  <a class="anchor" href="#1-%e5%90%ab%e4%b9%89">#</a>
+</h2>
+<ol>
+<li>AQS 全称是<strong>AbstractQueuedSynchronizer</strong>，即<strong>抽象对象同步器</strong>。</li>
+<li>AQS 定义了两种资源共享模式：
+<ol>
+<li><strong>独占式</strong>：
+<ol>
+<li><strong>只能有一个线程占有锁资源</strong>，<strong>其他竞争资源的线程</strong>，<strong>在竞争失败后都会进入到等待队列中</strong>，<strong>等待占有锁资源的线程释放锁</strong>，<strong>然后再重新被唤醒竞争资源</strong>，例如 <code>ReentrantLock</code> 实现的就是独占式的锁资源。</li>
+</ol>
+</li>
+<li><strong>共享式</strong>：
+<ol>
+<li><strong>允许多个线程同时获取锁</strong>，<strong>并发访问共享资源</strong>，<code>ReentrantWriteLock</code> 和 <code>CountDownLatch</code> 等就是实现的这种模式。</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>AQS 内部维护了一个
+  <a href="https://notebook.grayson.top/project-34/doc-528">volatile</a>的 <code>state</code> 变量和一个 FIFO（先进先出）的队列：
+<ol>
+<li>
+<p><code>state</code>：</p>
+<ol>
+<li><strong>代表的是竞争资源的标识</strong>。</li>
+<li>AQS 中提供了三种操作 <code>state</code> 的方法：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getState</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> state<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setState</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> newState<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    state <span style="color:#f92672">=</span> newState<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">compareAndSetState</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> expect<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> update<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// See below for intrinsics setup to support this
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> unsafe<span style="color:#f92672">.</span><span style="color:#a6e22e">compareAndSwapInt</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">,</span> stateOffset<span style="color:#f92672">,</span> expect<span style="color:#f92672">,</span> update<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p><strong>FIFO 队列</strong>：</p>
+<ol>
+<li><strong>代表的是竞争资源失败的线程排队时存放的容器</strong>。</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 竞争资源标识
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">volatile</span> <span style="color:#66d9ef">int</span> state<span style="color:#f92672">;</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * FIFO 队列，代表的是竞争资源失败的线程排队时存放的容器
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Node</span> <span style="color:#f92672">{}</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>因为 <code>AbstractQueuedSynchronizer</code><strong>是一个抽象类</strong>，<strong>采用模板方法的设计模式</strong>，<strong>规定了独占模式和共享模式需要实现的方法</strong>，并且<strong>将一些通用的功能已经进行了实现</strong>，所以<strong>不同模式的使用方式</strong>，<strong>只需要自己定义好实现共享资源的获取与释放即可</strong>，至于<strong>具体线程在等待队列中的维护</strong>（获取资源入队列、唤醒出队列等），<strong>AQS 已经实现好了</strong>，所以根据共享资源的模式一般实现的方法有如下几个：
+<ol>
+<li><code>boolean isHeldExclusively()</code>：<strong>是否为独占模式</strong>，<strong>只有使用到了 <code>Condition</code> 的</strong>，<strong>才需要去实现他</strong>，例如 <code>ReentrantLock</code>。</li>
+<li><code>boolean tryAcquire(int arg)</code>：<strong>独占模式</strong>，<strong>尝试获取资源</strong>，<strong>成功返回 <code>true</code></strong>，<strong>失败返回 <code>false</code></strong>。</li>
+<li><code>boolean tryRelease(int arg)</code>：<strong>独占模式</strong>，<strong>尝试释放资源</strong>，<strong>成功返回 <code>true</code></strong>，<strong>失败返回 <code>false</code></strong>。</li>
+<li><code>int tryAcquireShared(int arg)</code>：<strong>共享模式</strong>，<strong>尝试获取资源</strong>，<strong>负数表示失败</strong>，<strong>0 表示成功</strong>，<strong>但是没有剩余可用资源了</strong>，<strong>整数表示成功</strong>，且<strong>有剩余可用资源</strong>。</li>
+<li><code>boolean tryReleaseShared(int arg)</code>：<strong>共享模式</strong>，<strong>尝试释放资源</strong>，<strong>若资源释放后允许唤醒后续等待节点返回 <code>true</code></strong>，<strong>否则返回 <code>false</code></strong>。
+上面的这几个方法在 <code>AbstractQueuedSynchronizer</code> 抽象类中都没有被定义为 <code>abstract</code>，说明这些方法都是可以按需实现的，共享概念股模式下可以只实现共享模式的方法（例如 <code>CountDownLatch</code>），独占模式下可以只实现独占模式的方法（例如 <code>ReentrantLock</code>），也支持两种都实现，两种模式都使用（例如 <code>ReentrantReadWriteLock</code>）。</li>
+</ol>
+</li>
+</ol>
+<h2 id="2-源码分析">
+  2 源码分析
+  <a class="anchor" href="#2-%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90">#</a>
+</h2>
+<p>我们先简单介绍 AQS 的两种模式的实现类的代表 <code>ReentrantLock</code>（独占模式）和 <code>CountDownLatch</code>（共享模式），是如何来共享资源的一个过程，然后再详细通过 AQS 的源码来分析整个实现过程：</p>
+<ol>
+<li><code>ReentrantLock</code>：
+<ol>
+<li>在<strong>初始化的时候 <code>state = 0</code></strong>，<strong>表示资源未被锁定</strong>，<strong>当 $A$ 线程执行 <code>lock()</code> 方法时</strong>，<strong>会调用 <code>tryAcquire()</code> 方法</strong>，<strong>将 AQS 中队列的模式设置为独占</strong>，<strong>并将独占线程设置为线程 $A$</strong>，以及<strong>将 <code>state + 1</code></strong>。</li>
+<li><strong>这样在线程 $A$ 没有释放锁前</strong>，<strong>其他线程来竞争锁</strong>，<strong>调用 <code>tryAcquire()</code> 方法时都会失败</strong>，<strong>然后竞争锁失败的线程就会进入到队列中</strong>。</li>
+<li><strong>当线程 $A$ 调用执行 <code>unlock()</code> 方法将 <code>state = 0</code> 后</strong>，<strong>其他线程才有机会获取锁</strong>（注意 <code>ReentrantLock</code> 是可重入的，同一线程多次获取锁时 <code>state</code> 的值会进行累加的，在释放锁的时候也要释放相应的次数才算完全释放了锁）。</li>
+</ol>
+</li>
+<li><code>CountDownLatch</code>：
+<ol>
+<li><strong><code>CountDownLatch</code> 会将任务分成 $N$ 个子线程去执行</strong>，<code>state</code><strong>的初始值也是 $N$</strong>（<code>state</code> 与子线程数量一致），$N$<strong>个子线程是并行执行的</strong>，<strong>每个子线程执行完成后 <code>countDown()</code> 一次</strong>，<code>state</code><strong>会通过
+  <a href="https://notebook.grayson.top/project-34/doc-529">CAS</a>方式减 1</strong>，<strong>直到所有子线程执行完成后</strong>（<code>state = 0</code>），<strong>会通过 <code>unpark()</code> 方法唤醒主线程</strong>，<strong>然后主线程就会从 <code>await()</code> 方法返回</strong>，<strong>继续后续操作</strong>。</li>
+</ol>
+</li>
+</ol>
+<h3 id="21-独占模式">
+  2.1 独占模式
+  <a class="anchor" href="#21-%e7%8b%ac%e5%8d%a0%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h4 id="211-node">
+  2.1.1 Node
+  <a class="anchor" href="#211-node">#</a>
+</h4>
+<ol>
+<li>
+<p>在 <code>AbstractQueuedSynchronizer</code> 的类里面，有一个静态内部类 <code>Node</code>，他代表的是<strong>队列中的每一个节点</strong>，其中 <code>Node</code> 节点有如下几个属性：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">volatile</span> <span style="color:#66d9ef">int</span> waitStatus<span style="color:#f92672">;</span>    <span style="color:#75715e">/*节点的状态*/</span>
+<span style="color:#66d9ef">volatile</span> Node prev<span style="color:#f92672">;</span> <span style="color:#75715e">/*当前节点的前一个节点*/</span>
+<span style="color:#66d9ef">volatile</span> Node next<span style="color:#f92672">;</span> <span style="color:#75715e">/*当前节点的后一个节点*/</span>
+<span style="color:#66d9ef">volatile</span> Thread thread<span style="color:#f92672">;</span> <span style="color:#75715e">/*当前节点中所包含的线程对象*/</span>
+Node nextWaiter<span style="color:#f92672">;</span>    <span style="color:#75715e">/*等待队列中的下一个节点*/</span>
+</code></pre></div><ol>
+<li>
+<p><code>waitStatus</code>：</p>
+<ol>
+<li>
+<p>代表的是<strong>节点的状态</strong>，<strong>默认为 0</strong>。</p>
+</li>
+<li>
+<p>该变量对应的值有以下几种：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> CANCELLED <span style="color:#f92672">=</span>  1<span style="color:#f92672">;</span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> SIGNAL    <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> CONDITION <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>2<span style="color:#f92672">;</span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> PROPAGATE <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>3<span style="color:#f92672">;</span>
+</code></pre></div><ol>
+<li><code>CANCELLED =  1</code>：
+<ol>
+<li>代表的是<strong>当前节点从同步队列中取消</strong>。</li>
+<li><strong>当 timeout 或被中断</strong>（响应中断的情况下），<strong>会触发变更为此状态</strong>，<strong>进入该状态后的节点将不会再变化</strong>。</li>
+</ol>
+</li>
+<li><code>SIGNAL = -1</code>：
+<ol>
+<li>代表<strong>后继节点处于等待状态</strong>。</li>
+<li><strong>后继节点入队时</strong>，<strong>会将前继节点的状态更新为 SIGNAL</strong>。</li>
+</ol>
+</li>
+<li><code>CONDITION = -2</code>：
+<ol>
+<li><strong>节点在等待队列中</strong>，<strong>节点线程等待在 Condition 上</strong>。</li>
+<li><strong>当其他线程对 Condition 调用了 <code>signal()</code> 方法后</strong>，<strong>该节点将会从等待队列中转移到同步队列中</strong>，<strong>加入到对同步状态的获取中</strong>。</li>
+</ol>
+</li>
+<li><code>PROPAGATE = -3</code>：
+<ol>
+<li>表示<strong>在共享模式下</strong>，<strong>前继节点在释放资源后会唤醒后继节点</strong>，<strong>并将这种共享模式传播下去</strong>。</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>节点状态中通常<strong>负数值表示节点处于有效的等待状态</strong>，而<strong>正数值代表节点已经被取消了</strong>，源码中有很多地方<strong>通过节点状态的正负来判断队列中的节点是否正常</strong>。</p>
+</li>
+</ol>
+</li>
+<li>
+<p><code>prev</code>：</p>
+<ol>
+<li>代表的是<strong>当前节点的前一个节点</strong>。</li>
+</ol>
+</li>
+<li>
+<p><code>next</code>：</p>
+<ol>
+<li>代表的是<strong>当前节点的后一个节点</strong>。</li>
+</ol>
+</li>
+<li>
+<p><code>thread</code>：</p>
+<ol>
+<li>代表的是<strong>当前节点中所包含的线程对象</strong>。</li>
+</ol>
+</li>
+<li>
+<p><code>nextWaiter</code>：</p>
+<ol>
+<li>代表的是<strong>等待队列中的下一个节点</strong>。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h4 id="212-reentrantlock">
+  2.1.2 ReentrantLock
+  <a class="anchor" href="#212-reentrantlock">#</a>
+</h4>
+<p><code>ReentrantLock</code><strong>默认是非公平锁</strong>，就是说，<strong>线程在竞争锁的时候并不是按照先来后到的顺序来获取锁的</strong>，但是 <code>ReentrantLock</code> 也是支持公平锁的，在创建的时候传入一个参数值即可，如无特殊说明，下面对 ReentrantLock 加锁和解锁过程的分析是以 <code>ReentrantLock</code> 默认情况为基础。</p>
+<h5 id="2121-加锁过程">
+  2.1.2.1 加锁过程
+  <a class="anchor" href="#2121-%e5%8a%a0%e9%94%81%e8%bf%87%e7%a8%8b">#</a>
+</h5>
+<ol>
+<li>
+<p><code>ReentrantLock</code> 并<strong>没有直接继承 AQS 类</strong>，而是<strong>通过内部类来继承 AQS 类</strong>的。</p>
+</li>
+<li>
+<p>我们在用 <code>ReentrantLock</code> 加锁的时候都是调用 <code>lock()</code> 方法，在默认非公平锁下，<code>lock()</code> 的源码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Sync object for non-fair locks
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NonfairSync</span> <span style="color:#66d9ef">extends</span> Sync <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> serialVersionUID <span style="color:#f92672">=</span> 7316153563782823691L<span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Performs lock.  Try immediate barge, backing up to normal
+</span><span style="color:#75715e">     * acquire on failure.
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">lock</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>compareAndSetState<span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 1<span style="color:#f92672">))</span>
+            setExclusiveOwnerThread<span style="color:#f92672">(</span>Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">currentThread</span><span style="color:#f92672">());</span>
+        <span style="color:#66d9ef">else</span>
+            acquire<span style="color:#f92672">(</span>1<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">tryAcquire</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> acquires<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> nonfairTryAcquire<span style="color:#f92672">(</span>acquires<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p>通过源码我们可以看到 <code>lock()</code> 方法首先是<strong>通过 CAS 的方式抢占锁</strong>，<strong>如果抢占成功</strong>，<strong>则将 <code>state</code> 的值设为 1</strong>，<strong>然后将对象独占线程设置为当前线程</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setExclusiveOwnerThread</span><span style="color:#f92672">(</span>Thread thread<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    exclusiveOwnerThread <span style="color:#f92672">=</span> thread<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p><strong>如果抢占锁失败</strong>，<strong>就会调用 <code>acquire()</code> 方法</strong>，<strong>这个 <code>acquire()</code> 方法的实现就是在 AQS 类中</strong>，<strong>说明具体抢占锁失败后的逻辑</strong>，<strong>AQS 已经规定好了模板</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">acquire</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> arg<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>tryAcquire<span style="color:#f92672">(</span>arg<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span>
+        acquireQueued<span style="color:#f92672">(</span>addWaiter<span style="color:#f92672">(</span>Node<span style="color:#f92672">.</span><span style="color:#a6e22e">EXCLUSIVE</span><span style="color:#f92672">),</span> arg<span style="color:#f92672">))</span>
+        selfInterrupt<span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p>上面已经介绍了，独占模式是需要实现 <code>tryAcquire()</code> 方法的，这里首先就是通过 <code>tryAcquire()</code> 方法抢占锁，如果成功返回 <code>true</code>，失败返回 <code>false</code>，<code>tryAcquire()</code> 方法的具体实现，是在 <code>ReentrantLock</code> 里面的，AQS 类中默认是直接抛出异常的，<code>tryAcquire()</code> 方法的逻辑如下：</p>
+<ol>
+<li>
+<p>首先<strong>获取 <code>state</code> 值</strong>，<strong>如果 <code>state</code> 值为 0</strong>，说明<strong>无锁</strong>，那么<strong>通过 CAS 尝试加锁</strong>，<strong>成功后</strong>，<strong>将独占线程设置为当前线程</strong>。</p>
+</li>
+<li>
+<p><strong>如果 <code>state</code> 值不为 0</strong>，<strong>并且当前的独占线程和当前线程为同一线程</strong>，那么 <code>state</code><strong>重入次数加 1</strong>。</p>
+</li>
+<li>
+<p><strong>如果 <code>state</code> 值不为 0</strong>，<strong>并且当前线程不是独占线程</strong>，<strong>直接返回 <code>false</code></strong>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Performs non-fair tryLock.  tryAcquire is implemented in
+</span><span style="color:#75715e"> * subclasses, but both need nonfair try for trylock method.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">nonfairTryAcquire</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> acquires<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">final</span> Thread current <span style="color:#f92672">=</span> Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">currentThread</span><span style="color:#f92672">();</span>
+    <span style="color:#75715e">//  获取 state 值
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> getState<span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//  如果 state 值为 0，说明无锁，那么通过 CAS 尝试加锁，成功后，将独占线程设置为当前线程
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>compareAndSetState<span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> acquires<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            setExclusiveOwnerThread<span style="color:#f92672">(</span>current<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>current <span style="color:#f92672">==</span> getExclusiveOwnerThread<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//  如果是同一个线程再次来获取锁，那么就将 state 的值进行加 1 处理（可重入锁的重入次数）
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> nextc <span style="color:#f92672">=</span> c <span style="color:#f92672">+</span> acquires<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nextc <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#75715e">// overflow
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Maximum lock count exceeded&#34;</span><span style="color:#f92672">);</span>
+        setState<span style="color:#f92672">(</span>nextc<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">//  state 值不为 0，并且当前线程不是独占线程，直接返回 false
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p>我们继续来看 <code>acquire()</code> 方法，在<strong>执行完 <code>tryAcquire()</code> 方法后</strong>，<strong>如果加锁失败那么就会执行 <code>addWaiter()</code> 方法和 <code>acquireQueued()</code> 方法</strong>，这两个方法的作用是<strong>将竞争锁失败的线程放入到等待队列中</strong>：</p>
+<ol>
+<li><code>addWaiter()</code>：
+<ol>
+<li>该方法主要做了三件事：
+<ol>
+<li>
+<p><strong>将当前线程封装成 <code>Node</code></strong>。</p>
+</li>
+<li>
+<p><strong>判断队列中尾部节点是否为空</strong>，<strong>若不为空</strong>，<strong>则将当前线程的 <code>Node</code> 节点通过 CAS 插入到尾部</strong>。</p>
+</li>
+<li>
+<p><strong>如果尾部节点为空或 CAS 插入失败</strong>，<strong>则通过 <code>enq()</code> 方法插入到队列中</strong>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> Node <span style="color:#a6e22e">addWaiter</span><span style="color:#f92672">(</span>Node mode<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//  1. 将当前线程封装成 Node
+</span><span style="color:#75715e"></span>    Node node <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">(</span>Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">currentThread</span><span style="color:#f92672">(),</span> mode<span style="color:#f92672">);</span>
+    <span style="color:#75715e">//  2. 判断队列中尾部节点是否为空，若不为空，则将当前线程的 Node 节点通过 CAS 插入到尾部
+</span><span style="color:#75715e"></span>    Node pred <span style="color:#f92672">=</span> tail<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>pred <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        node<span style="color:#f92672">.</span><span style="color:#a6e22e">prev</span> <span style="color:#f92672">=</span> pred<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>compareAndSetTail<span style="color:#f92672">(</span>pred<span style="color:#f92672">,</span> node<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            pred<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> node<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">return</span> node<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">//  3. 如果尾部节点为空或 CAS 插入失败，则通过 enq() 方法插入到队列中
+</span><span style="color:#75715e"></span>    enq<span style="color:#f92672">(</span>node<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> node<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li><code>enq()</code> 方法主要就是<strong>通过自旋将数据插入到队列中</strong>：
+<ol>
+<li>
+<p><strong>当队列为空时</strong>，<strong>将当前节点设置为头结点和尾节点</strong>。</p>
+</li>
+<li>
+<p><strong>进入二次循环后</strong>，<strong>将 <code>node</code> 添加到尾部</strong>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Inserts node into queue, initializing if necessary. See picture above.
+</span><span style="color:#75715e"> * @param node the node to insert
+</span><span style="color:#75715e"> * @return node&#39;s predecessor
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> Node <span style="color:#a6e22e">enq</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> Node node<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//  看到死循环，就明白是通过自选咯
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(;;)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//  当 tail 节点为空时，直接将当前节点设置成尾部节点，并插入到队列中，以及设置他为 head 节点
+</span><span style="color:#75715e"></span>        Node t <span style="color:#f92672">=</span> tail<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>t <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>compareAndSetHead<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Node<span style="color:#f92672">()))</span>
+                tail <span style="color:#f92672">=</span> head<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//  若是因为在 addWaiter() 方法中插入失败或第二次进入循环，那么将当前线程的前级节点指向尾部节点，并通过 CAS 方式将尾部节点指向当前线程的节点
+</span><span style="color:#75715e"></span>            node<span style="color:#f92672">.</span><span style="color:#a6e22e">prev</span> <span style="color:#f92672">=</span> t<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>compareAndSetTail<span style="color:#f92672">(</span>t<span style="color:#f92672">,</span> node<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                t<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> node<span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">return</span> t<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>这样 <code>addWaiter()</code> 方法就构造了一个队列，并将当前线程添加到了队列中了。</li>
+</ol>
+</li>
+<li><code>acquireQueued()</code>：
+<ol>
+<li>该方法主要做了以下几件事：
+<ol>
+<li>
+<p>首先<strong>获取节点的前级节点</strong>。</p>
+</li>
+<li>
+<p><strong>如果当前节点的前级节点是 <code>head</code></strong>，那么<strong>就可以去抢占锁了</strong>。</p>
+</li>
+<li>
+<p><strong>抢占成功后就将新节点设置为 <code>head</code></strong>，<strong>原来的 <code>head</code> 置为空</strong>。</p>
+</li>
+<li>
+<p><strong>如果抢占锁失败</strong>，<strong>则根据 <code>waitStatus</code> 值决定是否挂起线程</strong>。</p>
+</li>
+<li>
+<p>最后，<strong>通过 <code>cancelAcquire()</code> 取消获取锁操作</strong>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Acquires in exclusive uninterruptible mode for thread already in
+</span><span style="color:#75715e"> * queue. Used by condition wait methods as well as acquire.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param node the node
+</span><span style="color:#75715e"> * @param arg the acquire argument
+</span><span style="color:#75715e"> * @return {@code true} if interrupted while waiting
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">acquireQueued</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> Node node<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> arg<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">boolean</span> failed <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">boolean</span> interrupted <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(;;)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//  1. 获取前级节点，如果为 null，则抛出异常
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">final</span> Node p <span style="color:#f92672">=</span> node<span style="color:#f92672">.</span><span style="color:#a6e22e">predecessor</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>p <span style="color:#f92672">==</span> head <span style="color:#f92672">&amp;&amp;</span> tryAcquire<span style="color:#f92672">(</span>arg<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                <span style="color:#75715e">//  2. 如果前级节点为 head，并且执行抢占锁成功，则
+</span><span style="color:#75715e"></span>                <span style="color:#75715e">//      1. 将当前节点设置为新的 head 节点。
+</span><span style="color:#75715e"></span>                <span style="color:#75715e">//      2. 将原来的 head 节点指向 null，方便进行垃圾回收
+</span><span style="color:#75715e"></span>                setHead<span style="color:#f92672">(</span>node<span style="color:#f92672">);</span>
+                p<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span> <span style="color:#75715e">// help GC
+</span><span style="color:#75715e"></span>                failed <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">return</span> interrupted<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#75715e">//  3. 如果当前节点不为 head，或者抢占锁失败，就根据节点的状态决定是否需要挂起线程
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>shouldParkAfterFailedAcquire<span style="color:#f92672">(</span>p<span style="color:#f92672">,</span> node<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span>
+                parkAndCheckInterrupt<span style="color:#f92672">())</span>
+                interrupted <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>failed<span style="color:#f92672">)</span>
+            <span style="color:#75715e">//  4. 如果获取锁失败，则取消获取锁操作
+</span><span style="color:#75715e"></span>            cancelAcquire<span style="color:#f92672">(</span>node<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Returns previous node, or throws NullPointerException if null.
+</span><span style="color:#75715e"> * Use when predecessor cannot be null.  The null check could
+</span><span style="color:#75715e"> * be elided, but is present to help the VM.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @return the predecessor of this node
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">final</span> Node <span style="color:#a6e22e">predecessor</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> NullPointerException <span style="color:#f92672">{</span>
+    Node p <span style="color:#f92672">=</span> prev<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>p <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
+        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NullPointerException<span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">else</span>
+        <span style="color:#66d9ef">return</span> p<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>下面看一下 <code>shouldParkAfterFailedAcquire()</code> 和 <code>parkAndCheckInterrupt()</code> 这两个方法是如何挂起线程的：
+<ol>
+<li><code>shouldParkAfterFailedAcquire()</code>：
+<ol>
+<li>
+<p>首先<strong>获取前级节点的</strong> <code>waitStatus</code>。</p>
+</li>
+<li>
+<p><strong>如果前级节点的 <code>waitStatus</code> 值为 <code>SIGNAL(-1)</code></strong>，<strong>说明当前节点也已经在等待唤醒了</strong>，<strong>直接返回 <code>true</code></strong>。</p>
+</li>
+<li>
+<p><strong>如果前级节点的 <code>waitStatus</code> 大于 0</strong>，<strong>说明前级节点已经取消了</strong>，<strong>那么会继续向前找</strong>，<strong>直到找到的节点不是取消状态</strong>（<code>waitStatus &gt; 0</code>），<strong>然后将其设置为当前节点的前级节点</strong>。</p>
+</li>
+<li>
+<p><strong>如果前级节点为 0 或者其他不为-1 的小于 0 的值</strong>，<strong>则将当前节点的前级节点设置为 <code>SIGNAL(-1)</code></strong>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Checks and updates status for a node that failed to acquire.
+</span><span style="color:#75715e"> * Returns true if thread should block. This is the main signal
+</span><span style="color:#75715e"> * control in all acquire loops.  Requires that pred == node.prev.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param pred node&#39;s predecessor holding status
+</span><span style="color:#75715e"> * @param node the node
+</span><span style="color:#75715e"> * @return {@code true} if thread should block
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">shouldParkAfterFailedAcquire</span><span style="color:#f92672">(</span>Node pred<span style="color:#f92672">,</span> Node node<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//  获取前级节点的 waitStatus
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> ws <span style="color:#f92672">=</span> pred<span style="color:#f92672">.</span><span style="color:#a6e22e">waitStatus</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ws <span style="color:#f92672">==</span> Node<span style="color:#f92672">.</span><span style="color:#a6e22e">SIGNAL</span><span style="color:#f92672">)</span>
+        <span style="color:#75715e">//  如果前级节点的 waitStatus 值为 SIGNAL(-1)，说明当前节点也已经在等待唤醒了，直接返回 true
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ws <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//  如果前级节点的 waitStatus 大于 0，说明前级节点已经取消了，那么会继续向前找，直到找到的节点不是取消状态（waitStatus &gt; 0），然后将其设置为当前节点的前级节点
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">do</span> <span style="color:#f92672">{</span>
+            node<span style="color:#f92672">.</span><span style="color:#a6e22e">prev</span> <span style="color:#f92672">=</span> pred <span style="color:#f92672">=</span> pred<span style="color:#f92672">.</span><span style="color:#a6e22e">prev</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>pred<span style="color:#f92672">.</span><span style="color:#a6e22e">waitStatus</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">);</span>
+        pred<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> node<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//  如果前级节点为 0 或者其他不为 -1 的小于 0 的值，则将当前节点的前级节点设置为 SIGNAL(-1)
+</span><span style="color:#75715e"></span>        compareAndSetWaitStatus<span style="color:#f92672">(</span>pred<span style="color:#f92672">,</span> ws<span style="color:#f92672">,</span> Node<span style="color:#f92672">.</span><span style="color:#a6e22e">SIGNAL</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li><code>parkAndCheckInterrupt()</code>：
+<ol>
+<li>
+<p>该方法的作用就是<strong>挂起线程</strong>。</p>
+</li>
+<li>
+<p><strong>如果 <code>shouldParkAfterFailedAcquire()</code> 方法执行成功</strong>，<strong>会执行 <code>parkAndCheckInterrupt()</code> 方法</strong>，<strong>他通过 <code>LockSupport.park()</code> 方法</strong>，<strong>将当前线程挂起</strong>（<code>WAITING</code>），<strong>然后需要 <code>LockSupport.unpark()</code> 方法唤醒他</strong>，<strong>通过这样一种 FIFO 机制的等待</strong>，<strong>来实现 <code>Lock</code> 操作</strong>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Convenience method to park and then check if interrupted
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @return {@code true} if interrupted
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">parkAndCheckInterrupt</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    LockSupport<span style="color:#f92672">.</span><span style="color:#a6e22e">park</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">interrupted</span><span style="color:#f92672">();</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p><code>LockSupport</code> 是 JDK 从 1.6 开始提供的一个线程同步源语工具类，在这里主要用到了他的两个方法，分别是<strong>挂起线程</strong>和<strong>唤醒线程</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">park</span><span style="color:#f92672">(</span>Object blocker<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Thread t <span style="color:#f92672">=</span> Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">currentThread</span><span style="color:#f92672">();</span>
+    setBlocker<span style="color:#f92672">(</span>t<span style="color:#f92672">,</span> blocker<span style="color:#f92672">);</span>
+    UNSAFE<span style="color:#f92672">.</span><span style="color:#a6e22e">park</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> 0L<span style="color:#f92672">);</span>
+    setBlocker<span style="color:#f92672">(</span>t<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">unpark</span><span style="color:#f92672">(</span>Thread thread<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>thread <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
+        UNSAFE<span style="color:#f92672">.</span><span style="color:#a6e22e">unpark</span><span style="color:#f92672">(</span>thread<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p><code>LockSupport</code> 的<strong>挂起和唤醒线程都是不可重入的</strong>，他<strong>有一个许可标志</strong>，当<strong>调用 <code>park()</code> 时</strong>，<strong>会将许可设置为 0</strong>，<strong>挂起线程</strong>，如果<strong>再调用一次 <code>park()</code></strong>，<strong>会阻塞线程</strong>，当<strong>调用 <code>unpark()</code> 时才会将许可标志设置成 1</strong>。</p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h5 id="2122-释放锁过程">
+  2.1.2.2 释放锁过程
+  <a class="anchor" href="#2122-%e9%87%8a%e6%94%be%e9%94%81%e8%bf%87%e7%a8%8b">#</a>
+</h5>
+<ol>
+<li>
+<p><code>ReentrantLock</code> 释放锁的过程主要有两个阶段：</p>
+<ol>
+<li><strong>释放锁</strong>。</li>
+<li><strong>唤醒挂起的线程</strong>。</li>
+</ol>
+</li>
+<li>
+<p><code>unlock()</code> 方法的源码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">unlock</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    sync<span style="color:#f92672">.</span><span style="color:#a6e22e">release</span><span style="color:#f92672">(</span>1<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p>释放锁的方法是写在父类 <code>AbstractQueuedSynchronizer</code> 中的，主要包括如下过程：</p>
+<ol>
+<li><strong>尝试释放资源</strong>：
+<ol>
+<li>
+<p><strong>释放成功后</strong>，<strong>判断头结点的状态是否为无锁状态，如果不为无锁状态，就将头结点中的线程唤醒</strong>。</p>
+</li>
+<li>
+<p><strong>释放资源失败，直接返回 <code>false</code></strong>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">release</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> arg<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//  尝试释放资源
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tryRelease<span style="color:#f92672">(</span>arg<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+        Node h <span style="color:#f92672">=</span> head<span style="color:#f92672">;</span>
+        <span style="color:#75715e">//  释放成功后，判断头结点的状态是否为无锁状态，如果不为无锁状态，就将头结点中的线程唤醒
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> h<span style="color:#f92672">.</span><span style="color:#a6e22e">waitStatus</span> <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span>
+            unparkSuccessor<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">//  释放资源失败，直接返回 false
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+</ol>
+</li>
+</ol>
+</li>
+<li>
+<p>释放资源的过程如下：</p>
+<ol>
+<li>
+<p><strong>从 <code>state</code> 中减去传入参数的相应值</strong>（一般为 1）。</p>
+</li>
+<li>
+<p><strong>判断释放资源的线程与独占锁现有线程是否一致</strong>，<strong>如果不一致</strong>，<strong>则为非法线程释放</strong>，<strong>直接抛出异常</strong>。</p>
+</li>
+<li>
+<p><strong>因为可重入机制</strong>，<strong>所以每次重入 <code>state</code> 值都加 1</strong>，<strong>所以在释放的时候也要相应的减 1</strong>，<strong>直到 <code>state</code> 的值为 0 才算完全的释放锁资源</strong>，<strong>完全释放锁资源后</strong>，<strong>将独占线程设置为 <code>null</code></strong>，<strong>这样后面的竞争线程才有可能抢占</strong>。</p>
+</li>
+<li>
+<p><strong>最后对 <code>state</code> 重新赋值</strong>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">tryRelease</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> releases<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//  从 state 中减去传入参数的相应值（一般为 1）
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> getState<span style="color:#f92672">()</span> <span style="color:#f92672">-</span> releases<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">currentThread</span><span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> getExclusiveOwnerThread<span style="color:#f92672">())</span>
+        <span style="color:#75715e">//  当释放资源的线程与独占锁现有线程不一致时，为非法线程释放，直接抛出异常
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalMonitorStateException<span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">boolean</span> free <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#75715e">//  这里是处理重入锁的机制，因为可重入机制，所以每次重入 state 值都加 1
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//  所以在释放的时候也要相应的减 1，直到 state 的值为 0 才算完全的释放锁资源
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        free <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#75715e">//  完全释放资源后，将独占线程设置为 null，这样后面的竞争线程才有可能抢占
+</span><span style="color:#75715e"></span>        setExclusiveOwnerThread<span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">//  重新赋值 state
+</span><span style="color:#75715e"></span>    setState<span style="color:#f92672">(</span>c<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> free<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p>释放了资源后，我们再看唤醒挂起线程时的过程，这个过程就在 <code>unparkSuccessor()</code> 方法中，主要过程如下：</p>
+<ol>
+<li>
+<p>首先<strong>获取当前节点的等待状态</strong>，<strong>一般是头结点</strong>，<strong>占有锁的节点是在头结点上</strong>，<strong>如果该节点没有处于取消状态</strong>，那么<strong>将当前节点的线程的状态值设为 0</strong>，<strong>成为无锁状态</strong>。</p>
+</li>
+<li>
+<p>然后<strong>获取下一个需要唤醒的节点线程</strong>，<strong>如果获取到的节点线程为空或已经取消</strong>，<strong>就从队列的后面向前找</strong>，<strong>直到找到一个未取消的节点</strong>。</p>
+<blockquote>
+<p>在寻找可以唤醒的节点时，为什么要从后向前找？
+线程唤醒的时候，通常是从当前线程的下个节点线程开始寻找，但是下个节点有可能已经取消了或者为 <code>null</code> 了，所以从后想起按找，直到找到一个非取消状态的节点线程。</p>
+</blockquote>
+</li>
+<li>
+<p>最后<strong>如果我们获得的下一个可以唤醒的节点线程不为空</strong>，<strong>那么就唤醒他</strong>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Wakes up node&#39;s successor, if one exists.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param node the node
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">unparkSuccessor</span><span style="color:#f92672">(</span>Node node<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//  获取当前节点的等待状态，一般是头结点，占有锁的节点是在头结点上
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> ws <span style="color:#f92672">=</span> node<span style="color:#f92672">.</span><span style="color:#a6e22e">waitStatus</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ws <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span>
+        <span style="color:#75715e">//  将当前节点的线程的状态值设为 0，成为无锁状态
+</span><span style="color:#75715e"></span>        compareAndSetWaitStatus<span style="color:#f92672">(</span>node<span style="color:#f92672">,</span> ws<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
+
+    <span style="color:#75715e">//  获取下一个需要唤醒的节点线程
+</span><span style="color:#75715e"></span>    Node s <span style="color:#f92672">=</span> node<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">waitStatus</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//  如果获取到的节点线程为空或已经取消，就从队列的后面向前找，直到找到一个未取消的节点
+</span><span style="color:#75715e"></span>        s <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Node t <span style="color:#f92672">=</span> tail<span style="color:#f92672">;</span> t <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> t <span style="color:#f92672">!=</span> node<span style="color:#f92672">;</span> t <span style="color:#f92672">=</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">prev</span><span style="color:#f92672">)</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">waitStatus</span> <span style="color:#f92672">&lt;=</span> 0<span style="color:#f92672">)</span>
+                s <span style="color:#f92672">=</span> t<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
+        <span style="color:#75715e">//  如果获得的下一个可以唤醒的节点线程不为空，那么就唤醒他
+</span><span style="color:#75715e"></span>        LockSupport<span style="color:#f92672">.</span><span style="color:#a6e22e">unpark</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">thread</span><span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+</ol>
+</li>
+</ol>
+<h3 id="22-共享模式">
+  2.2 共享模式
+  <a class="anchor" href="#22-%e5%85%b1%e4%ba%ab%e6%a8%a1%e5%bc%8f">#</a>
+</h3>
+<h4 id="221-countdownlatch">
+  2.2.1 CountDownLatch
+  <a class="anchor" href="#221-countdownlatch">#</a>
+</h4>
+<h5 id="2211-获取资源">
+  2.2.1.1 获取资源
+  <a class="anchor" href="#2211-%e8%8e%b7%e5%8f%96%e8%b5%84%e6%ba%90">#</a>
+</h5>
+<ol>
+<li>
+<p>在使用 <code>CountDownLatch</code> 时，是<strong>先创建 <code>CountDownLatch</code> 对象</strong>，<strong>然后在每次执行完一个任务后</strong>，<strong>就执行一次 <code>countDown()</code> 方法</strong>，<strong>直到通过 <code>getCount()</code> 获取到的值为 0 时才算执行完</strong>，<strong>如果 <code>count</code> 值不为 0</strong>，<strong>可通过 <code>await()</code> 方法让主线程进行等待</strong>，<strong>直到所有任务都执行完成</strong>，<code>count</code><strong>的值被设为 0</strong>。</p>
+</li>
+<li>
+<p>我们先来看创建 <code>CountDownLatch</code> 的方法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">CountDownLatch</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> count<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;count &lt; 0&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">sync</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Sync<span style="color:#f92672">(</span>count<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><pre><code>Sync(int count) {
+    setState(count);
+}
+</code></pre><p>我们看到创建 <code>CountDownLatch</code> 的过程，其实就是<strong>将</strong> <code>count</code> <strong>值赋值给</strong> <code>state</code> <strong>的过程</strong>。</p>
+</li>
+<li>
+<p>再来看 <code>await()</code> 方法的源码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">await</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//  可中断的获取共享资源的方法
+</span><span style="color:#75715e"></span>    sync<span style="color:#f92672">.</span><span style="color:#a6e22e">acquireSharedInterruptibly</span><span style="color:#f92672">(</span>1<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">acquireSharedInterruptibly</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> arg<span style="color:#f92672">)</span>
+        <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">interrupted</span><span style="color:#f92672">())</span>
+        <span style="color:#75715e">//  如果线程已经中断，直接抛出异常结束
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> InterruptedException<span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tryAcquireShared<span style="color:#f92672">(</span>arg<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span>
+        <span style="color:#75715e">//  尝试获取共享资源，获取失败后，自旋入队列
+</span><span style="color:#75715e"></span>        doAcquireSharedInterruptibly<span style="color:#f92672">(</span>arg<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>整个 <code>await()</code> 的等待过程是<strong>先尝试获取共享资源</strong>，<strong>获取成功则执行任务</strong>，<strong>获取失败</strong>，则<strong>调用方法自旋式进入队列</strong>。</p>
+</li>
+<li>
+<p>最初在介绍 AQS 的时候就说过，<strong>共享模式下是需要自己去实现 <code>tryAcquireShared()</code> 方法来获取共享资源的</strong>，那么我们看看 <code>CountDownLatch</code> 是如何实现共享资源的：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">tryAcquireShared</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> acquires<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>getState<span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>简单易懂，就一行代码，<strong>直接获取 <code>state</code> 值</strong>，<strong>等于 0 就是成功</strong>，<strong>不等于 0 就失败</strong>。</p>
+</li>
+<li>
+<p>那么获取资源失败后，<code>doAcquireSharedInterruptibly()</code> 方法是如何执行的呢，源码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doAcquireSharedInterruptibly</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> arg<span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//  addWaiter() 方法已经总结过了，这一步操作的目的就是将当前线程封装成节点加入队尾，并设置成共享模式
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">final</span> Node node <span style="color:#f92672">=</span> addWaiter<span style="color:#f92672">(</span>Node<span style="color:#f92672">.</span><span style="color:#a6e22e">SHARED</span><span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">boolean</span> failed <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(;;)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//  获取前级节点
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">final</span> Node p <span style="color:#f92672">=</span> node<span style="color:#f92672">.</span><span style="color:#a6e22e">predecessor</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>p <span style="color:#f92672">==</span> head<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#75715e">//  如果前级节点是头结点，直接尝试获取共享资源
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">int</span> r <span style="color:#f92672">=</span> tryAcquireShared<span style="color:#f92672">(</span>arg<span style="color:#f92672">);</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#75715e">//  如果获取共享资源成功，将 head 节点指向自己
+</span><span style="color:#75715e"></span>                    setHeadAndPropagate<span style="color:#f92672">(</span>node<span style="color:#f92672">,</span> r<span style="color:#f92672">);</span>
+                    <span style="color:#75715e">//  将原 head 节点指向空，方便垃圾回收
+</span><span style="color:#75715e"></span>                    p<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+                    failed <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+                    <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#75715e">//  如果前级节点不是 head 节点，就根据前级节点状态，判断是否需要挂起线程
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>shouldParkAfterFailedAcquire<span style="color:#f92672">(</span>p<span style="color:#f92672">,</span> node<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span>
+                parkAndCheckInterrupt<span style="color:#f92672">())</span>
+                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> InterruptedException<span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>failed<span style="color:#f92672">)</span>
+            <span style="color:#75715e">//  如果执行失败，取消获取共享资源的操作
+</span><span style="color:#75715e"></span>            cancelAcquire<span style="color:#f92672">(</span>node<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>这里的方法<strong>和独占模式下 <code>acquireQueued()</code> 方法很像</strong>，<strong>只是在设置头结点唤醒新线程的时候有所不同</strong>，在 <code>setHeadAndPropagate()</code> 方法里面：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setHeadAndPropagate</span><span style="color:#f92672">(</span>Node node<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> propagate<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Node h <span style="color:#f92672">=</span> head<span style="color:#f92672">;</span> <span style="color:#75715e">// Record old head for check below
+</span><span style="color:#75715e"></span>    setHead<span style="color:#f92672">(</span>node<span style="color:#f92672">);</span>
+    <span style="color:#75715e">//  如果在唤醒完下一个节点后，资源还有剩余，并且新唤醒的节点不为无效状态，就继续唤醒队列中的后面节点里的线程
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>propagate <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">||</span> h <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> h<span style="color:#f92672">.</span><span style="color:#a6e22e">waitStatus</span> <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">||</span>
+        <span style="color:#f92672">(</span>h <span style="color:#f92672">=</span> head<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> h<span style="color:#f92672">.</span><span style="color:#a6e22e">waitStatus</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Node s <span style="color:#f92672">=</span> node<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">isShared</span><span style="color:#f92672">())</span>
+            doReleaseShared<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><code>setHeadAndPropagate()</code> 这个方法名称翻译成中文是「<strong>设置头结点并传播</strong>」，其实就是<strong>在获取共享锁资源的时候</strong>，<strong>如果资源除了用于唤醒下一个节点后</strong>，<strong>还有剩余</strong>，<strong>就会用于唤醒后面的节点</strong>，<strong>直到资源被用完</strong>，<strong>充分体现了共享模式的「共享」</strong>。</p>
+</li>
+</ol>
+<h5 id="2212-释放资源">
+  2.2.1.2 释放资源
+  <a class="anchor" href="#2212-%e9%87%8a%e6%94%be%e8%b5%84%e6%ba%90">#</a>
+</h5>
+<ol>
+<li>
+<p>我们再来看 <code>countDown()</code> 方法是如何释放资源的，源码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">countDown</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    sync<span style="color:#f92672">.</span><span style="color:#a6e22e">releaseShared</span><span style="color:#f92672">(</span>1<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p><code>CountDownLatch</code> 中内部类 <code>Sync</code> 的 <code>releaseShared()</code><strong>方法</strong>，<strong>是使用的 AQS 的 <code>releaseShared()</code> 方法</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">releaseShared</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> arg<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tryReleaseShared<span style="color:#f92672">(</span>arg<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//  尝试释放资源，如果释放资源成功，则唤醒节点
+</span><span style="color:#75715e"></span>        doReleaseShared<span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p><strong>尝试释放资源方法 <code>tryReleaseShared()</code> 是 AQS 规定需要自己来实现的</strong>，<code>CountDownLatch</code> 的实现如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">tryReleaseShared</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> releases<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// Decrement count; signal when transition to zero
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(;;)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> getState<span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span>
+            <span style="color:#75715e">//  如果 state 为 0，说明已经不需要释放资源了，直接返回 false
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> nextc <span style="color:#f92672">=</span> c<span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>compareAndSetState<span style="color:#f92672">(</span>c<span style="color:#f92672">,</span> nextc<span style="color:#f92672">))</span>
+            <span style="color:#75715e">//  真正的释放资源，是通过 CAS 的方式将 state 的值减 1
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> nextc <span style="color:#f92672">==</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p><strong>释放资源成功后</strong>，<strong>就到了唤醒节点的过程了</strong>，<strong>在 <code>doReleaseShared()</code> 方法中</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doReleaseShared</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(;;)</span> <span style="color:#f92672">{</span>
+        Node h <span style="color:#f92672">=</span> head<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> h <span style="color:#f92672">!=</span> tail<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">//  当头结点不为空，并且不等于尾节点时，从头开始唤醒
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> ws <span style="color:#f92672">=</span> h<span style="color:#f92672">.</span><span style="color:#a6e22e">waitStatus</span><span style="color:#f92672">;</span>  <span style="color:#75715e">//  获取头结点的等待状态
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ws <span style="color:#f92672">==</span> Node<span style="color:#f92672">.</span><span style="color:#a6e22e">SIGNAL</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>    <span style="color:#75715e">//  如果头结点状态为等待唤醒，那么将头结点的状态设置为无锁状态，若 CAS 设置节点状态失败，就自旋
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>compareAndSetWaitStatus<span style="color:#f92672">(</span>h<span style="color:#f92672">,</span> Node<span style="color:#f92672">.</span><span style="color:#a6e22e">SIGNAL</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">))</span>
+                    <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>            <span style="color:#75715e">// loop to recheck cases
+</span><span style="color:#75715e"></span>                unparkSuccessor<span style="color:#f92672">(</span>h<span style="color:#f92672">);</span> <span style="color:#75715e">//  唤醒头结点
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>   <span style="color:#75715e">//  如果 head 节点的状态已经为无锁状态了，那么将 head 节点状态设置为可以向下传播唤醒的状态（PROPAGATE）
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ws <span style="color:#f92672">==</span> 0 <span style="color:#f92672">&amp;&amp;</span>
+                     <span style="color:#f92672">!</span>compareAndSetWaitStatus<span style="color:#f92672">(</span>h<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> Node<span style="color:#f92672">.</span><span style="color:#a6e22e">PROPAGATE</span><span style="color:#f92672">))</span>
+                <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>                <span style="color:#75715e">// loop on failed CAS
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#75715e">//  若在执行过程中 head 节点发生变化，直接跳出循环
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">==</span> head<span style="color:#f92672">)</span>                   <span style="color:#75715e">// loop if head changed
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+</ol>
+<h2 id="参考文献">
+  参考文献
+  <a class="anchor" href="#%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae">#</a>
+</h2>
+<ol>
+<li>
+  <a href="https://www.cnblogs.com/jimoer/p/13747291.html">你来讲讲 AQS 是什么吧？都是怎么用的？</a></li>
+</ol>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/graysonwp/ComputerCookbook-SchoolRecruitment/edit/main/exampleSite/content/docs/java/2%e3%80%81Java%e5%a4%9a%e7%ba%bf%e7%a8%8b/2.9%20AQS.md" target="_blank" rel="noopener">
+      <img src="/school-recruitment/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+
+<div id="gitalk-container" style="width : 100%;"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script src="https://rawgit.com/qhh0205/78e9e0b1f3114db6737f3ed8cdd51d3a/raw/3894c5be5aa2378336b1f5ee0f296fa0b22d06e9/md5.min.js"></script>
+<script>
+  const gitalk = new Gitalk({
+    clientID: '94880e59f97ce511eb59',
+    clientSecret: '025de6989c2398fdb4bfc398994541421fe6d32b',
+    repo: 'ComputerCookbook-SchoolRecruitment',
+    owner: 'graysonwp',
+    admin: ['graysonwp'],
+    id: md5(location.pathname), 
+    distractionFreeMode: false, 
+    body: location.href, 
+    proxy: 'https:\/\/shielded-brushlands-08810.herokuapp.com\/https:\/\/github.com\/login\/oauth\/access_token' 
+  });
+  (function() {
+    if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+      document.getElementById('gitalk-container').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+      return;
+    }
+    gitalk.render('gitalk-container');
+  })();
+</script>
+
+
+</div>
+
+
+
+  <script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-含义">1 含义</a></li>
+        <li><a href="#2-源码分析">2 源码分析</a>
+          <ul>
+            <li><a href="#21-独占模式">2.1 独占模式</a>
+              <ul>
+                <li><a href="#211-node">2.1.1 Node</a></li>
+                <li><a href="#212-reentrantlock">2.1.2 ReentrantLock</a>
+                  <ul>
+                    <li><a href="#2121-加锁过程">2.1.2.1 加锁过程</a></li>
+                    <li><a href="#2122-释放锁过程">2.1.2.2 释放锁过程</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li><a href="#22-共享模式">2.2 共享模式</a>
+              <ul>
+                <li><a href="#221-countdownlatch">2.2.1 CountDownLatch</a>
+                  <ul>
+                    <li><a href="#2211-获取资源">2.2.1.1 获取资源</a></li>
+                    <li><a href="#2212-释放资源">2.2.1.2 释放资源</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#参考文献">参考文献</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

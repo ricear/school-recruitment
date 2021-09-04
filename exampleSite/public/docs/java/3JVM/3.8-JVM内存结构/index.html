@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="JVM内存结构 #  1 概述 #  JVM 内部使用Java 内存模型，在逻辑上将内存划分为线程栈（Thread Stacks）和堆内存（Heap）两个部分，如下图所示：
+<meta name="description" content="1 概述 #  JVM 内部使用Java 内存模型，在逻辑上将内存划分为线程栈（Thread Stacks）和堆内存（Heap）两个部分，如下图所示：
  1.1 线程栈 #  JVM 中，每个正在运行的线程，都有自己的线程栈。
  线程栈包含了当前正在执行的方法链或调用链上的所有方法的状态信息， 所以线程栈又被称为方法栈或调用栈。 线程栈里面保存了调用链上正在执行的所有方法中的局部变量：  每个线程都只能访问自己的线程栈。 每个线程都不能访问其他线程的局部变量。   即使两个线程正在执行完全相同的代码，但每个线程都会在自己的线程栈内创建对应代码中声明的局部变量，所以每个线程都有一份自己的局部变量副本：  所有原生类型的局部变量都存储在线程栈中，因此对其他线程是不可见的。 线程可以将一个原生变量值的副本传给另一个线程，但不能共享原生局部变量本身。    1.2 堆内存 #  堆内存又称为共享堆，堆中的所有对象，可以被所有线程访问，只要他们能拿到对象的引用地址：
  如果一个线程可以访问某个对象时，也就可以访问该对象的成员变量。 如果两个线程同时调用某个对象的同一个方法，则他们都可以访问到这个对象的成员变量，但每个线程的局部变量副本是独立的。  虽然各个线程自己使用的局部变量都在自己的栈上，但是大家可以共享堆上的对象，各个不同线程访问同一个对象实例的基础类型的成员变量，会给每个线程一个变量的副本。
  1.3 总结 #   如果是原生数据类型的局部变量，那么他的内容就全部保留在线程栈中。 如果是对象引用，在对象的引用地址保存在栈中，而实际的对象内容保存在堆中。 对象的成员变量与对象本身一起存储在堆上，不管成员变量的类型是原生数值，还是对象引用。 类的静态变量则和类定义一样都保存在堆中。  总结一下：
- 原始数据类型的局部变量和对象引用地址在栈上。 对象、对象成员与类定义、静态变量在堆上。   2 线程栈 #    每启动一个线程，JVM 就会在栈空间分配对应的线程栈。 线程栈也叫做Java 方法栈，如果使用了JNI（Java Native Interface）方法，则会分配一个单独的本地方法栈（Native Stack）。 线程执行过程中，一般会有多个方法组成调用栈（Stack Trace），比如 A 调用 B，B 调用 C&hellip;&hellip;。每执行到一个方法，就会创建对应的栈帧（Frame）。  栈帧是一个逻辑上的概念，具体的大小在一个方法完成后基本上就能确定。 比如返回值需要有一个空间存放；每个局部变量都需要对应的地址空间；此外还有给指令使用的操作数栈；以及Class 指针（标识这个栈帧对应的是哪个类的方法，指向非堆里面的 Class 对象）。     3 堆 #    堆内存是所有线程共用的内存空间，理论上大家都可以访问。 逻辑上的 Java 堆划分为堆（Heap）和堆外（Non-Heap）两个部分：  3.">
+ 原始数据类型的局部变量和对象引用地址在栈上。 对象、对象成员与类定义、静态变量在堆上。   2 线程栈 #    每启动一个线程，JVM 就会在栈空间分配对应的线程栈。 线程栈也叫做Java 方法栈，如果使用了JNI（Java Native Interface）方法，则会分配一个单独的本地方法栈（Native Stack）。 线程执行过程中，一般会有多个方法组成调用栈（Stack Trace），比如 A 调用 B，B 调用 C&hellip;&hellip;。每执行到一个方法，就会创建对应的栈帧（Frame）。  栈帧是一个逻辑上的概念，具体的大小在一个方法完成后基本上就能确定。 比如返回值需要有一个空间存放；每个局部变量都需要对应的地址空间；此外还有给指令使用的操作数栈；以及Class 指针（标识这个栈帧对应的是哪个类的方法，指向非堆里面的 Class 对象）。     3 堆 #    堆内存是所有线程共用的内存空间，理论上大家都可以访问。 逻辑上的 Java 堆划分为 堆（Heap）和 堆外（Non-Heap）两个部分：  3.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="JVM内存结构 #  1 概述 #  JVM 内部使用Java 内存模型，在逻辑上将内存划分为线程栈（Thread Stacks）和堆内存（Heap）两个部分，如下图所示：
+<meta property="og:description" content="1 概述 #  JVM 内部使用Java 内存模型，在逻辑上将内存划分为线程栈（Thread Stacks）和堆内存（Heap）两个部分，如下图所示：
  1.1 线程栈 #  JVM 中，每个正在运行的线程，都有自己的线程栈。
  线程栈包含了当前正在执行的方法链或调用链上的所有方法的状态信息， 所以线程栈又被称为方法栈或调用栈。 线程栈里面保存了调用链上正在执行的所有方法中的局部变量：  每个线程都只能访问自己的线程栈。 每个线程都不能访问其他线程的局部变量。   即使两个线程正在执行完全相同的代码，但每个线程都会在自己的线程栈内创建对应代码中声明的局部变量，所以每个线程都有一份自己的局部变量副本：  所有原生类型的局部变量都存储在线程栈中，因此对其他线程是不可见的。 线程可以将一个原生变量值的副本传给另一个线程，但不能共享原生局部变量本身。    1.2 堆内存 #  堆内存又称为共享堆，堆中的所有对象，可以被所有线程访问，只要他们能拿到对象的引用地址：
  如果一个线程可以访问某个对象时，也就可以访问该对象的成员变量。 如果两个线程同时调用某个对象的同一个方法，则他们都可以访问到这个对象的成员变量，但每个线程的局部变量副本是独立的。  虽然各个线程自己使用的局部变量都在自己的栈上，但是大家可以共享堆上的对象，各个不同线程访问同一个对象实例的基础类型的成员变量，会给每个线程一个变量的副本。
  1.3 总结 #   如果是原生数据类型的局部变量，那么他的内容就全部保留在线程栈中。 如果是对象引用，在对象的引用地址保存在栈中，而实际的对象内容保存在堆中。 对象的成员变量与对象本身一起存储在堆上，不管成员变量的类型是原生数值，还是对象引用。 类的静态变量则和类定义一样都保存在堆中。  总结一下：
- 原始数据类型的局部变量和对象引用地址在栈上。 对象、对象成员与类定义、静态变量在堆上。   2 线程栈 #    每启动一个线程，JVM 就会在栈空间分配对应的线程栈。 线程栈也叫做Java 方法栈，如果使用了JNI（Java Native Interface）方法，则会分配一个单独的本地方法栈（Native Stack）。 线程执行过程中，一般会有多个方法组成调用栈（Stack Trace），比如 A 调用 B，B 调用 C&hellip;&hellip;。每执行到一个方法，就会创建对应的栈帧（Frame）。  栈帧是一个逻辑上的概念，具体的大小在一个方法完成后基本上就能确定。 比如返回值需要有一个空间存放；每个局部变量都需要对应的地址空间；此外还有给指令使用的操作数栈；以及Class 指针（标识这个栈帧对应的是哪个类的方法，指向非堆里面的 Class 对象）。     3 堆 #    堆内存是所有线程共用的内存空间，理论上大家都可以访问。 逻辑上的 Java 堆划分为堆（Heap）和堆外（Non-Heap）两个部分：  3." />
+ 原始数据类型的局部变量和对象引用地址在栈上。 对象、对象成员与类定义、静态变量在堆上。   2 线程栈 #    每启动一个线程，JVM 就会在栈空间分配对应的线程栈。 线程栈也叫做Java 方法栈，如果使用了JNI（Java Native Interface）方法，则会分配一个单独的本地方法栈（Native Stack）。 线程执行过程中，一般会有多个方法组成调用栈（Stack Trace），比如 A 调用 B，B 调用 C&hellip;&hellip;。每执行到一个方法，就会创建对应的栈帧（Frame）。  栈帧是一个逻辑上的概念，具体的大小在一个方法完成后基本上就能确定。 比如返回值需要有一个空间存放；每个局部变量都需要对应的地址空间；此外还有给指令使用的操作数栈；以及Class 指针（标识这个栈帧对应的是哪个类的方法，指向非堆里面的 Class 对象）。     3 堆 #    堆内存是所有线程共用的内存空间，理论上大家都可以访问。 逻辑上的 Java 堆划分为 堆（Heap）和 堆外（Non-Heap）两个部分：  3." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.8-JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" /><meta property="article:section" content="docs" />
 
@@ -26,7 +26,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.aea6d96f0a2607e0554a26a0e35b009f9b612c62f43fa70f1c24c528cd1ae7b3.js" integrity="sha256-rqbZbwomB&#43;BVSiag41sAn5thLGL0P6cPHCTFKM0a57M=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.7c5a0c6f7aee3ec02b01f6e3abdc878317cff9628c7528ce8c9961da7e2f7ed2.js" integrity="sha256-fFoMb3ruPsArAfbjq9yHgxfP&#43;WKMdSjOjJlh2n4vftI=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -163,7 +163,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E5%87%91%E9%9B%B6%E9%92%B1%E9%97%AE%E9%A2%98/" class="">1.1.2 凑零钱问题</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="">1.1.2 背包问题</a>
   
 
         </li>
@@ -254,7 +254,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8/" class="">1.1.9 买卖股票</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97%E9%80%9A%E8%A7%A3/" class="">1.1.9 股票问题系列通解</a>
   
 
         </li>
@@ -549,20 +549,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-%E5%85%A8%E6%8E%92%E5%88%97/" class="">1.6.2 全排列</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.3-N%E7%9A%87%E5%90%8E/" class="">1.6.3 N皇后</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-N%E7%9A%87%E5%90%8E/" class="">1.6.2 N皇后</a>
   
 
         </li>
@@ -811,6 +798,71 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">2.3.10 合并两个有序数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/" class="">2.3.11 下一个排列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/" class="">2.3.12 缺失的第一个正数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/" class="">2.3.13 寻找两个正序数组的中位数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/" class="">2.3.14 多数元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.15-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/" class="">2.3.15 最长连续序列</a>
   
 
         </li>
@@ -2598,6 +2650,87 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="toggle"  />
+    <label for="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="flex justify-between">
+      <a role="button" class="">3、结构型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.1-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="">3.1 代理模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.2-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="">3.2 装饰器模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0f94fb8c7e53c880650621fdcc596283" class="toggle"  />
+    <label for="section-0f94fb8c7e53c880650621fdcc596283" class="flex justify-between">
+      <a role="button" class="">4、行为型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/4%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/4.1-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" class="">4.1 策略模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -2812,6 +2945,19 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-AQS/" class="">2.9 Aqs</a>
+  
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -2826,7 +2972,7 @@ https://github.com/alex-shpak/hugo-book
   
     <input type="checkbox" id="section-65e183c484720f91ba3d1676e1ed5a16" class="toggle" checked />
     <label for="section-65e183c484720f91ba3d1676e1ed5a16" class="flex justify-between">
-      <a role="button" class="">3、JVM</a>
+      <a role="button" class="">3、 Jvm</a>
     </label>
   
 
@@ -3020,6 +3166,40 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-78e3fdb9e302e0ddb1abf0723557c671" class="toggle"  />
+    <label for="section-78e3fdb9e302e0ddb1abf0723557c671" class="flex justify-between">
+      <a role="button" class="">4、 Nio</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/4NIO/4.1-%E6%A6%82%E8%BF%B0/" class="">4.1 概述</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -3035,6 +3215,22 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" id="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="toggle"  />
     <label for="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="flex justify-between">
       <a role="button" class="">第六章 Spring全家桶</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-afe35ec73fb23fd24d05388dd4f6d178" class="toggle"  />
+    <label for="section-afe35ec73fb23fd24d05388dd4f6d178" class="flex justify-between">
+      <a role="button" class="">1、 Spring</a>
     </label>
   
 
@@ -3076,6 +3272,45 @@ https://github.com/alex-shpak/hugo-book
   
     <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.3-Spring-AOP/" class="">1.3 Spring Aop</a>
   
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b63cda05fe80f821d31813480ebd8acb" class="toggle"  />
+    <label for="section-b63cda05fe80f821d31813480ebd8acb" class="flex justify-between">
+      <a role="button" class="">2、 Spring Boot</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/2SpringBoot/2.1-SpringSpringBootSpringCloud%E7%9A%84%E8%81%94%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB/" class="">2.1 Spring、 Spring Boot、 Spring Cloud的联系与区别</a>
+  
+
+        </li>
+      
+    
+  </ul>
 
         </li>
       
@@ -3141,7 +3376,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#jvm内存结构">JVM内存结构</a>
+    <li>
       <ul>
         <li><a href="#1-概述">1 概述</a>
           <ul>
@@ -3186,11 +3421,7 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h1 id="jvm内存结构">
-  JVM内存结构
-  <a class="anchor" href="#jvm%e5%86%85%e5%ad%98%e7%bb%93%e6%9e%84">#</a>
-</h1>
-<h2 id="1-概述">
+  <article class="markdown"><h2 id="1-概述">
   1 概述
   <a class="anchor" href="#1-%e6%a6%82%e8%bf%b0">#</a>
 </h2>
@@ -3272,7 +3503,7 @@ https://github.com/alex-shpak/hugo-book
   <img src="../../media/202105//1621914622.9199617.png" alt="u0xac.jpg (1474×1010)" /></p>
 <ol>
 <li>堆内存是所有线程共用的内存空间，理论上大家都可以访问。</li>
-<li>逻辑上的 Java 堆划分为<code>堆</code>（Heap）和<code>堆外</code>（Non-Heap）两个部分：</li>
+<li>逻辑上的 Java 堆划分为 <code>堆</code>（Heap）和 <code>堆外</code>（Non-Heap）两个部分：</li>
 </ol>
 <h3 id="31-堆内存heap-memory">
   3.1 堆内存（Heap Memory）
@@ -3303,7 +3534,7 @@ https://github.com/alex-shpak/hugo-book
 </li>
 </ol>
 </li>
-<li>当 Eden 区进行垃圾回收时，GC 将从所有<code>root</code> 可达的对象过一遍，并标记为存活对象。</li>
+<li>当 Eden 区进行垃圾回收时，GC 将从所有 <code>root</code> 可达的对象过一遍，并标记为存活对象。</li>
 <li><strong>标记阶段完成后，Eden 区所有存活的对象都会被复制到存活区（Survivor Spaces）里面，整个 Eden 区就可以被认为是空的，然后就能用来分配新对象，</strong> 这种方法称为<strong>标记-复制算法</strong>（Mark and Copy）。</li>
 </ol>
 <h5 id="3112-存活区survivor-spaces">
@@ -3314,11 +3545,11 @@ https://github.com/alex-shpak/hugo-book
 <ol>
 <li>空的那个存活区用于在下一次年轻代 GC 时存放收集的对象，年轻代中所有的存活对象（包括<strong>Eden 区</strong>和<strong>非空的那个 from 存活区</strong>）都会被复制到<strong>to 存活区</strong>。GC 过程完成后，to 区有对象，而 from 区没有对象，二者的角色正好进行切换，from 变成 to，to 变成 from。</li>
 <li>存活的对象会在两个存活区之间复制多次，<strong>直到某些对象的存活时间达到一定阈值</strong>，因为根据分带理论假设，存活超过一定时间的对象很可能会继续存活更长时间，因此<strong>这些年老的对象将会被提升到老年代</strong>，提升的时候，<strong>存活的对象不再是复制到另一个存活区，而是迁移到老年代，并在老年代一直驻留，直到变为不可达对象</strong>。</li>
-<li>为了确定一个对象是否足够老，GC模块会跟踪记录每个存活区对象存活的次数，每次分代GC完成后，存活对象的年龄就会增长，当年龄超过<strong>提升阈值</strong>（Tenuring Threshold），就会被提升到老年代区域。
+<li>为了确定一个对象是否足够老，GC 模块会跟踪记录每个存活区对象存活的次数，每次分代 GC 完成后，存活对象的年龄就会增长，当年龄超过<strong>提升阈值</strong>（Tenuring Threshold），就会被提升到老年代区域。
 <ol>
-<li>具体的提升阈值由JVM动态调整，但也可以用参数<code>-XX:+MaxTenuringThreshold</code>来指定上限。</li>
-<li>如果设置<code>-XX:+MaxTenuringThreshold=0</code>，则GC时存活对象不在存活区之间复制，直接提升到老年代。</li>
-<li>现代JVM中，这个阈值默认设置为15个GC周期，这也是HotSpot JVM中允许的最大值。</li>
+<li>具体的提升阈值由 JVM 动态调整，但也可以用参数 <code>-XX:+MaxTenuringThreshold</code> 来指定上限。</li>
+<li>如果设置 <code>-XX:+MaxTenuringThreshold=0</code>，则 GC 时存活对象不在存活区之间复制，直接提升到老年代。</li>
+<li>现代 JVM 中，这个阈值默认设置为 15 个 GC 周期，这也是 HotSpot JVM 中允许的最大值。</li>
 <li>如果存活区空间不够存放年轻代中的存活对象，提升也可能更早的进行。</li>
 </ol>
 </li>
@@ -3330,11 +3561,11 @@ https://github.com/alex-shpak/hugo-book
   <a class="anchor" href="#312-%e8%80%81%e5%b9%b4%e4%bb%a3">#</a>
 </h4>
 <ol>
-<li>老年代的GC实现要复杂的多，其空间通常会更大，GC发生的频率比年轻代要小很多。</li>
+<li>老年代的 GC 实现要复杂的多，其空间通常会更大，GC 发生的频率比年轻代要小很多。</li>
 <li>因为预期老年代中的对象大部分是存活的，所以<strong>不再使用标记-复制算法，而是采用移动对象的方式来实现最小化内存碎片</strong>。</li>
 <li>老年代空间的清理算法通常是建立在不同基础上的，原则上，会执行以下这些步骤：
 <ol>
-<li>通过标志位，标记所有GC Roots可达的对象。</li>
+<li>通过标志位，标记所有 GC Roots 可达的对象。</li>
 <li>删除所有不可达的对象。</li>
 <li>整理老年代空间中的内容，方法是<strong>将所有的存活对象复制，从老年代开始的地方依次存放</strong>。</li>
 </ol>
@@ -3362,10 +3593,10 @@ https://github.com/alex-shpak/hugo-book
 </ol>
 </li>
 <li>
-<p>由于很难预测这块区域到底需要占用多少内存空间，预测失败可能会导致内存溢出错误，因此Java8直接删除了永久代，改用Metaspace，同时<strong>将方法区移至Metaspace</strong>。</p>
+<p>由于很难预测这块区域到底需要占用多少内存空间，预测失败可能会导致内存溢出错误，因此 Java8 直接删除了永久代，改用 Metaspace，同时<strong>将方法区移至 Metaspace</strong>。</p>
 </li>
 <li>
-<p><strong>Metaspace并不在虚拟机中，而是使用本地内存</strong>，因此，<strong>默认情况下，元空间的大小仅受本地内存限制</strong>。</p>
+<p><strong>Metaspace 并不在虚拟机中，而是使用本地内存</strong>，因此，<strong>默认情况下，元空间的大小仅受本地内存限制</strong>。</p>
 </li>
 </ol>
 <h2 id="参考文献">
@@ -3374,9 +3605,9 @@ https://github.com/alex-shpak/hugo-book
 </h2>
 <ol>
 <li>
-  <a href="https://blog.csdn.net/jijijijwwi111/article/details/51564271">Java8 Non-Heap 中的metaspace 和compressed class space解释</a>。</li>
+  <a href="https://blog.csdn.net/jijijijwwi111/article/details/51564271">Java8 Non-Heap 中的 metaspace 和 compressed class space 解释</a>。</li>
 <li>
-  <a href="https://www.cnblogs.com/williamjie/p/9558094.html">Metaspace 之一：Metaspace整体介绍（永久代被替换原因、元空间特点、元空间内存查看分析方法）</a>。</li>
+  <a href="https://www.cnblogs.com/williamjie/p/9558094.html">Metaspace 之一：Metaspace 整体介绍（永久代被替换原因、元空间特点、元空间内存查看分析方法）</a>。</li>
 </ol>
 </article>
  
@@ -3453,7 +3684,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#jvm内存结构">JVM内存结构</a>
+    <li>
       <ul>
         <li><a href="#1-概述">1 概述</a>
           <ul>

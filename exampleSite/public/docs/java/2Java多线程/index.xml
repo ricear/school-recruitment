@@ -102,5 +102,15 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
  2.1 总体设计 #  ThreadPoolExecutor 的继承关系如下图所示：</description>
     </item>
     
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-AQS/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-AQS/</guid>
+      <description>1 含义 #   AQS 全称是AbstractQueuedSynchronizer，即抽象对象同步器。 AQS 定义了两种资源共享模式：  独占式：  只能有一个线程占有锁资源，其他竞争资源的线程，在竞争失败后都会进入到等待队列中，等待占有锁资源的线程释放锁，然后再重新被唤醒竞争资源，例如 ReentrantLock 实现的就是独占式的锁资源。   共享式：  允许多个线程同时获取锁，并发访问共享资源，ReentrantWriteLock 和 CountDownLatch 等就是实现的这种模式。     AQS 内部维护了一个 volatile的 state 变量和一个 FIFO（先进先出）的队列：   state：
+ 代表的是竞争资源的标识。 AQS 中提供了三种操作 state 的方法： protected final int getState() { return state; } protected final void setState(int newState) { state = newState; } protected final boolean compareAndSetState(int expect, int update) { // See below for intrinsics setup to support this  return unsafe.</description>
+    </item>
+    
   </channel>
 </rss>

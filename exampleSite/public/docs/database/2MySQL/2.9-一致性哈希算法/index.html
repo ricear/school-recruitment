@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="一致性哈希算法 #  1 传统哈希算法 #  1.1 含义 #   简单地说，哈希就是一个键值对存储，在给定键的情况下，可以非常高效地找到所关联的值，假如我们要根据邮政编码查找城市中的街道名称，一种最简单的实现方式是将此信息以哈希字典的形式进行存储&lt;ZipCode, StreetName&gt;。 当数据太大而无法存储在一个节点或机器上时，系统就会需要多个这样的节点或机器来存储他，比如，使用多个 Web 缓存中间件的系统，对于如何确定哪个key 存储在哪个节点上，最简单的解决方案是使用哈希取模来决定：   给定一个 key，先对 key 进行哈希运算，将其除以系统中的节点数，然后将 key 放入该节点。
+<meta name="description" content="1 传统哈希算法 #  1.1 含义 #   简单地说，哈希就是一个键值对存储，在给定键的情况下，可以非常高效地找到所关联的值，假如我们要根据邮政编码查找城市中的街道名称，一种最简单的实现方式是将此信息以哈希字典的形式进行存储&lt;ZipCode, StreetName&gt;。 当数据太大而无法存储在一个节点或机器上时，系统就会需要多个这样的节点或机器来存储他，比如，使用多个 Web 缓存中间件的系统，对于如何确定哪个key 存储在哪个节点上，最简单的解决方案是使用哈希取模来决定：   给定一个 key，先对 key 进行哈希运算，将其除以系统中的节点数，然后将 key 放入该节点。
   在获取 key 时，先对 key 进行哈希运算，将其除以系统中的节点数，然后转到该节点并获取值。
   上述过程对应的哈希算法定义如下：
 # 下面的 N 为节点数 node_number = hash(key) % N   下图描绘了多节点系统中的传统的哈希取模算法，基于该算法可以实现简单的负载均衡。
      1.2 局限性 #  假设初始时有如下对应关系：
  1.2.1 节点减少的场景 #   在分布式多节点系统中，出现故障很常见，任何节点都可能在没有任何事先通知的情况下挂掉，针对这种情况，我们希望系统只是出现性能降低，正常的功能不会受到影响。 对于原始示例，假设其中 1 个节点出现了故障，这时节点数发生了变化，节点个数从 3 减少为 2，此时表格中的状态发生了变化：  很明显节点的减少会导致键与节点的映射关系发生变化，这个变化对于新的键来说并不会产生任何影响，但对于已有的键来说，将会导致节点映射错误，以semlinker 为例，变化前系统有 3 个节点，该键对应的节点编号为 1，当出现故障时，节点数减少为 2 个，此时该键对应的节点编号为 0。  1.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="一致性哈希算法 #  1 传统哈希算法 #  1.1 含义 #   简单地说，哈希就是一个键值对存储，在给定键的情况下，可以非常高效地找到所关联的值，假如我们要根据邮政编码查找城市中的街道名称，一种最简单的实现方式是将此信息以哈希字典的形式进行存储&lt;ZipCode, StreetName&gt;。 当数据太大而无法存储在一个节点或机器上时，系统就会需要多个这样的节点或机器来存储他，比如，使用多个 Web 缓存中间件的系统，对于如何确定哪个key 存储在哪个节点上，最简单的解决方案是使用哈希取模来决定：   给定一个 key，先对 key 进行哈希运算，将其除以系统中的节点数，然后将 key 放入该节点。
+<meta property="og:description" content="1 传统哈希算法 #  1.1 含义 #   简单地说，哈希就是一个键值对存储，在给定键的情况下，可以非常高效地找到所关联的值，假如我们要根据邮政编码查找城市中的街道名称，一种最简单的实现方式是将此信息以哈希字典的形式进行存储&lt;ZipCode, StreetName&gt;。 当数据太大而无法存储在一个节点或机器上时，系统就会需要多个这样的节点或机器来存储他，比如，使用多个 Web 缓存中间件的系统，对于如何确定哪个key 存储在哪个节点上，最简单的解决方案是使用哈希取模来决定：   给定一个 key，先对 key 进行哈希运算，将其除以系统中的节点数，然后将 key 放入该节点。
   在获取 key 时，先对 key 进行哈希运算，将其除以系统中的节点数，然后转到该节点并获取值。
   上述过程对应的哈希算法定义如下：
 # 下面的 N 为节点数 node_number = hash(key) % N   下图描绘了多节点系统中的传统的哈希取模算法，基于该算法可以实现简单的负载均衡。
@@ -26,7 +26,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.aea6d96f0a2607e0554a26a0e35b009f9b612c62f43fa70f1c24c528cd1ae7b3.js" integrity="sha256-rqbZbwomB&#43;BVSiag41sAn5thLGL0P6cPHCTFKM0a57M=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.7c5a0c6f7aee3ec02b01f6e3abdc878317cff9628c7528ce8c9961da7e2f7ed2.js" integrity="sha256-fFoMb3ruPsArAfbjq9yHgxfP&#43;WKMdSjOjJlh2n4vftI=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -163,7 +163,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E5%87%91%E9%9B%B6%E9%92%B1%E9%97%AE%E9%A2%98/" class="">1.1.2 凑零钱问题</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="">1.1.2 背包问题</a>
   
 
         </li>
@@ -254,7 +254,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8/" class="">1.1.9 买卖股票</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97%E9%80%9A%E8%A7%A3/" class="">1.1.9 股票问题系列通解</a>
   
 
         </li>
@@ -549,20 +549,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-%E5%85%A8%E6%8E%92%E5%88%97/" class="">1.6.2 全排列</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.3-N%E7%9A%87%E5%90%8E/" class="">1.6.3 N皇后</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-N%E7%9A%87%E5%90%8E/" class="">1.6.2 N皇后</a>
   
 
         </li>
@@ -811,6 +798,71 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">2.3.10 合并两个有序数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/" class="">2.3.11 下一个排列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/" class="">2.3.12 缺失的第一个正数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/" class="">2.3.13 寻找两个正序数组的中位数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/" class="">2.3.14 多数元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.15-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/" class="">2.3.15 最长连续序列</a>
   
 
         </li>
@@ -2598,6 +2650,87 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="toggle"  />
+    <label for="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="flex justify-between">
+      <a role="button" class="">3、结构型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.1-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="">3.1 代理模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.2-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="">3.2 装饰器模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0f94fb8c7e53c880650621fdcc596283" class="toggle"  />
+    <label for="section-0f94fb8c7e53c880650621fdcc596283" class="flex justify-between">
+      <a role="button" class="">4、行为型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/4%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/4.1-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" class="">4.1 策略模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -2812,6 +2945,19 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-AQS/" class="">2.9 Aqs</a>
+  
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -2826,7 +2972,7 @@ https://github.com/alex-shpak/hugo-book
   
     <input type="checkbox" id="section-65e183c484720f91ba3d1676e1ed5a16" class="toggle"  />
     <label for="section-65e183c484720f91ba3d1676e1ed5a16" class="flex justify-between">
-      <a role="button" class="">3、JVM</a>
+      <a role="button" class="">3、 Jvm</a>
     </label>
   
 
@@ -3020,6 +3166,40 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-78e3fdb9e302e0ddb1abf0723557c671" class="toggle"  />
+    <label for="section-78e3fdb9e302e0ddb1abf0723557c671" class="flex justify-between">
+      <a role="button" class="">4、 Nio</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/4NIO/4.1-%E6%A6%82%E8%BF%B0/" class="">4.1 概述</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -3035,6 +3215,22 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" id="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="toggle"  />
     <label for="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="flex justify-between">
       <a role="button" class="">第六章 Spring全家桶</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-afe35ec73fb23fd24d05388dd4f6d178" class="toggle"  />
+    <label for="section-afe35ec73fb23fd24d05388dd4f6d178" class="flex justify-between">
+      <a role="button" class="">1、 Spring</a>
     </label>
   
 
@@ -3076,6 +3272,45 @@ https://github.com/alex-shpak/hugo-book
   
     <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.3-Spring-AOP/" class="">1.3 Spring Aop</a>
   
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b63cda05fe80f821d31813480ebd8acb" class="toggle"  />
+    <label for="section-b63cda05fe80f821d31813480ebd8acb" class="flex justify-between">
+      <a role="button" class="">2、 Spring Boot</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/2SpringBoot/2.1-SpringSpringBootSpringCloud%E7%9A%84%E8%81%94%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB/" class="">2.1 Spring、 Spring Boot、 Spring Cloud的联系与区别</a>
+  
+
+        </li>
+      
+    
+  </ul>
 
         </li>
       
@@ -3141,7 +3376,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#一致性哈希算法">一致性哈希算法</a>
+    <li>
       <ul>
         <li><a href="#1-传统哈希算法">1 传统哈希算法</a>
           <ul>
@@ -3171,6 +3406,7 @@ https://github.com/alex-shpak/hugo-book
                 <li><a href="#242-带有虚拟节点的一致性哈希">2.4.2 带有虚拟节点的一致性哈希</a></li>
               </ul>
             </li>
+            <li><a href="#25-算法实现">2.5 算法实现</a></li>
           </ul>
         </li>
         <li><a href="#参考文献">参考文献</a></li>
@@ -3188,11 +3424,7 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h1 id="一致性哈希算法">
-  一致性哈希算法
-  <a class="anchor" href="#%e4%b8%80%e8%87%b4%e6%80%a7%e5%93%88%e5%b8%8c%e7%ae%97%e6%b3%95">#</a>
-</h1>
-<h2 id="1-传统哈希算法">
+  <article class="markdown"><h2 id="1-传统哈希算法">
   1 传统哈希算法
   <a class="anchor" href="#1-%e4%bc%a0%e7%bb%9f%e5%93%88%e5%b8%8c%e7%ae%97%e6%b3%95">#</a>
 </h2>
@@ -3371,7 +3603,82 @@ hash(cs3) <span style="color:#f92672">=</span> t3;
 <li>在查找时，如果<strong>要确定对象的服务器</strong>，需要<strong>先确定对象的虚拟服务器</strong>，<strong>再由虚拟服务器确定物理服务器</strong>。
   <img src="../../media/202107/2021-07-07_1632040.35710670981861736.png" alt="" /></li>
 </ol>
-<h2 id="参考文献">
+<h3 id="25-算法实现">
+  2.5 算法实现
+  <a class="anchor" href="#25-%e7%ae%97%e6%b3%95%e5%ae%9e%e7%8e%b0">#</a>
+</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * @author peng.wei
+</span><span style="color:#75715e"> * @version 1.0
+</span><span style="color:#75715e"> * @date 2021/8/29 15:36
+</span><span style="color:#75715e"> * @Description 一致性哈希算法
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ConsistentHash</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 虚拟节点的数量
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> Integer V_NODE_SIZE <span style="color:#f92672">=</span> 10<span style="color:#f92672">;</span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 虚拟节点的前缀
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String V_NODE_SUFFIX <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;V_NODE_SUFFIX&#34;</span><span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 构造哈希环
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param servers 服务器映射信息
+</span><span style="color:#75715e">     * @return 哈希环
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Node<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">buildConsistentHashRing</span><span style="color:#f92672">(</span>Map<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Node<span style="color:#f92672">&gt;</span> servers<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Node<span style="color:#f92672">&gt;</span> hashRing <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;&gt;();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Node node <span style="color:#f92672">:</span> servers<span style="color:#f92672">.</span><span style="color:#a6e22e">values</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            hashRing<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>getHashCode<span style="color:#f92672">(</span>node<span style="color:#f92672">.</span><span style="color:#a6e22e">getNodeAddress</span><span style="color:#f92672">()),</span> node<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> hashRing<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 构造带虚拟节点的哈希环
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param servers 服务器映射信息
+</span><span style="color:#75715e">     * @return 哈希环
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Node<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">buildConsistentHashRingWithVirtualNode</span><span style="color:#f92672">(</span>Map<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Node<span style="color:#f92672">&gt;</span> servers<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Node<span style="color:#f92672">&gt;</span> hashRing <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;&gt;();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Node node <span style="color:#f92672">:</span> servers<span style="color:#f92672">.</span><span style="color:#a6e22e">values</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Integer i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> V_NODE_SIZE<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+                hashRing<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>getHashCode<span style="color:#f92672">(</span>String<span style="color:#f92672">.</span><span style="color:#a6e22e">format</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;%s%s%s&#34;</span><span style="color:#f92672">,</span> node<span style="color:#f92672">.</span><span style="color:#a6e22e">getNodeAddress</span><span style="color:#f92672">(),</span> V_NODE_SUFFIX<span style="color:#f92672">,</span> i<span style="color:#f92672">)),</span> node<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> hashRing<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 根据请求 key 的哈希值在哈希环上寻找节点
+</span><span style="color:#75715e">     * @param servers   服务器映射信息
+</span><span style="color:#75715e">     * @param keyHashCode   节点哈希值
+</span><span style="color:#75715e">     * @return  目标节点
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> Node <span style="color:#a6e22e">locate</span><span style="color:#f92672">(</span>Map<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Node<span style="color:#f92672">&gt;</span> servers<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> keyHashCode<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Node<span style="color:#f92672">&gt;</span> hashRing <span style="color:#f92672">=</span> buildConsistentHashRingWithVirtualNode<span style="color:#f92672">(</span>servers<span style="color:#f92672">);</span>
+        <span style="color:#75715e">//  向右找到第一个 key
+</span><span style="color:#75715e"></span>        Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Node<span style="color:#f92672">&gt;</span> locateEntry <span style="color:#f92672">=</span> hashRing<span style="color:#f92672">.</span><span style="color:#a6e22e">ceilingEntry</span><span style="color:#f92672">(</span>keyHashCode<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>locateEntry <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            locateEntry <span style="color:#f92672">=</span> hashRing<span style="color:#f92672">.</span><span style="color:#a6e22e">firstEntry</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> locateEntry<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 根据服务器节点地址获取哈希值
+</span><span style="color:#75715e">     * @param nodeAddress   服务器节点地址
+</span><span style="color:#75715e">     * @return  服务器节点地址对应的哈希值
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> Integer <span style="color:#a6e22e">getHashCode</span><span style="color:#f92672">(</span>String nodeAddress<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">identityHashCode</span><span style="color:#f92672">(</span>nodeAddress<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="参考文献">
   参考文献
   <a class="anchor" href="#%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae">#</a>
 </h2>
@@ -3460,7 +3767,7 @@ hash(cs3) <span style="color:#f92672">=</span> t3;
   
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#一致性哈希算法">一致性哈希算法</a>
+    <li>
       <ul>
         <li><a href="#1-传统哈希算法">1 传统哈希算法</a>
           <ul>
@@ -3490,6 +3797,7 @@ hash(cs3) <span style="color:#f92672">=</span> t3;
                 <li><a href="#242-带有虚拟节点的一致性哈希">2.4.2 带有虚拟节点的一致性哈希</a></li>
               </ul>
             </li>
+            <li><a href="#25-算法实现">2.5 算法实现</a></li>
           </ul>
         </li>
         <li><a href="#参考文献">参考文献</a></li>

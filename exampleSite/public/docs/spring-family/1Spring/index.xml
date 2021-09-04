@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Computer Cookbook School Recruitment</title>
+    <link>https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/</link>
+    <description>Recent content on Computer Cookbook School Recruitment</description>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.1-%E6%A6%82%E8%BF%B0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.1-%E6%A6%82%E8%BF%B0/</guid>
+      <description>概述 #  </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.2-Spring-IOC/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.2-Spring-IOC/</guid>
+      <description>Spring IOC #   如无特殊说明，本文使用的 Spring 版本为 5.3.9。
+ 1 背景 #   传统的 Java 组件协作方式如下：   假如我们有一个在线书店的项目，通过 BookService 获取书籍：
+public class BookService { private HikariConfig config = new HikariConfig(); private DataSource dataSource = new HikariDataSource(config); public Book getBook(long bookId) { try (Connection conn = dataSource.getConnection()) { ... return book; } } } 为了从数据库查询书籍，BookService 持有一个 DataSource，为了实例化一个 HikariDataSource，又不得不实例化一个 HikariConfig。
+  现在我们继续编写 UserService 获取用户：
+public class UserService { private HikariConfig config = new HikariConfig(); private DataSource dataSource = new HikariDataSource(config); public User getUser(long userId) { try (Connection conn = dataSource.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.3-Spring-AOP/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.3-Spring-AOP/</guid>
+      <description>Spring AOP #   如无特殊说明，本文使用的 Spring 版本为 5.3.9。
+ 1 背景 #   软件开发一直在寻求一种高效开发、扩展、维护的方式，从面向过程的开发实践中，前人将关注点抽象出来，对行为和属性进行聚合，形成了面向对象的开发思想，其在一定程度上影响了软件开发的过程。 鉴于此，我们在开发的过程中会对软件开发进行抽象、分割成各个模块或对象，例如，我们会对 API 进行抽象成四个模块，分别为Controller、Service、Gateway、Command，这很好地解决了业务级别的开发，但对于系统级别的开发我们很难聚焦，比如，对于每一个模块需要进行打印日志、代码监控、异常处理，以打日志为例，我们只能将日志代码嵌套在各个对象上，而无法关注日志本身，这种现象有偏离了 OOP（Object-Oriented Programming, 面向对象编程）思想。  为了能更好地将系统级别的代码抽离出来，去掉与对象的耦合，就产生了 AOP（Aspect-Oriented Programming, 面向切面编程），如下图所示，OOP 属于一种横向扩展，AOP 属于一种纵向扩展，AOP 依托于 OOP，进一步将系统级别的代码抽象出来，进行纵向排列，实现低耦合。   2 含义 #   AOP，全称为 Aspect-Oriented Programming，即面向切面编程。 它是一种新的模块化机制，用来描述分散在对象、类或函数中的横切关注点，从关注点中分离出横切关注点是面向切面程序设计的核心概念。 分离关注点使解决特定领域问题的代码从业务逻辑中独立出来，业务逻辑代码中不再含有针对特定领域问题代码的调用，业务逻辑同特定领域问题的关系通过切面来封装、维护，这样原本分散在整个应用程序中的变动就可以很好地管理起来。 Spring AOP 的核心技术是 JDK 动态代理，以动态代理技术为基础，设计出了一系列 AOP 的横切实现，比如前置通知、返回通知、异常通知，同时，Spring AOP 还提供了一系列的 Pointcut来匹配切入点，例如JdkRegexpMethodPointcut（正则切入点）、NameMatchMethodPointcut（方法名切入点），可以使用现有的切入点来设置横切面，也可以扩展相关的 Pointcut 方法来实现切入需求。 为了让 AOP 起作用，需要完成一系列的过程，比如：  需要为目标对象建立代理对象，这个代理对象可以通过使用 JDK 的 Proxy 来完成，也可以通过第三方的代理生成器 CGLIB 来完成。 需要启动代理对象的拦截器来完成各种横切面的织入，这一系列的织入是通过一系列的 Adapter 来实现的，通过这一系列 Adapter 的设计，可以把 AOP 的横切面设计和 Proxy 模式有机地结合起来，从而实现在 AOP 中定义好的各种织入方式。    3 家庭成员 #  Spring AOP 的家庭成员主要包括三个，分别为Advice（通知）、Pointcut（切点）、Advisor（通知器）。</description>
+    </item>
+    
+  </channel>
+</rss>

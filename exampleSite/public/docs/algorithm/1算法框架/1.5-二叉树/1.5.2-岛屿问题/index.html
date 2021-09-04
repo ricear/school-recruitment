@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="岛屿问题 #  1 前言 #   我们所熟悉的 DFS（深度优先搜索）问题通常是在树或者图结构上进行的，而我们今天要讨论的 DFS 问题，是在一种【网格】结构中进行的，岛屿问题是这类网格 DFS 问题的典型代表。 网格结构遍历起来要比二叉树复杂一些，如果没有掌握一定的方法，DFS 代码容易写得冗长繁杂。 本文将以岛屿问题为例，展示网格类问题 DFS 通用思路，以及如何让代码变得简洁。  2 网格问题的基本概念 #   我们首先要明确一下岛屿问题中的网格结构是如何定义的，以方便我们后面的讨论。 网格问题是由 $m \times n$ 个小方格组成一个网格，每个小方格与其上下左右四个方格认为是相邻的，要在这样的网格上进行某种搜索。 岛屿问题是一类典型的网格问题，每个格子中的数字可能是 0 或者 1，我们把数字为 0 的格子看成海洋格子，数字为 1 的格子看成陆地格子，这样相邻的陆地格子就连接成一个岛屿。   在这样一个设定下，就出现了各种岛屿问题的变种，包括岛屿的数量、面积、周长等，不过这些问题，基本都可以用 DFS 遍历来解决。  3 网格 DFS 的基本结构 #  3.1 基本结构 #    网格结构要比二叉树结构稍微复杂一些，他其实是一种简化版的图结构，要写好网格上的 DFS 遍历，我们首先要理解二叉树上的 DFS 遍历方法，再类比写出网格结构上的 DFS 遍历，我们写的 二叉树 DFS 遍历一般是这样的：
+<meta name="description" content="1 前言 #   我们所熟悉的 DFS（深度优先搜索）问题通常是在树或者图结构上进行的，而我们今天要讨论的 DFS 问题，是在一种【网格】结构中进行的，岛屿问题是这类网格 DFS 问题的典型代表。 网格结构遍历起来要比二叉树复杂一些，如果没有掌握一定的方法，DFS 代码容易写得冗长繁杂。 本文将以岛屿问题为例，展示网格类问题 DFS 通用思路，以及如何让代码变得简洁。  2 网格问题的基本概念 #   我们首先要明确一下岛屿问题中的网格结构是如何定义的，以方便我们后面的讨论。 网格问题是由 $m \times n$ 个小方格组成一个网格，每个小方格与其上下左右四个方格认为是相邻的，要在这样的网格上进行某种搜索。 岛屿问题是一类典型的网格问题，每个格子中的数字可能是 0 或者 1，我们把数字为 0 的格子看成海洋格子，数字为 1 的格子看成陆地格子，这样相邻的陆地格子就连接成一个岛屿。   在这样一个设定下，就出现了各种岛屿问题的变种，包括岛屿的数量、面积、周长等，不过这些问题，基本都可以用 DFS 遍历来解决。  3 网格 DFS 的基本结构 #  3.1 基本结构 #    网格结构要比二叉树结构稍微复杂一些，他其实是一种简化版的图结构，要写好网格上的 DFS 遍历，我们首先要理解二叉树上的 DFS 遍历方法，再类比写出网格结构上的 DFS 遍历，我们写的 二叉树 DFS 遍历一般是这样的：
 void traverse(TreeNode root) { // 判断 base case  if (root == null) { return; } // 访问两个相邻结点：左子结点、右子结点  traverse(root.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="岛屿问题 #  1 前言 #   我们所熟悉的 DFS（深度优先搜索）问题通常是在树或者图结构上进行的，而我们今天要讨论的 DFS 问题，是在一种【网格】结构中进行的，岛屿问题是这类网格 DFS 问题的典型代表。 网格结构遍历起来要比二叉树复杂一些，如果没有掌握一定的方法，DFS 代码容易写得冗长繁杂。 本文将以岛屿问题为例，展示网格类问题 DFS 通用思路，以及如何让代码变得简洁。  2 网格问题的基本概念 #   我们首先要明确一下岛屿问题中的网格结构是如何定义的，以方便我们后面的讨论。 网格问题是由 $m \times n$ 个小方格组成一个网格，每个小方格与其上下左右四个方格认为是相邻的，要在这样的网格上进行某种搜索。 岛屿问题是一类典型的网格问题，每个格子中的数字可能是 0 或者 1，我们把数字为 0 的格子看成海洋格子，数字为 1 的格子看成陆地格子，这样相邻的陆地格子就连接成一个岛屿。   在这样一个设定下，就出现了各种岛屿问题的变种，包括岛屿的数量、面积、周长等，不过这些问题，基本都可以用 DFS 遍历来解决。  3 网格 DFS 的基本结构 #  3.1 基本结构 #    网格结构要比二叉树结构稍微复杂一些，他其实是一种简化版的图结构，要写好网格上的 DFS 遍历，我们首先要理解二叉树上的 DFS 遍历方法，再类比写出网格结构上的 DFS 遍历，我们写的 二叉树 DFS 遍历一般是这样的：
+<meta property="og:description" content="1 前言 #   我们所熟悉的 DFS（深度优先搜索）问题通常是在树或者图结构上进行的，而我们今天要讨论的 DFS 问题，是在一种【网格】结构中进行的，岛屿问题是这类网格 DFS 问题的典型代表。 网格结构遍历起来要比二叉树复杂一些，如果没有掌握一定的方法，DFS 代码容易写得冗长繁杂。 本文将以岛屿问题为例，展示网格类问题 DFS 通用思路，以及如何让代码变得简洁。  2 网格问题的基本概念 #   我们首先要明确一下岛屿问题中的网格结构是如何定义的，以方便我们后面的讨论。 网格问题是由 $m \times n$ 个小方格组成一个网格，每个小方格与其上下左右四个方格认为是相邻的，要在这样的网格上进行某种搜索。 岛屿问题是一类典型的网格问题，每个格子中的数字可能是 0 或者 1，我们把数字为 0 的格子看成海洋格子，数字为 1 的格子看成陆地格子，这样相邻的陆地格子就连接成一个岛屿。   在这样一个设定下，就出现了各种岛屿问题的变种，包括岛屿的数量、面积、周长等，不过这些问题，基本都可以用 DFS 遍历来解决。  3 网格 DFS 的基本结构 #  3.1 基本结构 #    网格结构要比二叉树结构稍微复杂一些，他其实是一种简化版的图结构，要写好网格上的 DFS 遍历，我们首先要理解二叉树上的 DFS 遍历方法，再类比写出网格结构上的 DFS 遍历，我们写的 二叉树 DFS 遍历一般是这样的：
 void traverse(TreeNode root) { // 判断 base case  if (root == null) { return; } // 访问两个相邻结点：左子结点、右子结点  traverse(root." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.2-%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/" /><meta property="article:section" content="docs" />
@@ -18,7 +18,7 @@ void traverse(TreeNode root) { // 判断 base case  if (root == null) { return; 
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.aea6d96f0a2607e0554a26a0e35b009f9b612c62f43fa70f1c24c528cd1ae7b3.js" integrity="sha256-rqbZbwomB&#43;BVSiag41sAn5thLGL0P6cPHCTFKM0a57M=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.7c5a0c6f7aee3ec02b01f6e3abdc878317cff9628c7528ce8c9961da7e2f7ed2.js" integrity="sha256-fFoMb3ruPsArAfbjq9yHgxfP&#43;WKMdSjOjJlh2n4vftI=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -155,7 +155,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E5%87%91%E9%9B%B6%E9%92%B1%E9%97%AE%E9%A2%98/" class="">1.1.2 凑零钱问题</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="">1.1.2 背包问题</a>
   
 
         </li>
@@ -246,7 +246,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E4%B9%B0%E5%8D%96%E8%82%A1%E7%A5%A8/" class="">1.1.9 买卖股票</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97%E9%80%9A%E8%A7%A3/" class="">1.1.9 股票问题系列通解</a>
   
 
         </li>
@@ -541,20 +541,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-%E5%85%A8%E6%8E%92%E5%88%97/" class="">1.6.2 全排列</a>
-  
-
-        </li>
-      
-    
-      
-        <li>
-          
-  
-  
-
-  
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.3-N%E7%9A%87%E5%90%8E/" class="">1.6.3 N皇后</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-N%E7%9A%87%E5%90%8E/" class="">1.6.2 N皇后</a>
   
 
         </li>
@@ -803,6 +790,71 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">2.3.10 合并两个有序数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/" class="">2.3.11 下一个排列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/" class="">2.3.12 缺失的第一个正数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/" class="">2.3.13 寻找两个正序数组的中位数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/" class="">2.3.14 多数元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.15-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/" class="">2.3.15 最长连续序列</a>
   
 
         </li>
@@ -2590,6 +2642,87 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="toggle"  />
+    <label for="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="flex justify-between">
+      <a role="button" class="">3、结构型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.1-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="">3.1 代理模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.2-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="">3.2 装饰器模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0f94fb8c7e53c880650621fdcc596283" class="toggle"  />
+    <label for="section-0f94fb8c7e53c880650621fdcc596283" class="flex justify-between">
+      <a role="button" class="">4、行为型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/4%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/4.1-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" class="">4.1 策略模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -2804,6 +2937,19 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-AQS/" class="">2.9 Aqs</a>
+  
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -2818,7 +2964,7 @@ https://github.com/alex-shpak/hugo-book
   
     <input type="checkbox" id="section-65e183c484720f91ba3d1676e1ed5a16" class="toggle"  />
     <label for="section-65e183c484720f91ba3d1676e1ed5a16" class="flex justify-between">
-      <a role="button" class="">3、JVM</a>
+      <a role="button" class="">3、 Jvm</a>
     </label>
   
 
@@ -3012,6 +3158,40 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-78e3fdb9e302e0ddb1abf0723557c671" class="toggle"  />
+    <label for="section-78e3fdb9e302e0ddb1abf0723557c671" class="flex justify-between">
+      <a role="button" class="">4、 Nio</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/4NIO/4.1-%E6%A6%82%E8%BF%B0/" class="">4.1 概述</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -3027,6 +3207,22 @@ https://github.com/alex-shpak/hugo-book
     <input type="checkbox" id="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="toggle"  />
     <label for="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="flex justify-between">
       <a role="button" class="">第六章 Spring全家桶</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-afe35ec73fb23fd24d05388dd4f6d178" class="toggle"  />
+    <label for="section-afe35ec73fb23fd24d05388dd4f6d178" class="flex justify-between">
+      <a role="button" class="">1、 Spring</a>
     </label>
   
 
@@ -3068,6 +3264,45 @@ https://github.com/alex-shpak/hugo-book
   
     <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.3-Spring-AOP/" class="">1.3 Spring Aop</a>
   
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b63cda05fe80f821d31813480ebd8acb" class="toggle"  />
+    <label for="section-b63cda05fe80f821d31813480ebd8acb" class="flex justify-between">
+      <a role="button" class="">2、 Spring Boot</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/2SpringBoot/2.1-SpringSpringBootSpringCloud%E7%9A%84%E8%81%94%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB/" class="">2.1 Spring、 Spring Boot、 Spring Cloud的联系与区别</a>
+  
+
+        </li>
+      
+    
+  </ul>
 
         </li>
       
@@ -3133,7 +3368,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#岛屿问题">岛屿问题</a>
+    <li>
       <ul>
         <li><a href="#1-前言">1 前言</a></li>
         <li><a href="#2-网格问题的基本概念">2 网格问题的基本概念</a></li>
@@ -3145,34 +3380,48 @@ https://github.com/alex-shpak/hugo-book
         </li>
         <li><a href="#4-相关题目">4 相关题目</a>
           <ul>
-            <li><a href="#41-岛屿的最大面积">4.1 岛屿的最大面积</a>
+            <li><a href="#41-岛屿数量">4.1 岛屿数量</a>
               <ul>
                 <li><a href="#411-题目">4.1.1 题目</a></li>
                 <li><a href="#412-问题分析">4.1.2 问题分析</a></li>
                 <li><a href="#413-参考代码">4.1.3 参考代码</a></li>
-                <li><a href="#414-题目扩展">4.1.4 题目扩展</a>
+              </ul>
+            </li>
+            <li><a href="#42-岛屿的最大面积">4.2 岛屿的最大面积</a>
+              <ul>
+                <li><a href="#421-题目">4.2.1 题目</a></li>
+                <li><a href="#422-问题分析">4.2.2 问题分析</a></li>
+                <li><a href="#423-参考代码">4.2.3 参考代码</a></li>
+                <li><a href="#424-题目扩展">4.2.4 题目扩展</a>
                   <ul>
-                    <li><a href="#4141-最大正方形httpsnotebookgraysontopproject-21doc-343">4.1.4.1 <a href="https://notebook.grayson.top/project-21/doc-343">最大正方形</a></a>
+                    <li><a href="#4241-最大正方形httpsnotebookgraysontopproject-21doc-343">4.2.4.1 <a href="https://notebook.grayson.top/project-21/doc-343">最大正方形</a></a>
                       <ul>
-                        <li><a href="#41411-问题分析">4.1.4.1.1 问题分析</a></li>
-                        <li><a href="#41412-参考代码">4.1.4.1.2 参考代码</a></li>
+                        <li><a href="#42411-问题分析">4.2.4.1.1 问题分析</a></li>
+                        <li><a href="#42412-参考代码">4.2.4.1.2 参考代码</a></li>
                       </ul>
                     </li>
                   </ul>
                 </li>
               </ul>
             </li>
-            <li><a href="#42-填海造陆问题">4.2 填海造陆问题</a>
-              <ul>
-                <li><a href="#421-题目">4.2.1 题目</a></li>
-                <li><a href="#422-问题分析">4.2.2 问题分析</a></li>
-              </ul>
-            </li>
-            <li><a href="#43-岛屿的周长">4.3 岛屿的周长</a>
+            <li><a href="#43-填海造陆问题">4.3 填海造陆问题</a>
               <ul>
                 <li><a href="#431-题目">4.3.1 题目</a></li>
                 <li><a href="#432-问题分析">4.3.2 问题分析</a></li>
-                <li><a href="#433-参考代码">4.3.3 参考代码</a></li>
+              </ul>
+            </li>
+            <li><a href="#44-岛屿的周长">4.4 岛屿的周长</a>
+              <ul>
+                <li><a href="#441-题目">4.4.1 题目</a></li>
+                <li><a href="#442-问题分析">4.4.2 问题分析</a></li>
+                <li><a href="#443-参考代码">4.4.3 参考代码</a></li>
+              </ul>
+            </li>
+            <li><a href="#45-单词搜索httpsleetcode-cncomproblemsword-search">4.5 <a href="https://leetcode-cn.com/problems/word-search">单词搜索</a></a>
+              <ul>
+                <li><a href="#451-题目">4.5.1 题目</a></li>
+                <li><a href="#452-问题分析">4.5.2 问题分析</a></li>
+                <li><a href="#453-参考代码">4.5.3 参考代码</a></li>
               </ul>
             </li>
           </ul>
@@ -3192,11 +3441,7 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h1 id="岛屿问题">
-  岛屿问题
-  <a class="anchor" href="#%e5%b2%9b%e5%b1%bf%e9%97%ae%e9%a2%98">#</a>
-</h1>
-<h2 id="1-前言">
+  <article class="markdown"><h2 id="1-前言">
   1 前言
   <a class="anchor" href="#1-%e5%89%8d%e8%a8%80">#</a>
 </h2>
@@ -3394,13 +3639,110 @@ https://github.com/alex-shpak/hugo-book
   4 相关题目
   <a class="anchor" href="#4-%e7%9b%b8%e5%85%b3%e9%a2%98%e7%9b%ae">#</a>
 </h2>
-<h3 id="41-岛屿的最大面积">
-  4.1 岛屿的最大面积
-  <a class="anchor" href="#41-%e5%b2%9b%e5%b1%bf%e7%9a%84%e6%9c%80%e5%a4%a7%e9%9d%a2%e7%a7%af">#</a>
+<h3 id="41-岛屿数量">
+  4.1 岛屿数量
+  <a class="anchor" href="#41-%e5%b2%9b%e5%b1%bf%e6%95%b0%e9%87%8f">#</a>
 </h3>
 <h4 id="411-题目">
   4.1.1 题目
   <a class="anchor" href="#411-%e9%a2%98%e7%9b%ae">#</a>
+</h4>
+<p>给你一个由 &lsquo;1&rsquo;（陆地）和 &lsquo;0&rsquo;（水）组成的的二维网格，请你计算网格中岛屿的数量。</p>
+<p>岛屿总是被水包围，并且每座岛屿只能由水平方向和/或竖直方向上相邻的陆地连接形成。</p>
+<p>此外，你可以假设该网格的四条边均被水包围。</p>
+<p><strong>示例 1：</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">输入：grid = [
+[&#34;1&#34;,&#34;1&#34;,&#34;1&#34;,&#34;1&#34;,&#34;0&#34;],
+[&#34;1&#34;,&#34;1&#34;,&#34;0&#34;,&#34;1&#34;,&#34;0&#34;],
+[&#34;1&#34;,&#34;1&#34;,&#34;0&#34;,&#34;0&#34;,&#34;0&#34;],
+[&#34;0&#34;,&#34;0&#34;,&#34;0&#34;,&#34;0&#34;,&#34;0&#34;]
+]
+输出：1
+</code></pre></div><p><strong>示例 2：</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">输入：grid = [
+[&#34;1&#34;,&#34;1&#34;,&#34;0&#34;,&#34;0&#34;,&#34;0&#34;],
+[&#34;1&#34;,&#34;1&#34;,&#34;0&#34;,&#34;0&#34;,&#34;0&#34;],
+[&#34;0&#34;,&#34;0&#34;,&#34;1&#34;,&#34;0&#34;,&#34;0&#34;],
+[&#34;0&#34;,&#34;0&#34;,&#34;0&#34;,&#34;1&#34;,&#34;1&#34;]
+]
+输出：3
+</code></pre></div><p><strong>提示：</strong></p>
+<ul>
+<li>m == grid.length</li>
+<li>n == grid[i].length</li>
+<li>1 &lt;= m, n &lt;= 300</li>
+<li>grid[i][j] 的值为 &lsquo;0&rsquo; 或 &lsquo;1&rsquo;</li>
+</ul>
+<h4 id="412-问题分析">
+  4.1.2 问题分析
+  <a class="anchor" href="#412-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
+</h4>
+<ol>
+<li>这个直接根据模板进行修改一下即可，同时需要注意的是：
+<ol>
+<li><strong>只要当遍历到的点是陆地的话才会开始执行 <code>dfs()</code> 函数</strong>，因此<strong>每当遍历一个陆地的点</strong>，<strong>岛屿数量看定会加 1</strong>。</li>
+<li><strong>在 <code>dfs()</code> 函数中</strong>，<strong>会将已经遍历过的陆地标记为已遍历</strong>，因此<strong>下一次遍历到这块已遍历过的陆地时</strong>，<strong>会直接返回</strong>。</li>
+</ol>
+</li>
+</ol>
+<h4 id="413-参考代码">
+  4.1.3 参考代码
+  <a class="anchor" href="#413-%e5%8f%82%e8%80%83%e4%bb%a3%e7%a0%81">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 200. 岛屿数量
+</span><span style="color:#75715e"> * @param grid  网格
+</span><span style="color:#75715e"> * @return  网格中岛屿的数量
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">numIslands</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[][]</span> grid<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>grid<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;1&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                dfs<span style="color:#f92672">(</span>grid<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> j<span style="color:#f92672">);</span>
+                res<span style="color:#f92672">++;</span>  <span style="color:#75715e">/*将当前岛屿数量加 1*/</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 判断点 (r, c) 是否在网格范围内
+</span><span style="color:#75715e"> * @param grid  网格
+</span><span style="color:#75715e"> * @param r 横坐标
+</span><span style="color:#75715e"> * @param c 纵坐标
+</span><span style="color:#75715e"> * @return  (r, c) 是否在网格范围内
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">inArea</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[][]</span> grid<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> r<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> r <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> r <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&amp;&amp;</span> c <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> c <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 网格深度优先遍历
+</span><span style="color:#75715e"> * @param grid  网格
+</span><span style="color:#75715e"> * @param r 横坐标
+</span><span style="color:#75715e"> * @param c 纵坐标
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[][]</span> grid<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> r<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>inArea<span style="color:#f92672">(</span>grid<span style="color:#f92672">,</span> r<span style="color:#f92672">,</span> c<span style="color:#f92672">))</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span><span style="color:#f92672">;}</span>
+
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>grid<span style="color:#f92672">[</span>r<span style="color:#f92672">][</span>c<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;1&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span><span style="color:#f92672">;}</span>
+
+    grid<span style="color:#f92672">[</span>r<span style="color:#f92672">][</span>c<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;2&#39;</span><span style="color:#f92672">;</span>
+
+    dfs<span style="color:#f92672">(</span>grid<span style="color:#f92672">,</span> r <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> c<span style="color:#f92672">);</span>
+    dfs<span style="color:#f92672">(</span>grid<span style="color:#f92672">,</span> r <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> c<span style="color:#f92672">);</span>
+    dfs<span style="color:#f92672">(</span>grid<span style="color:#f92672">,</span> r<span style="color:#f92672">,</span> c <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+    dfs<span style="color:#f92672">(</span>grid<span style="color:#f92672">,</span> r<span style="color:#f92672">,</span> c <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="42-岛屿的最大面积">
+  4.2 岛屿的最大面积
+  <a class="anchor" href="#42-%e5%b2%9b%e5%b1%bf%e7%9a%84%e6%9c%80%e5%a4%a7%e9%9d%a2%e7%a7%af">#</a>
+</h3>
+<h4 id="421-题目">
+  4.2.1 题目
+  <a class="anchor" href="#421-%e9%a2%98%e7%9b%ae">#</a>
 </h4>
 <p>给定一个包含了一些 0 和 1 的非空二维数组 grid 。</p>
 <p>一个 岛屿 是由一些相邻的 1 (代表土地) 构成的组合，这里的「相邻」要求两个 1 必须在水平或者竖直方向上相邻。你可以假设 grid 的四个边缘都被 0（代表水）包围着。</p>
@@ -3419,9 +3761,9 @@ https://github.com/alex-shpak/hugo-book
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">[[0,0,0,0,0,0,0,0]]
 </code></pre></div><p>对于上面这个给定的矩阵, 返回 0。</p>
 <p><strong>注意:</strong> 给定的矩阵 grid 的长度和宽度都不超过 50。</p>
-<h4 id="412-问题分析">
-  4.1.2 问题分析
-  <a class="anchor" href="#412-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
+<h4 id="422-问题分析">
+  4.2.2 问题分析
+  <a class="anchor" href="#422-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
 </h4>
 <ol>
 <li>
@@ -3458,9 +3800,9 @@ https://github.com/alex-shpak/hugo-book
 <span style="color:#f92672">}</span>
 </code></pre></div></li>
 </ol>
-<h4 id="413-参考代码">
-  4.1.3 参考代码
-  <a class="anchor" href="#413-%e5%8f%82%e8%80%83%e4%bb%a3%e7%a0%81">#</a>
+<h4 id="423-参考代码">
+  4.2.3 参考代码
+  <a class="anchor" href="#423-%e5%8f%82%e8%80%83%e4%bb%a3%e7%a0%81">#</a>
 </h4>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * 判断陆地是否超出岛屿范围
@@ -3519,33 +3861,33 @@ https://github.com/alex-shpak/hugo-book
     <span style="color:#f92672">}</span>
     <span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><h4 id="414-题目扩展">
-  4.1.4 题目扩展
-  <a class="anchor" href="#414-%e9%a2%98%e7%9b%ae%e6%89%a9%e5%b1%95">#</a>
+</code></pre></div><h4 id="424-题目扩展">
+  4.2.4 题目扩展
+  <a class="anchor" href="#424-%e9%a2%98%e7%9b%ae%e6%89%a9%e5%b1%95">#</a>
 </h4>
-4.1.4.1 <h5 id="4141-最大正方形httpsnotebookgraysontopproject-21doc-343">
+4.2.4.1 <h5 id="4241-最大正方形httpsnotebookgraysontopproject-21doc-343">
   
   <a href="https://notebook.grayson.top/project-21/doc-343">最大正方形</a>
-  <a class="anchor" href="#4141-%e6%9c%80%e5%a4%a7%e6%ad%a3%e6%96%b9%e5%bd%a2httpsnotebookgraysontopproject-21doc-343">#</a>
+  <a class="anchor" href="#4241-%e6%9c%80%e5%a4%a7%e6%ad%a3%e6%96%b9%e5%bd%a2httpsnotebookgraysontopproject-21doc-343">#</a>
 </h5>
-<h6 id="41411-问题分析">
-  4.1.4.1.1 问题分析
-  <a class="anchor" href="#41411-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
+<h6 id="42411-问题分析">
+  4.2.4.1.1 问题分析
+  <a class="anchor" href="#42411-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
 </h6>
 <ol>
 <li>
 <p>该题目也属于<strong>网格中寻找最值</strong>类型的题目，可以用<strong>DFS</strong>来实现，也可以用<strong>动态规划</strong>来实现，本文选择的是动态规划的方式来实现。</p>
 </li>
 <li>
-<p>该题目中$dp$数组的含义为$dp[i][j]$<strong>表示以点$matrix[i][j]$为起点的只包含 <code>'1'</code>的最大正方形的面积</strong>，且：</p>
+<p>该题目中 $dp$ 数组的含义为 $dp[i][j]$<strong>表示以点 $matrix[i][j]$ 为起点的只包含 <code>'1'</code> 的最大正方形的面积</strong>，且：</p>
 <p>$$
-dp\lbrack i\rbrack\lbrack j\rbrack=\left{\begin{array}{lc}0&amp;matrix\lbrack i\rbrack\lbrack j\rbrack=&lsquo;0&rsquo;\min(p\lbrack i\rbrack\lbrack j;+;1\rbrack,;dp\lbrack i;+;1\rbrack\lbrack j;+;1\rbrack,;dp\lbrack i;+;1\rbrack\lbrack j\rbrack)&amp;matrix\lbrack i\rbrack\lbrack j\rbrack=&lsquo;1&rsquo;\end{array}\right.
+dp\lbrack i\rbrack\lbrack j\rbrack=\left{\begin{array}{lc}0&amp;matrix\lbrack i\rbrack\lbrack j\rbrack=&lsquo;0&rsquo;\min(dp\lbrack i\rbrack\lbrack j;+;1\rbrack,;dp\lbrack i;+;1\rbrack\lbrack j;+;1\rbrack,;dp\lbrack i;+;1\rbrack\lbrack j\rbrack)&amp;matrix\lbrack i\rbrack\lbrack j\rbrack=&lsquo;1&rsquo;\end{array}\right.
 $$</p>
 </li>
 </ol>
-<h6 id="41412-参考代码">
-  4.1.4.1.2 参考代码
-  <a class="anchor" href="#41412-%e5%8f%82%e8%80%83%e4%bb%a3%e7%a0%81">#</a>
+<h6 id="42412-参考代码">
+  4.2.4.1.2 参考代码
+  <a class="anchor" href="#42412-%e5%8f%82%e8%80%83%e4%bb%a3%e7%a0%81">#</a>
 </h6>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * 221. 最大正方形
@@ -3564,26 +3906,22 @@ $$</p>
         <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">;</span> j<span style="color:#f92672">--)</span> <span style="color:#f92672">{</span>
             <span style="color:#75715e">//  base case
 </span><span style="color:#75715e"></span>            <span style="color:#75715e">//  对矩阵右下角的元素进行初始化
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">==</span> m <span style="color:#f92672">-</span> 1 <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">==</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>matrix<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;1&#39;</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> 0<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">==</span> m <span style="color:#f92672">-</span> 2 <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">==</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>matrix<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;1&#39;</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> 0<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">==</span> m <span style="color:#f92672">-</span> 1 <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">==</span> n <span style="color:#f92672">-</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>matrix<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;1&#39;</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> 0<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>matrix<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>
+                    <span style="color:#f92672">(</span>i <span style="color:#f92672">==</span> m <span style="color:#f92672">-</span> 1 <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">==</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">||</span>
+                    <span style="color:#f92672">(</span>i <span style="color:#f92672">==</span> m <span style="color:#f92672">-</span> 2 <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">==</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">||</span>
+                    <span style="color:#f92672">(</span>i <span style="color:#f92672">==</span> m <span style="color:#f92672">-</span> 1 <span style="color:#f92672">&amp;&amp;</span> j <span style="color:#f92672">==</span> n <span style="color:#f92672">-</span> 2<span style="color:#f92672">)</span>
+            <span style="color:#f92672">)</span> <span style="color:#f92672">{</span>dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;}</span>
+            <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
 
                 <span style="color:#75715e">//  分别以当前点 matrix[i][j] 的左边（matrix[i][j + 1]）、对角线（matrix[i + 1][j + 1]）、下边（matrix[i + 1][j]）为起点的只包含 &#39;1&#39; 的最大正方形的面积的的最小值
 </span><span style="color:#75715e"></span>                <span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>
                         Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j <span style="color:#f92672">+</span> 1<span style="color:#f92672">],</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>j <span style="color:#f92672">+</span> 1<span style="color:#f92672">]),</span>
                         dp<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span>
                 <span style="color:#f92672">);</span>
-                <span style="color:#75715e">//  如果 matrix[i][j] 为 &#39;0&#39;，则 dp[i][j] = 0
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>matrix<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-                <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                    <span style="color:#75715e">//  如果 matrix[i][j] 不为 &#39;0&#39;，则 dp[i][j] 等于上面求得的最大面积的最小值对应边长加1后对应的正方形的面积
-</span><span style="color:#75715e"></span>                    dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">pow</span><span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">sqrt</span><span style="color:#f92672">(</span>min<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> 2<span style="color:#f92672">);</span>
-                <span style="color:#f92672">}</span>
+                <span style="color:#75715e">//  dp[i][j] 等于上面求得的最大面积的最小值对应边长加 1 后对应的正方形的面积
+</span><span style="color:#75715e"></span>                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">pow</span><span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">sqrt</span><span style="color:#f92672">(</span>min<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> 2<span style="color:#f92672">);</span>
             <span style="color:#f92672">}</span>
 
             <span style="color:#75715e">//  res 等于 dp[i][j] 中的最大值
@@ -3594,13 +3932,13 @@ $$</p>
     <span style="color:#75715e">//  返回最后结果
 </span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><h3 id="42-填海造陆问题">
-  4.2 填海造陆问题
-  <a class="anchor" href="#42-%e5%a1%ab%e6%b5%b7%e9%80%a0%e9%99%86%e9%97%ae%e9%a2%98">#</a>
+</code></pre></div><h3 id="43-填海造陆问题">
+  4.3 填海造陆问题
+  <a class="anchor" href="#43-%e5%a1%ab%e6%b5%b7%e9%80%a0%e9%99%86%e9%97%ae%e9%a2%98">#</a>
 </h3>
-<h4 id="421-题目">
-  4.2.1 题目
-  <a class="anchor" href="#421-%e9%a2%98%e7%9b%ae">#</a>
+<h4 id="431-题目">
+  4.3.1 题目
+  <a class="anchor" href="#431-%e9%a2%98%e7%9b%ae">#</a>
 </h4>
 <p>给你一个大小为 n x n 二进制矩阵 grid 。最多 只能将一格 0 变成 1 。</p>
 <p>返回执行此操作后，grid 中最大的岛屿面积是多少？</p>
@@ -3617,16 +3955,16 @@ $$</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">输入: grid = [[1, 1], [1, 1]]
 输出: 4
 解释: 没有 0 可以让我们变成 1，面积依然为 4。
-</code></pre></div><p>** 提示：**</p>
+</code></pre></div><p><strong>提示：</strong></p>
 <ul>
 <li>n == grid.length</li>
 <li>n == grid[i].length</li>
 <li>1 &lt;= n &lt;= 500</li>
 <li>grid[i][j] 为 0 或 1</li>
 </ul>
-<h4 id="422-问题分析">
-  4.2.2 问题分析
-  <a class="anchor" href="#422-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
+<h4 id="432-问题分析">
+  4.3.2 问题分析
+  <a class="anchor" href="#432-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
 </h4>
 <ol>
 <li>这道题是
@@ -3646,18 +3984,20 @@ $$</p>
 </li>
 <li>这道题的基本思路就是这样，具体的代码还有一些需要注意的细节，但和本文的主题已经联系不大，这个会在后面有时间的时候在完善具体的代码实现。</li>
 </ol>
-<h3 id="43-岛屿的周长">
-  4.3 岛屿的周长
-  <a class="anchor" href="#43-%e5%b2%9b%e5%b1%bf%e7%9a%84%e5%91%a8%e9%95%bf">#</a>
+<h3 id="44-岛屿的周长">
+  4.4 岛屿的周长
+  <a class="anchor" href="#44-%e5%b2%9b%e5%b1%bf%e7%9a%84%e5%91%a8%e9%95%bf">#</a>
 </h3>
-<h4 id="431-题目">
-  4.3.1 题目
-  <a class="anchor" href="#431-%e9%a2%98%e7%9b%ae">#</a>
+<h4 id="441-题目">
+  4.4.1 题目
+  <a class="anchor" href="#441-%e9%a2%98%e7%9b%ae">#</a>
 </h4>
 <p>给定一个 row x col 的二维网格地图 grid ，其中：grid[i][j] = 1 表示陆地， grid[i][j] = 0 表示水域。</p>
 <p>网格中的格子 水平和垂直 方向相连（对角线方向不相连）。整个网格被水完全包围，但其中恰好有一个岛屿（或者说，一个或多个表示陆地的格子相连组成的岛屿）。</p>
 <p>岛屿中没有“湖”（“湖” 指水域在岛屿内部且不和岛屿周围的水相连）。格子是边长为 1 的正方形。网格为长方形，且宽度和高度均不超过 100 。计算这个岛屿的周长。</p>
 <p><strong>示例 1：</strong></p>
+<p>
+  <img src="../../../media/202108/2021-08-15_1935140.4830911464461979.png" alt="" /></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">输入：grid = [[0,1,0,0],[1,1,1,0],[0,1,0,0],[1,1,0,0]]
 输出：16
 解释：它的周长是上面图片中的 16 个黄色的边
@@ -3674,9 +4014,9 @@ $$</p>
 <li>1 &lt;= row, col &lt;= 100</li>
 <li>grid[i][j] 为 0 或 1</li>
 </ul>
-<h4 id="432-问题分析">
-  4.3.2 问题分析
-  <a class="anchor" href="#432-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
+<h4 id="442-问题分析">
+  4.4.2 问题分析
+  <a class="anchor" href="#442-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
 </h4>
 <ol>
 <li>
@@ -3686,8 +4026,11 @@ $$</p>
 <p>我们可以将岛屿的周长分为两类：</p>
 <ol>
 <li><strong>与网格边界相邻的周长：</strong><code>dfs</code> 函数因为<strong>坐标 $(r,c)$ 超出网格范围而返回的时候就经过了一条相应的边</strong>。</li>
-<li><strong>与海洋格子相邻的周长：</strong><code>dfs</code> 函数因为<strong>当前格子是海洋格子而返回的时候就经过了一条相应的边</strong>。</li>
+<li><strong>与海洋格子相邻的周长：</strong><code>dfs</code> 函数因为<strong>当前格子是海洋格子而返回的时候就经过了一条相应的边</strong>。
+  <img src="../../../media/202108/2021-08-15_1936420.45840867566908317.png" alt="将岛屿周长中的边分为两类" /></li>
 </ol>
+</li>
+<li>
 <p>这样，我们就<strong>把岛屿周长和 DFS 遍历联系起来了</strong>，具体的代码如下：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * 采用 DFS 遍历求陆地所在岛屿的周长
@@ -3723,11 +4066,23 @@ $$</p>
 <span style="color:#f92672">}</span>
 </code></pre></div></li>
 </ol>
-<h4 id="433-参考代码">
-  4.3.3 参考代码
-  <a class="anchor" href="#433-%e5%8f%82%e8%80%83%e4%bb%a3%e7%a0%81">#</a>
+<h4 id="443-参考代码">
+  4.4.3 参考代码
+  <a class="anchor" href="#443-%e5%8f%82%e8%80%83%e4%bb%a3%e7%a0%81">#</a>
 </h4>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 判断陆地是否超出岛屿范围
+</span><span style="color:#75715e"> * @param grid  岛屿数组
+</span><span style="color:#75715e"> * @param r 陆地横坐标
+</span><span style="color:#75715e"> * @param c 陆地纵坐标
+</span><span style="color:#75715e"> * @return  陆地是否超出岛屿范围
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">inArea</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> grid<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> r<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> r <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> r <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span>
+            <span style="color:#f92672">&amp;&amp;</span> c <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> c <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
 </span><span style="color:#75715e"> * 采用 DFS 遍历求陆地所在岛屿的周长
 </span><span style="color:#75715e"> * @param grid  岛屿数组
 </span><span style="color:#75715e"> * @param r 陆地横坐标
@@ -3759,6 +4114,140 @@ $$</p>
             <span style="color:#f92672">+</span> dfs<span style="color:#f92672">(</span>grid<span style="color:#f92672">,</span> r<span style="color:#f92672">,</span> c <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span>
             <span style="color:#f92672">+</span>dfs<span style="color:#f92672">(</span>grid<span style="color:#f92672">,</span> r<span style="color:#f92672">,</span> c <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>
 <span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 463. 岛屿的周长
+</span><span style="color:#75715e"> * @param grid  岛屿
+</span><span style="color:#75715e"> * @return  岛屿的周长
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">islandPerimeter</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> grid<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>grid<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#75715e">//  题目限制只有一个岛屿，计算一个即可
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> dfs<span style="color:#f92672">(</span>grid<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> j<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>4.5 <h3 id="45-单词搜索httpsleetcode-cncomproblemsword-search">
+  
+  <a href="https://leetcode-cn.com/problems/word-search">单词搜索</a>
+  <a class="anchor" href="#45-%e5%8d%95%e8%af%8d%e6%90%9c%e7%b4%a2httpsleetcode-cncomproblemsword-search">#</a>
+</h3>
+<h4 id="451-题目">
+  4.5.1 题目
+  <a class="anchor" href="#451-%e9%a2%98%e7%9b%ae">#</a>
+</h4>
+<p>给定一个 m x n 二维字符网格 board 和一个字符串单词 word 。如果 word 存在于网格中，返回 true ；否则，返回 false 。</p>
+<p>单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。</p>
+<p><strong>示例 1：</strong></p>
+<p>
+  <img src="../../../media/202108/2021-08-28_1951260.6416354552062601.png" alt="" /></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">输入：board = [[&#34;A&#34;,&#34;B&#34;,&#34;C&#34;,&#34;E&#34;],[&#34;S&#34;,&#34;F&#34;,&#34;C&#34;,&#34;S&#34;],[&#34;A&#34;,&#34;D&#34;,&#34;E&#34;,&#34;E&#34;]], word = &#34;ABCCED&#34;
+输出：true
+</code></pre></div><p><strong>示例 2：</strong></p>
+<p>
+  <img src="../../../media/202108/2021-08-28_1951340.03564141591250025.png" alt="" /></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">输入：board = [[&#34;A&#34;,&#34;B&#34;,&#34;C&#34;,&#34;E&#34;],[&#34;S&#34;,&#34;F&#34;,&#34;C&#34;,&#34;S&#34;],[&#34;A&#34;,&#34;D&#34;,&#34;E&#34;,&#34;E&#34;]], word = &#34;SEE&#34;
+输出：true
+</code></pre></div><p><strong>示例 3：</strong></p>
+<p>
+  <img src="../../../media/202108/2021-08-28_1951460.9733885442865199.png" alt="" /></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">输入：board = [[&#34;A&#34;,&#34;B&#34;,&#34;C&#34;,&#34;E&#34;],[&#34;S&#34;,&#34;F&#34;,&#34;C&#34;,&#34;S&#34;],[&#34;A&#34;,&#34;D&#34;,&#34;E&#34;,&#34;E&#34;]], word = &#34;ABCB&#34;
+输出：false
+</code></pre></div><p><strong>提示：</strong></p>
+<ul>
+<li>m == board.length</li>
+<li>n = board[i].length</li>
+<li>1 &lt;= m, n &lt;= 6</li>
+<li>1 &lt;= word.length &lt;= 15</li>
+<li>board 和 word 仅由大小写英文字母组成</li>
+</ul>
+<p><strong>进阶：</strong> 你可以使用搜索剪枝的技术来优化解决方案，使其在 board 更大的情况下可以更快解决问题？</p>
+<h4 id="452-问题分析">
+  4.5.2 问题分析
+  <a class="anchor" href="#452-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
+</h4>
+<ol>
+<li>该题目为<strong>网格搜索</strong>类题目，可以利用<strong>网格DFS</strong>的框架来解决。</li>
+<li>需要注意的是，该题目在遍历的时候<strong>涉及到回退的操作</strong>，因此<strong>需要建立一个数组</strong>，用来<strong>标记当前节点是否使用过</strong>，<strong>如果使用过则直接跳过</strong>，但是最后<strong>如果当前遍历得到的字符串和原来的字符串不相等</strong>，<strong>需要进行回退</strong>，<strong>把刚才标记为使用过的节点标记为未使用</strong>，<strong>相当于原来的节点没有使用</strong>。</li>
+</ol>
+<h4 id="453-参考代码">
+  4.5.3 参考代码
+  <a class="anchor" href="#453-%e5%8f%82%e8%80%83%e4%bb%a3%e7%a0%81">#</a>
+</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//  最后结果
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">boolean</span> res <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 79. 单词搜索
+</span><span style="color:#75715e"> * @param board 二维字符网格
+</span><span style="color:#75715e"> * @param word  字符串单词
+</span><span style="color:#75715e"> * @return  字符串单词是否存在于二维字符网络中
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">exist</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[][]</span> board<span style="color:#f92672">,</span> String word<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> board<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> board<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> used <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>board<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">][</span>board<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
+            dfs<span style="color:#f92672">(</span>board<span style="color:#f92672">,</span> word<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> j<span style="color:#f92672">,</span> index<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>res<span style="color:#f92672">)</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 深度优先遍历判断字符串单词是否存在于二维字符网络中
+</span><span style="color:#75715e"> * @param board 二维字符网格
+</span><span style="color:#75715e"> * @param word  字符串单词
+</span><span style="color:#75715e"> * @param i 当前遍历的二维字符网络中字符的横坐标
+</span><span style="color:#75715e"> * @param j 当前遍历的二维字符网络中字符的纵坐标
+</span><span style="color:#75715e"> * @param index 当前遍历的字符串单词的下标
+</span><span style="color:#75715e"> * @param used  当前遍历的二维字符网络中字符是否使用过
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[][]</span> board<span style="color:#f92672">,</span> String word<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> j<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> index<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> used<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>inArea<span style="color:#f92672">(</span>board<span style="color:#f92672">,</span> word<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> j<span style="color:#f92672">,</span> index<span style="color:#f92672">,</span> used<span style="color:#f92672">))</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span><span style="color:#f92672">;}</span>
+
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">==</span> word<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1 <span style="color:#f92672">&amp;&amp;</span> board<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> word<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> used<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        res <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">//  标记当前字符为已经使用过
+</span><span style="color:#75715e"></span>    used<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>res<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>dfs<span style="color:#f92672">(</span>board<span style="color:#f92672">,</span> word<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> j <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> used<span style="color:#f92672">);}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>res<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>dfs<span style="color:#f92672">(</span>board<span style="color:#f92672">,</span> word<span style="color:#f92672">,</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> j<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> used<span style="color:#f92672">);}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>res<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>dfs<span style="color:#f92672">(</span>board<span style="color:#f92672">,</span> word<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> j <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> used<span style="color:#f92672">);}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>res<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>dfs<span style="color:#f92672">(</span>board<span style="color:#f92672">,</span> word<span style="color:#f92672">,</span> i <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> j<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> used<span style="color:#f92672">);}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>res<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//  如果字符串单词不在于二维字符网络中，则撤销原来的标记
+</span><span style="color:#75715e"></span>        used<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 判断当前遍历的二维字符网络中字符是否在边界内
+</span><span style="color:#75715e"> * @param board 二维字符网格
+</span><span style="color:#75715e"> * @param word  字符串单词
+</span><span style="color:#75715e"> * @param i 当前遍历的二维字符网络中字符的横坐标
+</span><span style="color:#75715e"> * @param j 当前遍历的二维字符网络中字符的纵坐标
+</span><span style="color:#75715e"> * @param index 当前遍历的字符串单词的下标
+</span><span style="color:#75715e"> * @param used  当前遍历的二维字符网络中字符是否使用过
+</span><span style="color:#75715e"> * @return  判断当前遍历的二维字符网络中字符是否在边界内
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">inArea</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[][]</span> board<span style="color:#f92672">,</span> String word<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> j<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> index<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> used<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>i <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">||</span> i <span style="color:#f92672">&gt;=</span> board<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">||</span> j <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">||</span> j <span style="color:#f92672">&gt;=</span> board<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">||</span> index <span style="color:#f92672">&gt;=</span> word<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>used<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>board<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> word<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">))</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 </code></pre></div><h2 id="参考文献">
   参考文献
   <a class="anchor" href="#%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae">#</a>
@@ -3776,6 +4265,8 @@ $$</p>
   <a href="https://leetcode-cn.com/problems/island-perimeter">463. 岛屿的周长</a>。</li>
 <li>
   <a href="https://leetcode-cn.com/problems/maximal-square">221. 最大正方形</a>。</li>
+<li>
+  <a href="https://leetcode-cn.com/problems/word-search">79. 单词搜索</a>。</li>
 </ol>
 </article>
  
@@ -3852,7 +4343,7 @@ $$</p>
   
 <nav id="TableOfContents">
   <ul>
-    <li><a href="#岛屿问题">岛屿问题</a>
+    <li>
       <ul>
         <li><a href="#1-前言">1 前言</a></li>
         <li><a href="#2-网格问题的基本概念">2 网格问题的基本概念</a></li>
@@ -3864,34 +4355,48 @@ $$</p>
         </li>
         <li><a href="#4-相关题目">4 相关题目</a>
           <ul>
-            <li><a href="#41-岛屿的最大面积">4.1 岛屿的最大面积</a>
+            <li><a href="#41-岛屿数量">4.1 岛屿数量</a>
               <ul>
                 <li><a href="#411-题目">4.1.1 题目</a></li>
                 <li><a href="#412-问题分析">4.1.2 问题分析</a></li>
                 <li><a href="#413-参考代码">4.1.3 参考代码</a></li>
-                <li><a href="#414-题目扩展">4.1.4 题目扩展</a>
+              </ul>
+            </li>
+            <li><a href="#42-岛屿的最大面积">4.2 岛屿的最大面积</a>
+              <ul>
+                <li><a href="#421-题目">4.2.1 题目</a></li>
+                <li><a href="#422-问题分析">4.2.2 问题分析</a></li>
+                <li><a href="#423-参考代码">4.2.3 参考代码</a></li>
+                <li><a href="#424-题目扩展">4.2.4 题目扩展</a>
                   <ul>
-                    <li><a href="#4141-最大正方形httpsnotebookgraysontopproject-21doc-343">4.1.4.1 <a href="https://notebook.grayson.top/project-21/doc-343">最大正方形</a></a>
+                    <li><a href="#4241-最大正方形httpsnotebookgraysontopproject-21doc-343">4.2.4.1 <a href="https://notebook.grayson.top/project-21/doc-343">最大正方形</a></a>
                       <ul>
-                        <li><a href="#41411-问题分析">4.1.4.1.1 问题分析</a></li>
-                        <li><a href="#41412-参考代码">4.1.4.1.2 参考代码</a></li>
+                        <li><a href="#42411-问题分析">4.2.4.1.1 问题分析</a></li>
+                        <li><a href="#42412-参考代码">4.2.4.1.2 参考代码</a></li>
                       </ul>
                     </li>
                   </ul>
                 </li>
               </ul>
             </li>
-            <li><a href="#42-填海造陆问题">4.2 填海造陆问题</a>
-              <ul>
-                <li><a href="#421-题目">4.2.1 题目</a></li>
-                <li><a href="#422-问题分析">4.2.2 问题分析</a></li>
-              </ul>
-            </li>
-            <li><a href="#43-岛屿的周长">4.3 岛屿的周长</a>
+            <li><a href="#43-填海造陆问题">4.3 填海造陆问题</a>
               <ul>
                 <li><a href="#431-题目">4.3.1 题目</a></li>
                 <li><a href="#432-问题分析">4.3.2 问题分析</a></li>
-                <li><a href="#433-参考代码">4.3.3 参考代码</a></li>
+              </ul>
+            </li>
+            <li><a href="#44-岛屿的周长">4.4 岛屿的周长</a>
+              <ul>
+                <li><a href="#441-题目">4.4.1 题目</a></li>
+                <li><a href="#442-问题分析">4.4.2 问题分析</a></li>
+                <li><a href="#443-参考代码">4.4.3 参考代码</a></li>
+              </ul>
+            </li>
+            <li><a href="#45-单词搜索httpsleetcode-cncomproblemsword-search">4.5 <a href="https://leetcode-cn.com/problems/word-search">单词搜索</a></a>
+              <ul>
+                <li><a href="#451-题目">4.5.1 题目</a></li>
+                <li><a href="#452-问题分析">4.5.2 问题分析</a></li>
+                <li><a href="#453-参考代码">4.5.3 参考代码</a></li>
               </ul>
             </li>
           </ul>
