@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="1 简介 #   NIO 中的 N 可以理解为 Non-Blocking，是一种同步非阻塞的 I/O 模型，在 JDK 1.4 中引入了 NIO 框架，对应于 java.nio 包，提供了 Channel、Selector、Buffer 等抽象。 他支持面向缓冲的、基于通道的 I/O 操作方法，提供了与传统 I/O 模型中的 Socket 和 ServerSocket 相对应的 SocketChannel 和 ServerSocketChannel 两种不同的套接字通道实现，这两种通道都支持阻塞和非阻塞两种模式：  阻塞模式就像传统中的支持一样，比较简单，但是性能和可靠性都不好，一般用于低负载、低并发的应用程序，以此来提升开发速度和可维护性。 非阻塞模式正好与之相反，一般用于高负载、高并发的（网络）应用，以此来提升高性能和可靠性。    2 BIO、NIO、AIO 的区别 #   底层原理可参考 五种 IO 模型，下面介绍的主要是 Java 中 BIO、NIO、AIO 的区别。
+<meta name="description" content="概述 #  1 简介 #   NIO 中的 N 可以理解为 Non-Blocking，是一种同步非阻塞的 I/O 模型，在 JDK 1.4 中引入了 NIO 框架，对应于 java.nio 包，提供了 Channel、Selector、Buffer 等抽象。 他支持面向缓冲的、基于通道的 I/O 操作方法，提供了与传统 I/O 模型中的 Socket 和 ServerSocket 相对应的 SocketChannel 和 ServerSocketChannel 两种不同的套接字通道实现，这两种通道都支持阻塞和非阻塞两种模式：  阻塞模式就像传统中的支持一样，比较简单，但是性能和可靠性都不好，一般用于低负载、低并发的应用程序，以此来提升开发速度和可维护性。 非阻塞模式正好与之相反，一般用于高负载、高并发的（网络）应用，以此来提升高性能和可靠性。    2 BIO、NIO、AIO 的区别 #   底层原理可参考 五种 IO 模型，下面介绍的主要是 Java 中 BIO、NIO、AIO 的区别。
  2.1 BIO 是阻塞的，NIO 是非阻塞的 #   BIO 的各种流是阻塞的，这就意味着，当一个线程调用 read() 或 write() 时，该线程被阻塞，直到有一些数据被读取，或数据完全写入，在此期间，该线程不能再干其他任何事，因此在任何时候都可能有大量的线程处于休眠状态，只是等待输入或者输出就绪，这可以算为对资源的一种浪费， NIO 使我们可以进行非阻塞IO 操作，比如说，单线程从通道读取数据到 Buffer，同时可以继续做别的事，当数据读取到 Buffer 中后，线程再进行处理数据，写数据也是一样的，一个线程请求写入一些数据到某通道，但不需要等待他完全写入，这个线程可以同时去做别的事情，这样可以提高线程的利用效率。  2.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="1 简介 #   NIO 中的 N 可以理解为 Non-Blocking，是一种同步非阻塞的 I/O 模型，在 JDK 1.4 中引入了 NIO 框架，对应于 java.nio 包，提供了 Channel、Selector、Buffer 等抽象。 他支持面向缓冲的、基于通道的 I/O 操作方法，提供了与传统 I/O 模型中的 Socket 和 ServerSocket 相对应的 SocketChannel 和 ServerSocketChannel 两种不同的套接字通道实现，这两种通道都支持阻塞和非阻塞两种模式：  阻塞模式就像传统中的支持一样，比较简单，但是性能和可靠性都不好，一般用于低负载、低并发的应用程序，以此来提升开发速度和可维护性。 非阻塞模式正好与之相反，一般用于高负载、高并发的（网络）应用，以此来提升高性能和可靠性。    2 BIO、NIO、AIO 的区别 #   底层原理可参考 五种 IO 模型，下面介绍的主要是 Java 中 BIO、NIO、AIO 的区别。
+<meta property="og:description" content="概述 #  1 简介 #   NIO 中的 N 可以理解为 Non-Blocking，是一种同步非阻塞的 I/O 模型，在 JDK 1.4 中引入了 NIO 框架，对应于 java.nio 包，提供了 Channel、Selector、Buffer 等抽象。 他支持面向缓冲的、基于通道的 I/O 操作方法，提供了与传统 I/O 模型中的 Socket 和 ServerSocket 相对应的 SocketChannel 和 ServerSocketChannel 两种不同的套接字通道实现，这两种通道都支持阻塞和非阻塞两种模式：  阻塞模式就像传统中的支持一样，比较简单，但是性能和可靠性都不好，一般用于低负载、低并发的应用程序，以此来提升开发速度和可维护性。 非阻塞模式正好与之相反，一般用于高负载、高并发的（网络）应用，以此来提升高性能和可靠性。    2 BIO、NIO、AIO 的区别 #   底层原理可参考 五种 IO 模型，下面介绍的主要是 Java 中 BIO、NIO、AIO 的区别。
  2.1 BIO 是阻塞的，NIO 是非阻塞的 #   BIO 的各种流是阻塞的，这就意味着，当一个线程调用 read() 或 write() 时，该线程被阻塞，直到有一些数据被读取，或数据完全写入，在此期间，该线程不能再干其他任何事，因此在任何时候都可能有大量的线程处于休眠状态，只是等待输入或者输出就绪，这可以算为对资源的一种浪费， NIO 使我们可以进行非阻塞IO 操作，比如说，单线程从通道读取数据到 Buffer，同时可以继续做别的事，当数据读取到 Buffer 中后，线程再进行处理数据，写数据也是一样的，一个线程请求写入一些数据到某通道，但不需要等待他完全写入，这个线程可以同时去做别的事情，这样可以提高线程的利用效率。  2." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/java/4NIO/4.1-%E6%A6%82%E8%BF%B0/" /><meta property="article:section" content="docs" />
@@ -18,7 +18,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3355,7 +3355,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#概述">概述</a>
       <ul>
         <li><a href="#1-简介">1 简介</a></li>
         <li><a href="#2-bionioaio-的区别">2 BIO、NIO、AIO 的区别</a>
@@ -3383,7 +3383,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h2 id="1-简介">
+  <article class="markdown"><h1 id="概述">
+  概述
+  <a class="anchor" href="#%e6%a6%82%e8%bf%b0">#</a>
+</h1>
+<h2 id="1-简介">
   1 简介
   <a class="anchor" href="#1-%e7%ae%80%e4%bb%8b">#</a>
 </h2>
@@ -3579,7 +3583,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#概述">概述</a>
       <ul>
         <li><a href="#1-简介">1 简介</a></li>
         <li><a href="#2-bionioaio-的区别">2 BIO、NIO、AIO 的区别</a>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="1 题目 #  实现获取 下一个排列 的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列（即，组合出下一个更大的整数）。
+<meta name="description" content="下一个排列 #  1 题目 #  实现获取 下一个排列 的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列（即，组合出下一个更大的整数）。
 如果不存在下一个更大的排列，则将数字重新排列成最小的排列（即升序排列）。
 必须 原地 修改，只允许使用额外常数空间。
 示例 1：
@@ -13,7 +13,7 @@
 输入：nums = [1] 输出：[1] 提示：
  1 &lt;= nums.length &lt;= 100 0 &lt;= nums[i] &lt;= 100  2 问题分析 #   这道题可以按照 维基百科上的解题思路来解决，具体如下：  先找出最大的索引 $k$，满足 $nums[k] &lt; nums[k &#43; 1]$，如果不存在，就翻转整个数组。 再找出另一个最大索引 $l$，满足 $nums[l] &gt; nums[k]$。 交换 $nums[l]$ 和 $nums[k]$。 最后反转 $nums[k&#43;1]$ 后面的元素。    3 参考代码 #  /** * 31.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="1 题目 #  实现获取 下一个排列 的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列（即，组合出下一个更大的整数）。
+<meta property="og:description" content="下一个排列 #  1 题目 #  实现获取 下一个排列 的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列（即，组合出下一个更大的整数）。
 如果不存在下一个更大的排列，则将数字重新排列成最小的排列（即升序排列）。
 必须 原地 修改，只允许使用额外常数空间。
 示例 1：
@@ -32,7 +32,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3369,7 +3369,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#下一个排列">下一个排列</a>
       <ul>
         <li><a href="#1-题目">1 题目</a></li>
         <li><a href="#2-问题分析">2 问题分析</a></li>
@@ -3389,7 +3389,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h2 id="1-题目">
+  <article class="markdown"><h1 id="下一个排列">
+  下一个排列
+  <a class="anchor" href="#%e4%b8%8b%e4%b8%80%e4%b8%aa%e6%8e%92%e5%88%97">#</a>
+</h1>
+<h2 id="1-题目">
   1 题目
   <a class="anchor" href="#1-%e9%a2%98%e7%9b%ae">#</a>
 </h2>
@@ -3570,7 +3574,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#下一个排列">下一个排列</a>
       <ul>
         <li><a href="#1-题目">1 题目</a></li>
         <li><a href="#2-问题分析">2 问题分析</a></li>

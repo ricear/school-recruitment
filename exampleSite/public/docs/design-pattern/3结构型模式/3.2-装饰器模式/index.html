@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="1 含义 #   装饰器模式又称为包装模式，主要以对客户端透明的方式，在不改变对象结构的情况下，可以动态地扩展器功能。  不同于继承，组合可以在运行时进行，所以称之为「动态扩展」，比如在按钮点击时进行一些 log 日志的打印，在绘制 text 文本框时，额外绘制一个滚动条和边框等。
+<meta name="description" content="装饰器模式 #  1 含义 #   装饰器模式又称为包装模式，主要以对客户端透明的方式，在不改变对象结构的情况下，可以动态地扩展器功能。  不同于继承，组合可以在运行时进行，所以称之为「动态扩展」，比如在按钮点击时进行一些 log 日志的打印，在绘制 text 文本框时，额外绘制一个滚动条和边框等。
   装饰器模式是继承关系的一个替代方案，可以在不使用创造更多子类的情况下，扩展对象的功能，就增加功能来说，相比生成子类更加灵活。  组合比继承更加灵活是因为当可拓展的功能很多时，继承方案会产生大量的子类，而组合可以提前写好处理函数，在需要时动态构造，显然更加灵活。
   具体的示例如下：  相框：  照片 &#43; 相框 = 带相框的照片，这背后就是一种装饰器模式，照片具有看的功能，相框具有装饰功能，在我们看照片的基础上，还能看到精心设计的相框，增加了美感，同时相框还可以增加照片的保存时间与安全性。 相框与照片是一种组合关系，任何照片都可以放到相框中，而不是每个照片生成一个特定的相框，显然，组合的方式更加灵活。   带有缓存的文件读写：  假如我们有一个类 FileIO 用来读写文件，但是没有缓存能力，一眼看上去好像新建一个CachedFileIO 用起来更加方便，而CachedIO 的用法是new CachedIO(new FileIO()) 稍微麻烦些。 但如果我们增加一个网络读写类NetworkIO，一个数据库读写类DBIO，此时，继承的方式会使子类数量急速膨胀 ，而组合的方式则非常灵活，生成一个支持缓存的网络读写器，只需要 new CachedIO(new NetworkIO()) 即可，这就是组合灵活的地方。 当然，为了实现这个能力，CachedIO需要与 FileIO、CachedFileIO、CachedIO 继承自同一个类，具备相同的接口。   搭建平台的组件 wrapper：  装饰器模式别名也叫wrapper，wrapper 也经常在前端搭建场景中遇到，当搭建平台加载一个组件时，希望拓展其基础能力，一般会使用 wrapper 层对组件进行嵌套，wrapper 层就是在不改变 API 的基础上，对第三方组件进行增强。      2 结构 #    抽象构件（Component）角色：定义一个抽象接口以规范准备接收扩展功能的目标对象。 具体构件（ConrecteComponent）角色：实现抽象构件，负责具体的行为实现。 抽象装饰（Decorator）角色：实现抽象构件，并包含具体构件的实例，可以通过其子类扩展具体构件的功能。 具体装饰（ConcreteDecoratorA 和 ConcreteDecoratorB）角色：继承抽象装饰角色，传入具体构件对象给到父类，重写抽象构件的方法，在重写的方法里面给具体构件对象添加附加的责任。  3 示例 #    现在有这么一个场景：">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="1 含义 #   装饰器模式又称为包装模式，主要以对客户端透明的方式，在不改变对象结构的情况下，可以动态地扩展器功能。  不同于继承，组合可以在运行时进行，所以称之为「动态扩展」，比如在按钮点击时进行一些 log 日志的打印，在绘制 text 文本框时，额外绘制一个滚动条和边框等。
+<meta property="og:description" content="装饰器模式 #  1 含义 #   装饰器模式又称为包装模式，主要以对客户端透明的方式，在不改变对象结构的情况下，可以动态地扩展器功能。  不同于继承，组合可以在运行时进行，所以称之为「动态扩展」，比如在按钮点击时进行一些 log 日志的打印，在绘制 text 文本框时，额外绘制一个滚动条和边框等。
   装饰器模式是继承关系的一个替代方案，可以在不使用创造更多子类的情况下，扩展对象的功能，就增加功能来说，相比生成子类更加灵活。  组合比继承更加灵活是因为当可拓展的功能很多时，继承方案会产生大量的子类，而组合可以提前写好处理函数，在需要时动态构造，显然更加灵活。
   具体的示例如下：  相框：  照片 &#43; 相框 = 带相框的照片，这背后就是一种装饰器模式，照片具有看的功能，相框具有装饰功能，在我们看照片的基础上，还能看到精心设计的相框，增加了美感，同时相框还可以增加照片的保存时间与安全性。 相框与照片是一种组合关系，任何照片都可以放到相框中，而不是每个照片生成一个特定的相框，显然，组合的方式更加灵活。   带有缓存的文件读写：  假如我们有一个类 FileIO 用来读写文件，但是没有缓存能力，一眼看上去好像新建一个CachedFileIO 用起来更加方便，而CachedIO 的用法是new CachedIO(new FileIO()) 稍微麻烦些。 但如果我们增加一个网络读写类NetworkIO，一个数据库读写类DBIO，此时，继承的方式会使子类数量急速膨胀 ，而组合的方式则非常灵活，生成一个支持缓存的网络读写器，只需要 new CachedIO(new NetworkIO()) 即可，这就是组合灵活的地方。 当然，为了实现这个能力，CachedIO需要与 FileIO、CachedFileIO、CachedIO 继承自同一个类，具备相同的接口。   搭建平台的组件 wrapper：  装饰器模式别名也叫wrapper，wrapper 也经常在前端搭建场景中遇到，当搭建平台加载一个组件时，希望拓展其基础能力，一般会使用 wrapper 层对组件进行嵌套，wrapper 层就是在不改变 API 的基础上，对第三方组件进行增强。      2 结构 #    抽象构件（Component）角色：定义一个抽象接口以规范准备接收扩展功能的目标对象。 具体构件（ConrecteComponent）角色：实现抽象构件，负责具体的行为实现。 抽象装饰（Decorator）角色：实现抽象构件，并包含具体构件的实例，可以通过其子类扩展具体构件的功能。 具体装饰（ConcreteDecoratorA 和 ConcreteDecoratorB）角色：继承抽象装饰角色，传入具体构件对象给到父类，重写抽象构件的方法，在重写的方法里面给具体构件对象添加附加的责任。  3 示例 #    现在有这么一个场景：" />
 <meta property="og:type" content="article" />
@@ -20,7 +20,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3357,7 +3357,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#装饰器模式">装饰器模式</a>
       <ul>
         <li><a href="#1-含义">1 含义</a></li>
         <li><a href="#2-结构">2 结构</a></li>
@@ -3389,7 +3389,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h2 id="1-含义">
+  <article class="markdown"><h1 id="装饰器模式">
+  装饰器模式
+  <a class="anchor" href="#%e8%a3%85%e9%a5%b0%e5%99%a8%e6%a8%a1%e5%bc%8f">#</a>
+</h1>
+<h2 id="1-含义">
   1 含义
   <a class="anchor" href="#1-%e5%90%ab%e4%b9%89">#</a>
 </h2>
@@ -3695,7 +3699,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#装饰器模式">装饰器模式</a>
       <ul>
         <li><a href="#1-含义">1 含义</a></li>
         <li><a href="#2-结构">2 结构</a></li>

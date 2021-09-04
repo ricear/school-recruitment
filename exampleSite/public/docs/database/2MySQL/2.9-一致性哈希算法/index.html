@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="1 传统哈希算法 #  1.1 含义 #   简单地说，哈希就是一个键值对存储，在给定键的情况下，可以非常高效地找到所关联的值，假如我们要根据邮政编码查找城市中的街道名称，一种最简单的实现方式是将此信息以哈希字典的形式进行存储&lt;ZipCode, StreetName&gt;。 当数据太大而无法存储在一个节点或机器上时，系统就会需要多个这样的节点或机器来存储他，比如，使用多个 Web 缓存中间件的系统，对于如何确定哪个key 存储在哪个节点上，最简单的解决方案是使用哈希取模来决定：   给定一个 key，先对 key 进行哈希运算，将其除以系统中的节点数，然后将 key 放入该节点。
+<meta name="description" content="一致性哈希算法 #  1 传统哈希算法 #  1.1 含义 #   简单地说，哈希就是一个键值对存储，在给定键的情况下，可以非常高效地找到所关联的值，假如我们要根据邮政编码查找城市中的街道名称，一种最简单的实现方式是将此信息以哈希字典的形式进行存储&lt;ZipCode, StreetName&gt;。 当数据太大而无法存储在一个节点或机器上时，系统就会需要多个这样的节点或机器来存储他，比如，使用多个 Web 缓存中间件的系统，对于如何确定哪个key 存储在哪个节点上，最简单的解决方案是使用哈希取模来决定：   给定一个 key，先对 key 进行哈希运算，将其除以系统中的节点数，然后将 key 放入该节点。
   在获取 key 时，先对 key 进行哈希运算，将其除以系统中的节点数，然后转到该节点并获取值。
   上述过程对应的哈希算法定义如下：
 # 下面的 N 为节点数 node_number = hash(key) % N   下图描绘了多节点系统中的传统的哈希取模算法，基于该算法可以实现简单的负载均衡。
      1.2 局限性 #  假设初始时有如下对应关系：
  1.2.1 节点减少的场景 #   在分布式多节点系统中，出现故障很常见，任何节点都可能在没有任何事先通知的情况下挂掉，针对这种情况，我们希望系统只是出现性能降低，正常的功能不会受到影响。 对于原始示例，假设其中 1 个节点出现了故障，这时节点数发生了变化，节点个数从 3 减少为 2，此时表格中的状态发生了变化：  很明显节点的减少会导致键与节点的映射关系发生变化，这个变化对于新的键来说并不会产生任何影响，但对于已有的键来说，将会导致节点映射错误，以semlinker 为例，变化前系统有 3 个节点，该键对应的节点编号为 1，当出现故障时，节点数减少为 2 个，此时该键对应的节点编号为 0。  1.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="1 传统哈希算法 #  1.1 含义 #   简单地说，哈希就是一个键值对存储，在给定键的情况下，可以非常高效地找到所关联的值，假如我们要根据邮政编码查找城市中的街道名称，一种最简单的实现方式是将此信息以哈希字典的形式进行存储&lt;ZipCode, StreetName&gt;。 当数据太大而无法存储在一个节点或机器上时，系统就会需要多个这样的节点或机器来存储他，比如，使用多个 Web 缓存中间件的系统，对于如何确定哪个key 存储在哪个节点上，最简单的解决方案是使用哈希取模来决定：   给定一个 key，先对 key 进行哈希运算，将其除以系统中的节点数，然后将 key 放入该节点。
+<meta property="og:description" content="一致性哈希算法 #  1 传统哈希算法 #  1.1 含义 #   简单地说，哈希就是一个键值对存储，在给定键的情况下，可以非常高效地找到所关联的值，假如我们要根据邮政编码查找城市中的街道名称，一种最简单的实现方式是将此信息以哈希字典的形式进行存储&lt;ZipCode, StreetName&gt;。 当数据太大而无法存储在一个节点或机器上时，系统就会需要多个这样的节点或机器来存储他，比如，使用多个 Web 缓存中间件的系统，对于如何确定哪个key 存储在哪个节点上，最简单的解决方案是使用哈希取模来决定：   给定一个 key，先对 key 进行哈希运算，将其除以系统中的节点数，然后将 key 放入该节点。
   在获取 key 时，先对 key 进行哈希运算，将其除以系统中的节点数，然后转到该节点并获取值。
   上述过程对应的哈希算法定义如下：
 # 下面的 N 为节点数 node_number = hash(key) % N   下图描绘了多节点系统中的传统的哈希取模算法，基于该算法可以实现简单的负载均衡。
@@ -26,7 +26,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3363,7 +3363,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一致性哈希算法">一致性哈希算法</a>
       <ul>
         <li><a href="#1-传统哈希算法">1 传统哈希算法</a>
           <ul>
@@ -3411,7 +3411,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h2 id="1-传统哈希算法">
+  <article class="markdown"><h1 id="一致性哈希算法">
+  一致性哈希算法
+  <a class="anchor" href="#%e4%b8%80%e8%87%b4%e6%80%a7%e5%93%88%e5%b8%8c%e7%ae%97%e6%b3%95">#</a>
+</h1>
+<h2 id="1-传统哈希算法">
   1 传统哈希算法
   <a class="anchor" href="#1-%e4%bc%a0%e7%bb%9f%e5%93%88%e5%b8%8c%e7%ae%97%e6%b3%95">#</a>
 </h2>
@@ -3754,7 +3758,7 @@ hash(cs3) <span style="color:#f92672">=</span> t3;
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#一致性哈希算法">一致性哈希算法</a>
       <ul>
         <li><a href="#1-传统哈希算法">1 传统哈希算法</a>
           <ul>

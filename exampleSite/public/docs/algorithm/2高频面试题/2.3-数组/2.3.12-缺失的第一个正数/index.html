@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="1 题目 #  给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
+<meta name="description" content="缺失的第一个正数 #  1 题目 #  给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
 请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。 示例 1：
 输入：nums = [1,2,0] 输出：3 示例 2：
 输入：nums = [3,4,-1,1] 输出：2 示例 3：
 输入：nums = [7,8,9,11,12] 输出：1 提示：
  1 &lt;= nums.length &lt;= 5 * 105 -231 &lt;= nums[i] &lt;= 231 - 1  2 解题思路 #  2.1 哈希表 #  2.1.1 问题分析 #   对于一个长度为$N$的数组，其中没有出现的最小正整数只能在$[1, N &#43; 1]$中，这是因为如果$[1, N]$都出现了，那么答案是$N &#43; 1$，否则答案是$[1, N]$中没有出现的最小正整数。 因此，我们有了一种将数组设计成哈希表的思路：  我们对数组进行遍历，对于遍历到的数$x$，如果他在$[1, N]$的范围内，那么就将数组中的第$x - 1$个位置（数组下标从0开始）打上标记。 在遍历结束之后，如果所有位置都被打了标记，那么答案是$N &#43; 1$，否则答案是最小的没有打上标记的位置加1。   由于我们只在意$[1, N]$的数，因此我们可以先对数组进行遍历，把不在$[1, N]$范围内的数修改成任意一个大于$N$的数（例如$N &#43; 1$），这样一来，数组中的所有数就都是正数了，因此，我们可以将标记表示为负号。 具体的算法流程如下：   将数组中所有小于等于0的数修改为$N &#43; 1$。">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="1 题目 #  给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
+<meta property="og:description" content="缺失的第一个正数 #  1 题目 #  给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
 请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。 示例 1：
 输入：nums = [1,2,0] 输出：3 示例 2：
 输入：nums = [3,4,-1,1] 输出：2 示例 3：
@@ -26,7 +26,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3363,7 +3363,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#缺失的第一个正数">缺失的第一个正数</a>
       <ul>
         <li><a href="#1-题目">1 题目</a></li>
         <li><a href="#2-解题思路">2 解题思路</a>
@@ -3397,7 +3397,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h2 id="1-题目">
+  <article class="markdown"><h1 id="缺失的第一个正数">
+  缺失的第一个正数
+  <a class="anchor" href="#%e7%bc%ba%e5%a4%b1%e7%9a%84%e7%ac%ac%e4%b8%80%e4%b8%aa%e6%ad%a3%e6%95%b0">#</a>
+</h1>
+<h2 id="1-题目">
   1 题目
   <a class="anchor" href="#1-%e9%a2%98%e7%9b%ae">#</a>
 </h2>
@@ -3624,7 +3628,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#缺失的第一个正数">缺失的第一个正数</a>
       <ul>
         <li><a href="#1-题目">1 题目</a></li>
         <li><a href="#2-解题思路">2 解题思路</a>

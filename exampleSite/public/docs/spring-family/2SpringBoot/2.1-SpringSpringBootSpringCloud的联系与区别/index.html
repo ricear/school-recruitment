@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="1 Spring #  1.1 含义 #   Spring是一个生态体系，包含了 Spring Framework、Spring Boot、Spring Cloud 等（还包括 Spring Cloud Data Flow、Spring Data、Spring Integration、Spring Batch、Spring Security、Spring Hateoas），是一站式的轻量级的 Java 开发框架，核心是 IoC（控制反转）和 AOP（面向切面），针对于开发的 WEB 层（SpringMVC）、业务层（IoC）、持久层（JdbcTemplate）等都提供了多种配置解决方案。  2 SpringBoot #  2.1 含义 #   SpringBoot使用了约定大于配置的理念，集成了多个快速开发的 Spring 插件，同时自动过滤不需要配置的多余的插件，简化了项目开发的配置流程，一定程度上取消了 XML 配置，是一套快速配置开发的脚手架，能快速开发单个微服务。  3 SpringCloud #  3.1 含义 #   SpringCloud是一套分布式服务治理的框架，本身不会提供具体功能性的操作，专注于服务之间的通讯、熔断、监控等，需要很多的 组件来支持一套功能。 SpringCloud依赖于 SpringBoot 开发，而 SpringBoot 可以独立开发。  3.2 组件 #  3.2.1 默默无闻服务 #   融合在每个微服务中，依赖其他组件并为其提供服务。">
+<meta name="description" content="Spring、SpringBoot、SpringCloud的联系与区别 #  1 Spring #  1.1 含义 #   Spring是一个生态体系，包含了 Spring Framework、Spring Boot、Spring Cloud 等（还包括 Spring Cloud Data Flow、Spring Data、Spring Integration、Spring Batch、Spring Security、Spring Hateoas），是一站式的轻量级的 Java 开发框架，核心是 IoC（控制反转）和 AOP（面向切面），针对于开发的 WEB 层（SpringMVC）、业务层（IoC）、持久层（JdbcTemplate）等都提供了多种配置解决方案。  2 SpringBoot #  2.1 含义 #   SpringBoot使用了约定大于配置的理念，集成了多个快速开发的 Spring 插件，同时自动过滤不需要配置的多余的插件，简化了项目开发的配置流程，一定程度上取消了 XML 配置，是一套快速配置开发的脚手架，能快速开发单个微服务。  3 SpringCloud #  3.1 含义 #   SpringCloud是一套分布式服务治理的框架，本身不会提供具体功能性的操作，专注于服务之间的通讯、熔断、监控等，需要很多的 组件来支持一套功能。 SpringCloud依赖于 SpringBoot 开发，而 SpringBoot 可以独立开发。  3.2 组件 #  3.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="1 Spring #  1.1 含义 #   Spring是一个生态体系，包含了 Spring Framework、Spring Boot、Spring Cloud 等（还包括 Spring Cloud Data Flow、Spring Data、Spring Integration、Spring Batch、Spring Security、Spring Hateoas），是一站式的轻量级的 Java 开发框架，核心是 IoC（控制反转）和 AOP（面向切面），针对于开发的 WEB 层（SpringMVC）、业务层（IoC）、持久层（JdbcTemplate）等都提供了多种配置解决方案。  2 SpringBoot #  2.1 含义 #   SpringBoot使用了约定大于配置的理念，集成了多个快速开发的 Spring 插件，同时自动过滤不需要配置的多余的插件，简化了项目开发的配置流程，一定程度上取消了 XML 配置，是一套快速配置开发的脚手架，能快速开发单个微服务。  3 SpringCloud #  3.1 含义 #   SpringCloud是一套分布式服务治理的框架，本身不会提供具体功能性的操作，专注于服务之间的通讯、熔断、监控等，需要很多的 组件来支持一套功能。 SpringCloud依赖于 SpringBoot 开发，而 SpringBoot 可以独立开发。  3.2 组件 #  3.2.1 默默无闻服务 #   融合在每个微服务中，依赖其他组件并为其提供服务。" />
+<meta property="og:description" content="Spring、SpringBoot、SpringCloud的联系与区别 #  1 Spring #  1.1 含义 #   Spring是一个生态体系，包含了 Spring Framework、Spring Boot、Spring Cloud 等（还包括 Spring Cloud Data Flow、Spring Data、Spring Integration、Spring Batch、Spring Security、Spring Hateoas），是一站式的轻量级的 Java 开发框架，核心是 IoC（控制反转）和 AOP（面向切面），针对于开发的 WEB 层（SpringMVC）、业务层（IoC）、持久层（JdbcTemplate）等都提供了多种配置解决方案。  2 SpringBoot #  2.1 含义 #   SpringBoot使用了约定大于配置的理念，集成了多个快速开发的 Spring 插件，同时自动过滤不需要配置的多余的插件，简化了项目开发的配置流程，一定程度上取消了 XML 配置，是一套快速配置开发的脚手架，能快速开发单个微服务。  3 SpringCloud #  3.1 含义 #   SpringCloud是一套分布式服务治理的框架，本身不会提供具体功能性的操作，专注于服务之间的通讯、熔断、监控等，需要很多的 组件来支持一套功能。 SpringCloud依赖于 SpringBoot 开发，而 SpringBoot 可以独立开发。  3.2 组件 #  3." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/spring-family/2SpringBoot/2.1-SpringSpringBootSpringCloud%E7%9A%84%E8%81%94%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB/" /><meta property="article:section" content="docs" />
 
@@ -16,7 +16,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3353,7 +3353,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#springspringbootspringcloud的联系与区别">Spring、SpringBoot、SpringCloud的联系与区别</a>
       <ul>
         <li><a href="#1-spring">1 Spring</a>
           <ul>
@@ -3392,7 +3392,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h2 id="1-spring">
+  <article class="markdown"><h1 id="springspringbootspringcloud的联系与区别">
+  Spring、SpringBoot、SpringCloud的联系与区别
+  <a class="anchor" href="#springspringbootspringcloud%e7%9a%84%e8%81%94%e7%b3%bb%e4%b8%8e%e5%8c%ba%e5%88%ab">#</a>
+</h1>
+<h2 id="1-spring">
   1 Spring
   <a class="anchor" href="#1-spring">#</a>
 </h2>
@@ -3565,7 +3569,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#springspringbootspringcloud的联系与区别">Spring、SpringBoot、SpringCloud的联系与区别</a>
       <ul>
         <li><a href="#1-spring">1 Spring</a>
           <ul>

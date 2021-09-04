@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="1 含义 #   AQS 全称是AbstractQueuedSynchronizer，即抽象对象同步器。 AQS 定义了两种资源共享模式：  独占式：  只能有一个线程占有锁资源，其他竞争资源的线程，在竞争失败后都会进入到等待队列中，等待占有锁资源的线程释放锁，然后再重新被唤醒竞争资源，例如 ReentrantLock 实现的就是独占式的锁资源。   共享式：  允许多个线程同时获取锁，并发访问共享资源，ReentrantWriteLock 和 CountDownLatch 等就是实现的这种模式。     AQS 内部维护了一个 volatile的 state 变量和一个 FIFO（先进先出）的队列：   state：
+<meta name="description" content="AQS #  1 含义 #   AQS 全称是AbstractQueuedSynchronizer，即抽象对象同步器。 AQS 定义了两种资源共享模式：  独占式：  只能有一个线程占有锁资源，其他竞争资源的线程，在竞争失败后都会进入到等待队列中，等待占有锁资源的线程释放锁，然后再重新被唤醒竞争资源，例如 ReentrantLock 实现的就是独占式的锁资源。   共享式：  允许多个线程同时获取锁，并发访问共享资源，ReentrantWriteLock 和 CountDownLatch 等就是实现的这种模式。     AQS 内部维护了一个 volatile的 state 变量和一个 FIFO（先进先出）的队列：   state：
  代表的是竞争资源的标识。 AQS 中提供了三种操作 state 的方法： protected final int getState() { return state; } protected final void setState(int newState) { state = newState; } protected final boolean compareAndSetState(int expect, int update) { // See below for intrinsics setup to support this  return unsafe.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="1 含义 #   AQS 全称是AbstractQueuedSynchronizer，即抽象对象同步器。 AQS 定义了两种资源共享模式：  独占式：  只能有一个线程占有锁资源，其他竞争资源的线程，在竞争失败后都会进入到等待队列中，等待占有锁资源的线程释放锁，然后再重新被唤醒竞争资源，例如 ReentrantLock 实现的就是独占式的锁资源。   共享式：  允许多个线程同时获取锁，并发访问共享资源，ReentrantWriteLock 和 CountDownLatch 等就是实现的这种模式。     AQS 内部维护了一个 volatile的 state 变量和一个 FIFO（先进先出）的队列：   state：
+<meta property="og:description" content="AQS #  1 含义 #   AQS 全称是AbstractQueuedSynchronizer，即抽象对象同步器。 AQS 定义了两种资源共享模式：  独占式：  只能有一个线程占有锁资源，其他竞争资源的线程，在竞争失败后都会进入到等待队列中，等待占有锁资源的线程释放锁，然后再重新被唤醒竞争资源，例如 ReentrantLock 实现的就是独占式的锁资源。   共享式：  允许多个线程同时获取锁，并发访问共享资源，ReentrantWriteLock 和 CountDownLatch 等就是实现的这种模式。     AQS 内部维护了一个 volatile的 state 变量和一个 FIFO（先进先出）的队列：   state：
  代表的是竞争资源的标识。 AQS 中提供了三种操作 state 的方法： protected final int getState() { return state; } protected final void setState(int newState) { state = newState; } protected final boolean compareAndSetState(int expect, int update) { // See below for intrinsics setup to support this  return unsafe." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-AQS/" /><meta property="article:section" content="docs" />
@@ -18,7 +18,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3355,7 +3355,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#aqs">AQS</a>
       <ul>
         <li><a href="#1-含义">1 含义</a></li>
         <li><a href="#2-源码分析">2 源码分析</a>
@@ -3398,7 +3398,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h2 id="1-含义">
+  <article class="markdown"><h1 id="aqs">
+  AQS
+  <a class="anchor" href="#aqs">#</a>
+</h1>
+<h2 id="1-含义">
   1 含义
   <a class="anchor" href="#1-%e5%90%ab%e4%b9%89">#</a>
 </h2>
@@ -4262,7 +4266,7 @@ Node nextWaiter<span style="color:#f92672">;</span>    <span style="color:#75715
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#aqs">AQS</a>
       <ul>
         <li><a href="#1-含义">1 含义</a></li>
         <li><a href="#2-源码分析">2 源码分析</a>

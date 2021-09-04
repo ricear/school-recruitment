@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="1 含义 #   给定一个背包容量 $target$，再给定一个数组$nums$（物品），能否按一定方式选取 $nums$ 中的元素得到 $target$。 需要注意的是：  背包容量 $target$ 和物品 $nums$ 的类型可能是数，也可能是字符串。 $target$可能题目已经给出（显式），也可能是需要我们从题目的信息中挖掘出来（非显式）（常见的非显式 $target$ 比如 $sum / 2$ 等）。 选取的方式有常见的以下几种：  每个元素选一次。 每个元素选多次。 选元素进行排列组合。      2 分类及解题模板 #   常见的背包类型有以下几种：  0/1 背包问题：  每个元素最多选取一次。 外循环 $nums$，内循环（倒序）$target$，且 $target \ge num$。   完全背包问题：  每个元素可以重复选择。 外循环 $nums$，内循环（正序）$target$，且 $target \ge num$。   组合背包问题：  背包中的物品要考虑顺序。 外循环（正序）$target$，内循环 $nums$，且 $target \ge num$。   分组背包问题：  不止一个背包，需要遍历每一个背包。 这个比较特殊，需要三重循环，外循环背包 $bags$，内部两层循环根据题目的要求转化为上面三种背包类型的模板。     而每个背包问题要求的也是不同的，按照所求问题分类，又可以分为以下几种：  最值问题：  要求最大值或最小值。 $dp[i] = max/min(dp[i], dp[i - num] &#43; 1)$ 或 $dp[i] = max/min(dp[i], dp[i - num] &#43; num)$。   存在问题：  是否存在&hellip;，满足&hellip;。 $dp[i] = dp[i] || dp[i - num]$。   组合问题：  求所有满足&hellip;的排列组合。 $dp[i] &#43;= dp[i - num]$。      3 题目示例 #  3.">
+<meta name="description" content="背包问题 #  1 含义 #   给定一个背包容量 $target$，再给定一个数组$nums$（物品），能否按一定方式选取 $nums$ 中的元素得到 $target$。 需要注意的是：  背包容量 $target$ 和物品 $nums$ 的类型可能是数，也可能是字符串。 $target$可能题目已经给出（显式），也可能是需要我们从题目的信息中挖掘出来（非显式）（常见的非显式 $target$ 比如 $sum / 2$ 等）。 选取的方式有常见的以下几种：  每个元素选一次。 每个元素选多次。 选元素进行排列组合。      2 分类及解题模板 #   常见的背包类型有以下几种：  0/1 背包问题：  每个元素最多选取一次。 外循环 $nums$，内循环（倒序）$target$，且 $target \ge num$。   完全背包问题：  每个元素可以重复选择。 外循环 $nums$，内循环（正序）$target$，且 $target \ge num$。   组合背包问题：  背包中的物品要考虑顺序。 外循环（正序）$target$，内循环 $nums$，且 $target \ge num$。   分组背包问题：  不止一个背包，需要遍历每一个背包。 这个比较特殊，需要三重循环，外循环背包 $bags$，内部两层循环根据题目的要求转化为上面三种背包类型的模板。     而每个背包问题要求的也是不同的，按照所求问题分类，又可以分为以下几种：  最值问题：  要求最大值或最小值。 $dp[i] = max/min(dp[i], dp[i - num] &#43; 1)$ 或 $dp[i] = max/min(dp[i], dp[i - num] &#43; num)$。   存在问题：  是否存在&hellip;，满足&hellip;。 $dp[i] = dp[i] || dp[i - num]$。   组合问题：  求所有满足&hellip;的排列组合。 $dp[i] &#43;= dp[i - num]$。      3 题目示例 #  3.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="1 含义 #   给定一个背包容量 $target$，再给定一个数组$nums$（物品），能否按一定方式选取 $nums$ 中的元素得到 $target$。 需要注意的是：  背包容量 $target$ 和物品 $nums$ 的类型可能是数，也可能是字符串。 $target$可能题目已经给出（显式），也可能是需要我们从题目的信息中挖掘出来（非显式）（常见的非显式 $target$ 比如 $sum / 2$ 等）。 选取的方式有常见的以下几种：  每个元素选一次。 每个元素选多次。 选元素进行排列组合。      2 分类及解题模板 #   常见的背包类型有以下几种：  0/1 背包问题：  每个元素最多选取一次。 外循环 $nums$，内循环（倒序）$target$，且 $target \ge num$。   完全背包问题：  每个元素可以重复选择。 外循环 $nums$，内循环（正序）$target$，且 $target \ge num$。   组合背包问题：  背包中的物品要考虑顺序。 外循环（正序）$target$，内循环 $nums$，且 $target \ge num$。   分组背包问题：  不止一个背包，需要遍历每一个背包。 这个比较特殊，需要三重循环，外循环背包 $bags$，内部两层循环根据题目的要求转化为上面三种背包类型的模板。     而每个背包问题要求的也是不同的，按照所求问题分类，又可以分为以下几种：  最值问题：  要求最大值或最小值。 $dp[i] = max/min(dp[i], dp[i - num] &#43; 1)$ 或 $dp[i] = max/min(dp[i], dp[i - num] &#43; num)$。   存在问题：  是否存在&hellip;，满足&hellip;。 $dp[i] = dp[i] || dp[i - num]$。   组合问题：  求所有满足&hellip;的排列组合。 $dp[i] &#43;= dp[i - num]$。      3 题目示例 #  3." />
+<meta property="og:description" content="背包问题 #  1 含义 #   给定一个背包容量 $target$，再给定一个数组$nums$（物品），能否按一定方式选取 $nums$ 中的元素得到 $target$。 需要注意的是：  背包容量 $target$ 和物品 $nums$ 的类型可能是数，也可能是字符串。 $target$可能题目已经给出（显式），也可能是需要我们从题目的信息中挖掘出来（非显式）（常见的非显式 $target$ 比如 $sum / 2$ 等）。 选取的方式有常见的以下几种：  每个元素选一次。 每个元素选多次。 选元素进行排列组合。      2 分类及解题模板 #   常见的背包类型有以下几种：  0/1 背包问题：  每个元素最多选取一次。 外循环 $nums$，内循环（倒序）$target$，且 $target \ge num$。   完全背包问题：  每个元素可以重复选择。 外循环 $nums$，内循环（正序）$target$，且 $target \ge num$。   组合背包问题：  背包中的物品要考虑顺序。 外循环（正序）$target$，内循环 $nums$，且 $target \ge num$。   分组背包问题：  不止一个背包，需要遍历每一个背包。 这个比较特殊，需要三重循环，外循环背包 $bags$，内部两层循环根据题目的要求转化为上面三种背包类型的模板。     而每个背包问题要求的也是不同的，按照所求问题分类，又可以分为以下几种：  最值问题：  要求最大值或最小值。 $dp[i] = max/min(dp[i], dp[i - num] &#43; 1)$ 或 $dp[i] = max/min(dp[i], dp[i - num] &#43; num)$。   存在问题：  是否存在&hellip;，满足&hellip;。 $dp[i] = dp[i] || dp[i - num]$。   组合问题：  求所有满足&hellip;的排列组合。 $dp[i] &#43;= dp[i - num]$。      3 题目示例 #  3." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" /><meta property="article:section" content="docs" />
 
@@ -16,7 +16,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3353,7 +3353,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#背包问题">背包问题</a>
       <ul>
         <li><a href="#1-含义">1 含义</a></li>
         <li><a href="#2-分类及解题模板">2 分类及解题模板</a></li>
@@ -3422,7 +3422,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h2 id="1-含义">
+  <article class="markdown"><h1 id="背包问题">
+  背包问题
+  <a class="anchor" href="#%e8%83%8c%e5%8c%85%e9%97%ae%e9%a2%98">#</a>
+</h1>
+<h2 id="1-含义">
   1 含义
   <a class="anchor" href="#1-%e5%90%ab%e4%b9%89">#</a>
 </h2>
@@ -4014,7 +4018,7 @@ $$</p>
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#背包问题">背包问题</a>
       <ul>
         <li><a href="#1-含义">1 含义</a></li>
         <li><a href="#2-分类及解题模板">2 分类及解题模板</a></li>

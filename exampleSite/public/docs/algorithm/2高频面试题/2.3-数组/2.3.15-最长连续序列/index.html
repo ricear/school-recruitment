@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="1 题目 #  给定一个未排序的整数数组 nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。
+<meta name="description" content="最长连续序列 #  1 题目 #  给定一个未排序的整数数组 nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。
 请你设计并实现时间复杂度为 O(n) 的算法解决此问题。
 示例 1：
 输入：nums = [100,4,200,1,3,2] 输出：4 解释：最长数字连续序列是 [1, 2, 3, 4]。它的长度为 4。 示例 2：
 输入：nums = [0,3,7,2,5,8,4,6,0,1] 输出：9 提示：
  0 &lt;= nums.length &lt;= 105 -109 &lt;= nums[i] &lt;= 109  2 解题思路 #  2.1 哈希表 #  2.1.1 问题分析 #   有意题目要求的时间复杂度为 $O(n)$，因此我们可以使用哈希表来解决这个问题。 我们使用哈希表来存储每个端点值对应连续区间的长度，其中 $key$为端点值，$value$为对应连续区间的长度。 然后按以下步骤计算每个端点值对应连续区间的长度：  若该端点已经在哈希表中存在，则直接跳过即可。 否则：  计算出该端点左右两个相邻端点 $nums[i] - 1$ 和 $nums[i] &#43; 1$ 的连续区间的长度分别为 $left$ 和 $right$。 则当前端点对应连续区间的长度$currentLength$为 $left &#43; right &#43; 1$，然后更新最后的结果值 $res$ 为所有已计算端点连续区间长度的最大值。 更新当前端点 $nums[i]$ 及所在连续区间两边端点 $nums[i] - left$ 和 $nums[i] &#43; right$ 的连续区间的长度为当前端点对应连续区间的长度 $currentLength$。       2.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="1 题目 #  给定一个未排序的整数数组 nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。
+<meta property="og:description" content="最长连续序列 #  1 题目 #  给定一个未排序的整数数组 nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。
 请你设计并实现时间复杂度为 O(n) 的算法解决此问题。
 示例 1：
 输入：nums = [100,4,200,1,3,2] 输出：4 解释：最长数字连续序列是 [1, 2, 3, 4]。它的长度为 4。 示例 2：
@@ -26,7 +26,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3363,7 +3363,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#最长连续序列">最长连续序列</a>
       <ul>
         <li><a href="#1-题目">1 题目</a></li>
         <li><a href="#2-解题思路">2 解题思路</a>
@@ -3391,7 +3391,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h2 id="1-题目">
+  <article class="markdown"><h1 id="最长连续序列">
+  最长连续序列
+  <a class="anchor" href="#%e6%9c%80%e9%95%bf%e8%bf%9e%e7%bb%ad%e5%ba%8f%e5%88%97">#</a>
+</h1>
+<h2 id="1-题目">
   1 题目
   <a class="anchor" href="#1-%e9%a2%98%e7%9b%ae">#</a>
 </h2>
@@ -3564,7 +3568,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#最长连续序列">最长连续序列</a>
       <ul>
         <li><a href="#1-题目">1 题目</a></li>
         <li><a href="#2-解题思路">2 解题思路</a>

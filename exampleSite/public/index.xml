@@ -474,14 +474,13 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.2-B-%E6%A0%91B&#43;%E6%A0%91%E7%B4%A2%E5%BC%95%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/</guid>
-      <description>1 为什么要用 B 树、B+ 树索引 #    常用的数据结构如二叉查找树（Binary Search Tree, BST）的每个节点只能容纳一个数据，导致树的高度很高，逻辑上挨着的节点的数据可能离得很远，如果在内存中操作数据的话，这样问题并不大，但是由于读写磁盘的速度相比内存慢很多，每次读写磁盘的单位要比读写内存的最小单位大很多。
+      <description>B 树、B+树索引算法原理 #  1 为什么要用 B 树、B+ 树索引 #    常用的数据结构如二叉查找树（Binary Search Tree, BST）的每个节点只能容纳一个数据，导致树的高度很高，逻辑上挨着的节点的数据可能离得很远，如果在内存中操作数据的话，这样问题并不大，但是由于读写磁盘的速度相比内存慢很多，每次读写磁盘的单位要比读写内存的最小单位大很多。
   因此，对应的数据结构应该尽量的满足局部性原理，即当一个数据被用到时，其附近的数据也通常会马上被使用，因此，逻辑上相邻的数据在物理上也尽量存储在一起，这样才能减少读写磁盘的数量。
   因此，对比起一个节点只能存储一个数据的 BST 类数据结构来说，要求这种数据结构在形状上更胖，更加扁平，即每个节点能容纳更多的数据，这样就能降低树的高度，同时让相邻的数据都能尽量的存储在物理上也相邻的硬盘空间上，减少磁盘读写。
   以下图为例，图中从根节点出发，查找数据 14 的过程中，经过的第二节点中有键值 [3,7,13]，这三个值在逻辑上是相邻的，如果他们在磁盘上的存储也能做到在物理上相邻，那么只需要一次读操作就能把这个节点的数据从磁盘上加载到内存中进行数据比较，这样整个过程就只需要两次磁盘读操作，这种数据结构具有两个特点：
  高扇出： 临近键值的数据局部性更好。 低高度： 遍历期间的寻道次数更少。     B 树和 B+ 树就是两种利用磁盘局部性原理进行优化的树结构。
  MySQL为什么不使用跳表作为索引的数据结构？
- 数据库的数据量比较大，如果数据库索引使用了跳表，那么：  跳表的层数太高，数据存储不紧凑，产生大量的空间浪费。 查询时会产生大量跨页IO，而且磁盘磁头无法对链表进行预读，会产生大量的随机IO，对磁盘的缓存不友好，查询效率较低。       2 B 树 #  2.1 B 树的定义及性质 #    在 B 树种，分为两种节点：
- 内部节点（Internal Node）： 存储了数据以及指向其子节点的指针。 叶子节点（Leaf Node）： 叶子节点只存储数据，没有子节点。    一个数据，既可能存在内部节点上，也可能存在叶子节点上，这一点是与 B+ 树最大的不同，B+ 树只会将数据存储在叶子节点上。</description>
+ 数据库的数据量比较大，如果数据库索引使用了跳表，那么：  跳表的层数太高，数据存储不紧凑，产生大量的空间浪费。 查询时会产生大量跨页IO，而且磁盘磁头无法对链表进行预读，会产生大量的随机IO，对磁盘的缓存不友好，查询效率较低。       2 B 树 #  2.1 B 树的定义及性质 #    在 B 树种，分为两种节点：</description>
     </item>
     
     <item>
@@ -534,13 +533,12 @@ create table z( a int not null, b int null, c int not null, d int not null, uniq
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.7-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%98%E5%8C%96/</guid>
-      <description>1 优化方法 #  1.1 SQL 语句的优化 #   优化 SQL 语句时可以按照以下的步骤来进行：
+      <description>数据库优化 #  1 优化方法 #  1.1 SQL 语句的优化 #   优化 SQL 语句时可以按照以下的步骤来进行：
  首先分析慢查询日志，这里面记录了响应时间超过阈值 long_query_time 的 SQL 语句，通过日志找出 IO 大的 SQL 以及发现未命中索引的 SQL。 然后使用 EXPLAIN 对慢查询 SQL 进行分析，通过EXPLAIN 命令可以得到表的读取顺序、数据读取操作的操作类型、哪些索引可以使用、哪些索引被实际使用、表之间的引用以及被扫描的行数等问题。     应尽量避免在 WHERE 子句中使用 !=、&amp;lt;、&amp;gt;操作符或对字段进行 null 值判断，否则数据库引擎将放弃使用索引而进行全表扫描。
   只返回必要的列，最好不要用 SELECT * 语句。
   只返回必要的行，使用 LIMIT 语句来限制返回的数据。
   高并发高性能的应用中尽量对关联查询分解为单表查询，然后将结果在应用程序中进行关联，例如下面这个查询：
-select * from tag join tag_post on tag_post.tag_id=tag.id join post on tag_post.post_id=post.id where tag.tag=&amp;#39;mysql&amp;#39;; 可以分解成下面这些查询来代替：
-select * from tag where tag=&amp;#39;mysql&amp;#39;; select * from tag_post where tag_id=1234; select * from post where id in(123,456,567,9989,8909); 这种用分解关联查询的方式重构查询具有如下优势：</description>
+select * from tag join tag_post on tag_post.tag_id=tag.id join post on tag_post.post_id=post.id where tag.</description>
     </item>
     
     <item>
@@ -564,7 +562,7 @@ select * from tag where tag=&amp;#39;mysql&amp;#39;; select * from tag_post wher
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.9-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/</guid>
-      <description>1 传统哈希算法 #  1.1 含义 #   简单地说，哈希就是一个键值对存储，在给定键的情况下，可以非常高效地找到所关联的值，假如我们要根据邮政编码查找城市中的街道名称，一种最简单的实现方式是将此信息以哈希字典的形式进行存储&amp;lt;ZipCode, StreetName&amp;gt;。 当数据太大而无法存储在一个节点或机器上时，系统就会需要多个这样的节点或机器来存储他，比如，使用多个 Web 缓存中间件的系统，对于如何确定哪个key 存储在哪个节点上，最简单的解决方案是使用哈希取模来决定：   给定一个 key，先对 key 进行哈希运算，将其除以系统中的节点数，然后将 key 放入该节点。
+      <description>一致性哈希算法 #  1 传统哈希算法 #  1.1 含义 #   简单地说，哈希就是一个键值对存储，在给定键的情况下，可以非常高效地找到所关联的值，假如我们要根据邮政编码查找城市中的街道名称，一种最简单的实现方式是将此信息以哈希字典的形式进行存储&amp;lt;ZipCode, StreetName&amp;gt;。 当数据太大而无法存储在一个节点或机器上时，系统就会需要多个这样的节点或机器来存储他，比如，使用多个 Web 缓存中间件的系统，对于如何确定哪个key 存储在哪个节点上，最简单的解决方案是使用哈希取模来决定：   给定一个 key，先对 key 进行哈希运算，将其除以系统中的节点数，然后将 key 放入该节点。
   在获取 key 时，先对 key 进行哈希运算，将其除以系统中的节点数，然后转到该节点并获取值。
   上述过程对应的哈希算法定义如下：
 # 下面的 N 为节点数 node_number = hash(key) % N   下图描绘了多节点系统中的传统的哈希取模算法，基于该算法可以实现简单的负载均衡。
@@ -659,7 +657,7 @@ F(0) = 0, F(1) = 1 F(N) = F(N - 1) + F(N - 2), 其中 N &amp;gt; 1. 斐波那契
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/</guid>
-      <description>1 含义 #   给定一个背包容量 $target$，再给定一个数组$nums$（物品），能否按一定方式选取 $nums$ 中的元素得到 $target$。 需要注意的是：  背包容量 $target$ 和物品 $nums$ 的类型可能是数，也可能是字符串。 $target$可能题目已经给出（显式），也可能是需要我们从题目的信息中挖掘出来（非显式）（常见的非显式 $target$ 比如 $sum / 2$ 等）。 选取的方式有常见的以下几种：  每个元素选一次。 每个元素选多次。 选元素进行排列组合。      2 分类及解题模板 #   常见的背包类型有以下几种：  0/1 背包问题：  每个元素最多选取一次。 外循环 $nums$，内循环（倒序）$target$，且 $target \ge num$。   完全背包问题：  每个元素可以重复选择。 外循环 $nums$，内循环（正序）$target$，且 $target \ge num$。   组合背包问题：  背包中的物品要考虑顺序。 外循环（正序）$target$，内循环 $nums$，且 $target \ge num$。   分组背包问题：  不止一个背包，需要遍历每一个背包。 这个比较特殊，需要三重循环，外循环背包 $bags$，内部两层循环根据题目的要求转化为上面三种背包类型的模板。     而每个背包问题要求的也是不同的，按照所求问题分类，又可以分为以下几种：  最值问题：  要求最大值或最小值。 $dp[i] = max/min(dp[i], dp[i - num] + 1)$ 或 $dp[i] = max/min(dp[i], dp[i - num] + num)$。   存在问题：  是否存在&amp;hellip;，满足&amp;hellip;。 $dp[i] = dp[i] || dp[i - num]$。   组合问题：  求所有满足&amp;hellip;的排列组合。 $dp[i] += dp[i - num]$。      3 题目示例 #  3.</description>
+      <description>背包问题 #  1 含义 #   给定一个背包容量 $target$，再给定一个数组$nums$（物品），能否按一定方式选取 $nums$ 中的元素得到 $target$。 需要注意的是：  背包容量 $target$ 和物品 $nums$ 的类型可能是数，也可能是字符串。 $target$可能题目已经给出（显式），也可能是需要我们从题目的信息中挖掘出来（非显式）（常见的非显式 $target$ 比如 $sum / 2$ 等）。 选取的方式有常见的以下几种：  每个元素选一次。 每个元素选多次。 选元素进行排列组合。      2 分类及解题模板 #   常见的背包类型有以下几种：  0/1 背包问题：  每个元素最多选取一次。 外循环 $nums$，内循环（倒序）$target$，且 $target \ge num$。   完全背包问题：  每个元素可以重复选择。 外循环 $nums$，内循环（正序）$target$，且 $target \ge num$。   组合背包问题：  背包中的物品要考虑顺序。 外循环（正序）$target$，内循环 $nums$，且 $target \ge num$。   分组背包问题：  不止一个背包，需要遍历每一个背包。 这个比较特殊，需要三重循环，外循环背包 $bags$，内部两层循环根据题目的要求转化为上面三种背包类型的模板。     而每个背包问题要求的也是不同的，按照所求问题分类，又可以分为以下几种：  最值问题：  要求最大值或最小值。 $dp[i] = max/min(dp[i], dp[i - num] + 1)$ 或 $dp[i] = max/min(dp[i], dp[i - num] + num)$。   存在问题：  是否存在&amp;hellip;，满足&amp;hellip;。 $dp[i] = dp[i] || dp[i - num]$。   组合问题：  求所有满足&amp;hellip;的排列组合。 $dp[i] += dp[i - num]$。      3 题目示例 #  3.</description>
     </item>
     
     <item>
@@ -688,7 +686,7 @@ F(0) = 0, F(1) = 1 F(N) = F(N - 1) + F(N - 2), 其中 N &amp;gt; 1. 斐波那契
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.2-Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</guid>
-      <description>如无特殊说明，本文内容针对的 Redis 版本为 3.0.0，源码下载地址为 redis-3.0.0。
+      <description>Redis数据类型 #   如无特殊说明，本文内容针对的 Redis 版本为 3.0.0，源码下载地址为 redis-3.0.0。
  1 前言 #    Redis 的 key 是顶层模型，他的 value 是扁平化的，所有的 value 都是一个 object，它的结构如下：
 typedef struct redisObject { unsigned [type] 4; unsigned [encoding] 4; unsigned [lru] REDIS_LRU_BITS; int refcount; void *ptr; } robj;   上面的几个字段的意义如下：
  type：数据类型，就是我们熟悉的string、hash、list 等。 encoding：内部编码，其实就是数据结构，指的是当前这个 value 底层是用的什么数据结构，因为同一个数据类型底层也有多种数据结构的实现，所以这里需要指定数据结构。 REDIS_LRU_BITS：当前对象可以保留的时长。 refcount：对象引用计数，用于 GC。 ptr：指针，指向以 encoding 的方式实现这个对象的实际地址。    整个 Redis 的数据结构组织如下图所示：
@@ -701,7 +699,7 @@ typedef struct redisObject { unsigned [type] 4; unsigned [encoding] 4; unsigned 
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.2-%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E5%AD%98%E6%B4%BB%E7%9A%84%E6%96%B9%E6%B3%95/</guid>
-      <description>判断对象是否存活的方法有两种，分别是 引用计数法、可达性分析算法。
+      <description>判断对象是否存活的方法 #  判断对象是否存活的方法有两种，分别是 引用计数法、可达性分析算法。
 1. 引用计数法 #    引用计数法是指给对象添加一个引用计数器，每当有一个地方 引用它时，计数器值就加 1，当引用失效时，计数器值就减 1，任何时刻计数器为 0 的对象就是不可能再被使用的。
   缺点是它很难解决对象之间相互循环引用的问题。举个简单的例子，对象 objA 和 obB 都有字段 Instance,赋值令 obja instance=objB 及 obiB. Instance=ojA，除此之外，这两个对象再无任何引用,实际上这两个对象已经不可能再被访问,但是它们因为互相引用着对方，导致它们的引用计数都不为 0，于是引用计数算法无法通知 GC 收集器回收它们，具体代码如下：
 /** * @author peng.wei * @version 1.0 * @date 2021/9/3 16:17 * @Description 引用计数法 GC 测试 */ public class ReferenceCountingGC { public Object instance = null; private static final int _1MB = 1024 * 1024; /** * 这个成员属性的唯一意义就是占点内存，以便能在 GC 日志中看清楚是否有回收过 */ private byte[] bigSize = new byte[2 * _1MB]; public static void main(String[] args) { ReferenceCountingGC objA = new ReferenceCountingGC(); ReferenceCountingGC objB = new ReferenceCountingGC(); objA.</description>
@@ -928,7 +926,7 @@ int n = array.</description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.8-JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/</guid>
-      <description>1 概述 #  JVM 内部使用Java 内存模型，在逻辑上将内存划分为线程栈（Thread Stacks）和堆内存（Heap）两个部分，如下图所示：
+      <description>JVM内存结构 #  1 概述 #  JVM 内部使用Java 内存模型，在逻辑上将内存划分为线程栈（Thread Stacks）和堆内存（Heap）两个部分，如下图所示：
  1.1 线程栈 #  JVM 中，每个正在运行的线程，都有自己的线程栈。
  线程栈包含了当前正在执行的方法链或调用链上的所有方法的状态信息， 所以线程栈又被称为方法栈或调用栈。 线程栈里面保存了调用链上正在执行的所有方法中的局部变量：  每个线程都只能访问自己的线程栈。 每个线程都不能访问其他线程的局部变量。   即使两个线程正在执行完全相同的代码，但每个线程都会在自己的线程栈内创建对应代码中声明的局部变量，所以每个线程都有一份自己的局部变量副本：  所有原生类型的局部变量都存储在线程栈中，因此对其他线程是不可见的。 线程可以将一个原生变量值的副本传给另一个线程，但不能共享原生局部变量本身。    1.2 堆内存 #  堆内存又称为共享堆，堆中的所有对象，可以被所有线程访问，只要他们能拿到对象的引用地址：
  如果一个线程可以访问某个对象时，也就可以访问该对象的成员变量。 如果两个线程同时调用某个对象的同一个方法，则他们都可以访问到这个对象的成员变量，但每个线程的局部变量副本是独立的。  虽然各个线程自己使用的局部变量都在自己的栈上，但是大家可以共享堆上的对象，各个不同线程访问同一个对象实例的基础类型的成员变量，会给每个线程一个变量的副本。
@@ -942,7 +940,7 @@ int n = array.</description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97%E9%80%9A%E8%A7%A3/</guid>
-      <description>本篇文章转载自 股票问题系列通解（转载翻译）。
+      <description>股票问题系列通解 #   本篇文章转载自 股票问题系列通解（转载翻译）。
  1 前言 #   股票问题一共有六道题，链接如下：   121. 买卖股票的最佳时机。  122. 买卖股票的最佳时机 II。  123. 买卖股票的最佳时机 III。  188. 买卖股票的最佳时机 IV。  309. 最佳买卖股票时机含冷冻期。  714. 买卖股票的最佳时机含手续费。   每个问题都有优质的题解，但是大多数题解没有建立起这些问题之间的联系，也没有给出股票问题系列的通解，这篇文章给出适用于全部股票问题的通解，以及对于每个特定问题的特解。  2 通用情况 #   这个想法基于如下问题，给定一个表示每天股票价格的数组，什么因素决定了可以获得的最大收益，相信大多数人可以很快给出答案，例如在那些天进行交易以及允许多少次交易，这些因素当然也很重要，在问题描述中也有这些因素，然而还有一个隐藏但是关键的因素决定了最大收益，下文将阐述这一点。 首先介绍一些符号：  用 $n$表示股票价格的数组。 用 $i$表示第 $i$ 天（$i$ 的取值范围是 0 到 $n - 1$）。 用 $k$表示允许的最大交易次数。 用 $T[i][k]$表示在第 $i$ 天结束时，最多进行 $k$ 次交易的情况下可以获得的最大收益。   基准情况为 $T[-1][k] = T[i][0] = 0$，表示没有进行股票交易时没有收益（注意第一天对应 $i = 0$，因此 $i = -1$ 表示没有股票交易）。 现在开始将 $T[i][k]$ 关联到子问题，得到状态转移方程：  第 $i$ 天可能有三个操作，分别为买入、卖出、休息。 我们并不知道哪个操作是最好的，但是可以通过计算得到选择每个操作可以得到的最大收益，假设没有别的限制条件，则可以尝试每一种操作，并选择可以最大化收益的一种操作，但是，题目中确实有限制条件，规定不能同时进行多次交易，因此如果决定在第 $i$ 天买入，在买入之前必须持有 0 份股票，如果决定在第 $i$ 天卖出，在卖出之前必须恰好持有 1 份股票，持有股票的数量是上文提及到的隐藏因素，该因素影响第 $i$ 天可以进行的操作，进而影响最大收益。 因此对 $T[i][k]$ 的定义需要分成两项：  $T[i][k][0]$表示第 $i$ 天结束时，最多进行 $k$ 次交易且在进行操作后持有 0 份股票的情况下可以获得的最大收益。 $T[i][k][1]$表示在第 $i$ 天结束时，最多进行 $k$ 次交易且在进行操作后持有 1 份股票的情况下可以获得的最大收益。   使用新的状态表示之后，可以得到基准情况和状态转移方程如下：   基准情况：</description>
     </item>
     
@@ -1142,7 +1140,7 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-AQS/</guid>
-      <description>1 含义 #   AQS 全称是AbstractQueuedSynchronizer，即抽象对象同步器。 AQS 定义了两种资源共享模式：  独占式：  只能有一个线程占有锁资源，其他竞争资源的线程，在竞争失败后都会进入到等待队列中，等待占有锁资源的线程释放锁，然后再重新被唤醒竞争资源，例如 ReentrantLock 实现的就是独占式的锁资源。   共享式：  允许多个线程同时获取锁，并发访问共享资源，ReentrantWriteLock 和 CountDownLatch 等就是实现的这种模式。     AQS 内部维护了一个 volatile的 state 变量和一个 FIFO（先进先出）的队列：   state：
+      <description>AQS #  1 含义 #   AQS 全称是AbstractQueuedSynchronizer，即抽象对象同步器。 AQS 定义了两种资源共享模式：  独占式：  只能有一个线程占有锁资源，其他竞争资源的线程，在竞争失败后都会进入到等待队列中，等待占有锁资源的线程释放锁，然后再重新被唤醒竞争资源，例如 ReentrantLock 实现的就是独占式的锁资源。   共享式：  允许多个线程同时获取锁，并发访问共享资源，ReentrantWriteLock 和 CountDownLatch 等就是实现的这种模式。     AQS 内部维护了一个 volatile的 state 变量和一个 FIFO（先进先出）的队列：   state：
  代表的是竞争资源的标识。 AQS 中提供了三种操作 state 的方法： protected final int getState() { return state; } protected final void setState(int newState) { state = newState; } protected final boolean compareAndSetState(int expect, int update) { // See below for intrinsics setup to support this  return unsafe.</description>
     </item>
     
@@ -1301,7 +1299,7 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/</guid>
-      <description>1 题目 #  实现获取 下一个排列 的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列（即，组合出下一个更大的整数）。
+      <description>下一个排列 #  1 题目 #  实现获取 下一个排列 的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列（即，组合出下一个更大的整数）。
 如果不存在下一个更大的排列，则将数字重新排列成最小的排列（即升序排列）。
 必须 原地 修改，只允许使用额外常数空间。
 示例 1：
@@ -1318,7 +1316,7 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/</guid>
-      <description>1 题目 #  给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
+      <description>缺失的第一个正数 #  1 题目 #  给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
 请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。 示例 1：
 输入：nums = [1,2,0] 输出：3 示例 2：
 输入：nums = [3,4,-1,1] 输出：2 示例 3：
@@ -1332,13 +1330,12 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</guid>
-      <description>1 题目 #  给定两个大小分别为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。请你找出并返回这两个正序数组的 中位数 。
+      <description>寻找两个正序数组的中位数 #  1 题目 #  给定两个大小分别为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。请你找出并返回这两个正序数组的 中位数 。
 示例 1：
 输入：nums1 = [1,3], nums2 = [2] 输出：2.00000 解释：合并数组 = [1,2,3] ，中位数 2 示例 2：
 输入：nums1 = [1,2], nums2 = [3,4] 输出：2.50000 解释：合并数组 = [1,2,3,4] ，中位数 (2 + 3) / 2 = 2.5 示例 3：
 输入：nums1 = [0,0], nums2 = [0,0] 输出：0.00000 示例 4：
-输入：nums1 = [], nums2 = [1] 输出：1.00000 示例 5：
-输入：nums1 = [2], nums2 = [] 输出：2.</description>
+输入：nums1 = [], nums2 = [1] 输出：1.00000 示例 5：</description>
     </item>
     
     <item>
@@ -1347,7 +1344,7 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/</guid>
-      <description>1 题目 #  给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
+      <description>多数元素 #  1 题目 #  给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
 你可以假设数组是非空的，并且给定的数组总是存在多数元素。
 示例 1：
 输入：[3,2,3] 输出：3 示例 2：
@@ -1361,7 +1358,7 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.15-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</guid>
-      <description>1 题目 #  给定一个未排序的整数数组 nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。
+      <description>最长连续序列 #  1 题目 #  给定一个未排序的整数数组 nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。
 请你设计并实现时间复杂度为 O(n) 的算法解决此问题。
 示例 1：
 输入：nums = [100,4,200,1,3,2] 输出：4 解释：最长数字连续序列是 [1, 2, 3, 4]。它的长度为 4。 示例 2：
@@ -1444,7 +1441,7 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.3-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</guid>
-      <description>1 题目 #  给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
+      <description>二叉树的最近公共祖先 #  1 题目 #  给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
  百度百科中最近公共祖先的定义为：“对于有根树 T 的两个节点 p、q，最近公共祖先表示为一个节点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
 示例 1：
  输入：root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1 输出：3 解释：节点 5 和节点 1 的最近公共祖先是节点 3 。 示例 2：
@@ -1468,7 +1465,7 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.2-%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/</guid>
-      <description>1 前言 #   我们所熟悉的 DFS（深度优先搜索）问题通常是在树或者图结构上进行的，而我们今天要讨论的 DFS 问题，是在一种【网格】结构中进行的，岛屿问题是这类网格 DFS 问题的典型代表。 网格结构遍历起来要比二叉树复杂一些，如果没有掌握一定的方法，DFS 代码容易写得冗长繁杂。 本文将以岛屿问题为例，展示网格类问题 DFS 通用思路，以及如何让代码变得简洁。  2 网格问题的基本概念 #   我们首先要明确一下岛屿问题中的网格结构是如何定义的，以方便我们后面的讨论。 网格问题是由 $m \times n$ 个小方格组成一个网格，每个小方格与其上下左右四个方格认为是相邻的，要在这样的网格上进行某种搜索。 岛屿问题是一类典型的网格问题，每个格子中的数字可能是 0 或者 1，我们把数字为 0 的格子看成海洋格子，数字为 1 的格子看成陆地格子，这样相邻的陆地格子就连接成一个岛屿。   在这样一个设定下，就出现了各种岛屿问题的变种，包括岛屿的数量、面积、周长等，不过这些问题，基本都可以用 DFS 遍历来解决。  3 网格 DFS 的基本结构 #  3.1 基本结构 #    网格结构要比二叉树结构稍微复杂一些，他其实是一种简化版的图结构，要写好网格上的 DFS 遍历，我们首先要理解二叉树上的 DFS 遍历方法，再类比写出网格结构上的 DFS 遍历，我们写的 二叉树 DFS 遍历一般是这样的：
+      <description>岛屿问题 #  1 前言 #   我们所熟悉的 DFS（深度优先搜索）问题通常是在树或者图结构上进行的，而我们今天要讨论的 DFS 问题，是在一种【网格】结构中进行的，岛屿问题是这类网格 DFS 问题的典型代表。 网格结构遍历起来要比二叉树复杂一些，如果没有掌握一定的方法，DFS 代码容易写得冗长繁杂。 本文将以岛屿问题为例，展示网格类问题 DFS 通用思路，以及如何让代码变得简洁。  2 网格问题的基本概念 #   我们首先要明确一下岛屿问题中的网格结构是如何定义的，以方便我们后面的讨论。 网格问题是由 $m \times n$ 个小方格组成一个网格，每个小方格与其上下左右四个方格认为是相邻的，要在这样的网格上进行某种搜索。 岛屿问题是一类典型的网格问题，每个格子中的数字可能是 0 或者 1，我们把数字为 0 的格子看成海洋格子，数字为 1 的格子看成陆地格子，这样相邻的陆地格子就连接成一个岛屿。   在这样一个设定下，就出现了各种岛屿问题的变种，包括岛屿的数量、面积、周长等，不过这些问题，基本都可以用 DFS 遍历来解决。  3 网格 DFS 的基本结构 #  3.1 基本结构 #    网格结构要比二叉树结构稍微复杂一些，他其实是一种简化版的图结构，要写好网格上的 DFS 遍历，我们首先要理解二叉树上的 DFS 遍历方法，再类比写出网格结构上的 DFS 遍历，我们写的 二叉树 DFS 遍历一般是这样的：
 void traverse(TreeNode root) { // 判断 base case  if (root == null) { return; } // 访问两个相邻结点：左子结点、右子结点  traverse(root.</description>
     </item>
     
@@ -1517,7 +1514,7 @@ Input: preorder = [-1], inorder = [-1] Output: [-1] 提示:
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.1-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E8%A7%A3%E9%A2%98%E6%A1%86%E6%9E%B6/</guid>
-      <description>1 含义 #    回溯算法建立在 DFS 基础之上，与 DFS 的主要不同在于：
+      <description>回溯算法解题框架 #  1 含义 #    回溯算法建立在 DFS 基础之上，与 DFS 的主要不同在于：
  DFS 是一个劲的往某一个方向搜索，等到到达一个方向的终点时，才恢复状态，回溯上一层。 回溯算法在达到结束条件后，就恢复状态，回溯上一层。    当问题需要回头，以此来查出所有的解的时候，使用回溯算法，即满足结束条件或者发现不是正确路径的时候（走不通），要撤销选择，回退到上一个状态，继续尝试，直到找出所有解为止。
   解决一个回溯算法时主要按照以下步骤：
  画出递归树，找到状态变量（回溯函数的参数），这一部非常重要。 根据题意，确定结束条件。 找准选择列表（与函数参数相关），与第一步紧密关联。 判断是否需要剪枝。 做出选择，递归调用，进入下一层。 撤销选择。    回溯算法的核心就是for 循环里面的递归，即在递归调用之前【做选择】，在递归调用之后【撤销选择】，解题框架如下：
@@ -1963,7 +1960,7 @@ public interface Car { void run(); }   创建工厂的产品（宝马）：</des
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.1-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/</guid>
-      <description>1 含义 #    代理模式是指通过代理控制对象的访问，可以在这个对象调用方法之前、调用方法之后去处理/添加新的功能。
+      <description>代理模式 #  1 含义 #    代理模式是指通过代理控制对象的访问，可以在这个对象调用方法之前、调用方法之后去处理/添加新的功能。
   代码在原有代码乃至原业务流程都不修改的情况下，直接在业务流程中切入新代码，增加新功能。
  关于代理，以下小例子可以帮助我们理解代理的含义：
  游戏代练 游戏代练这件事就是一个代理模式，所谓代练，就是 Proxy，也即代理类，代理的流程是我们把自己的账号交给代练人员，让他们帮我们打怪升级，而我们只需提供账号即可，代练人员那边，他所要做的就是登陆我们的账号，然后替我们打游戏，从第三者的角度看，我们这个角色在打怪升级，但这个第三者并不知道是不是我们本人在打游戏，他只能看到我们这个账号正在打怪升级，但并不需要知道后面打游戏的是谁，这就是代理模式，由他人代理玩游戏。 邀请明星 假设我们现在要邀请明星来上节目，我们应该先给他的经纪人打电话，然后再由经纪人通知到该明星，这里经纪人充当的就是代理的角色。     2 应用场景 #   当不想访问某个对象或访问某个对象存在困难时，就可以为这个对象创建一个代理，通过代理来间接的访问这个对象。 如果原始对象有不同的访问权限，可以使用代理控制对原始对象的访问，保护原始对象。 在访问原始对象时执行一些自己的附加条件。 为某个对象在不同的地址空间提供局部代理，使得系统可以将服务端的实现隐藏，客户端不必考虑服务端的存在。 具体应用场景主要包括Spring AOP、日志打印、异常处理、事务控制、权限控制。  3 分类 #  代理模式主要分为静态代理模式和动态代理模式两类，其中动态代理模式可分为 JDK 动态代理和 cglib 动态代理两种。
@@ -1976,7 +1973,7 @@ public interface Car { void run(); }   创建工厂的产品（宝马）：</des
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.2-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/</guid>
-      <description>1 含义 #   装饰器模式又称为包装模式，主要以对客户端透明的方式，在不改变对象结构的情况下，可以动态地扩展器功能。  不同于继承，组合可以在运行时进行，所以称之为「动态扩展」，比如在按钮点击时进行一些 log 日志的打印，在绘制 text 文本框时，额外绘制一个滚动条和边框等。
+      <description>装饰器模式 #  1 含义 #   装饰器模式又称为包装模式，主要以对客户端透明的方式，在不改变对象结构的情况下，可以动态地扩展器功能。  不同于继承，组合可以在运行时进行，所以称之为「动态扩展」，比如在按钮点击时进行一些 log 日志的打印，在绘制 text 文本框时，额外绘制一个滚动条和边框等。
   装饰器模式是继承关系的一个替代方案，可以在不使用创造更多子类的情况下，扩展对象的功能，就增加功能来说，相比生成子类更加灵活。  组合比继承更加灵活是因为当可拓展的功能很多时，继承方案会产生大量的子类，而组合可以提前写好处理函数，在需要时动态构造，显然更加灵活。
   具体的示例如下：  相框：  照片 + 相框 = 带相框的照片，这背后就是一种装饰器模式，照片具有看的功能，相框具有装饰功能，在我们看照片的基础上，还能看到精心设计的相框，增加了美感，同时相框还可以增加照片的保存时间与安全性。 相框与照片是一种组合关系，任何照片都可以放到相框中，而不是每个照片生成一个特定的相框，显然，组合的方式更加灵活。   带有缓存的文件读写：  假如我们有一个类 FileIO 用来读写文件，但是没有缓存能力，一眼看上去好像新建一个CachedFileIO 用起来更加方便，而CachedIO 的用法是new CachedIO(new FileIO()) 稍微麻烦些。 但如果我们增加一个网络读写类NetworkIO，一个数据库读写类DBIO，此时，继承的方式会使子类数量急速膨胀 ，而组合的方式则非常灵活，生成一个支持缓存的网络读写器，只需要 new CachedIO(new NetworkIO()) 即可，这就是组合灵活的地方。 当然，为了实现这个能力，CachedIO需要与 FileIO、CachedFileIO、CachedIO 继承自同一个类，具备相同的接口。   搭建平台的组件 wrapper：  装饰器模式别名也叫wrapper，wrapper 也经常在前端搭建场景中遇到，当搭建平台加载一个组件时，希望拓展其基础能力，一般会使用 wrapper 层对组件进行嵌套，wrapper 层就是在不改变 API 的基础上，对第三方组件进行增强。      2 结构 #    抽象构件（Component）角色：定义一个抽象接口以规范准备接收扩展功能的目标对象。 具体构件（ConrecteComponent）角色：实现抽象构件，负责具体的行为实现。 抽象装饰（Decorator）角色：实现抽象构件，并包含具体构件的实例，可以通过其子类扩展具体构件的功能。 具体装饰（ConcreteDecoratorA 和 ConcreteDecoratorB）角色：继承抽象装饰角色，传入具体构件对象给到父类，重写抽象构件的方法，在重写的方法里面给具体构件对象添加附加的责任。  3 示例 #    现在有这么一个场景：</description>
     </item>
@@ -1987,7 +1984,7 @@ public interface Car { void run(); }   创建工厂的产品（宝马）：</des
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/design-pattern/4%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/4.1-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/</guid>
-      <description>1 模式动机 #   完成一项任务，往往可以有多种不同的方式，每一种方式称为一个策略，我们可以根据环境或者条件的不同选择不同的策略来完成该项任务。 在软件开发中也常常遇到类似的情况，实现某一个功能有多个路径，此时可以使用一种设计模式来使得系统可以灵活地选择解决路径，也能够方便地增加新的解决路径。 在软件系统中，有许多算法可以实现某一功能，如查找、排序等，一种常用的方法是硬编码在一个类中，如需要提供多种查找方法，可以将这些算法写到一个类中，在该类中提供多个方法，每一个方法对应一个具体的查找算法，当然也可以将这些查找算法封装在一个统一的方法中，通过if...else... 等条件判断语句来进行选择，这两种实现方法我们都称之为硬编码，如果需要增加一种新的查找算法，需要修改封装算法类的源代码，更换查找算法，也需要修改客户端调用代码，在这个算法类中封装了大量查找算法，该类代码将较复杂，维护较为困难。 除了提供专门的查找算法类之外，还可以在客户端程序中直接包含算法代码，这种做法更不可取，将导致客户端程序庞大而且难以维护，如果存在大量可供选择的算法时，问题将变得更加严重。 为了解决这些问题，可以定义一些独立的类来封装不同的算法，每一个类封装一个具体的算法，在这里，每一个封装算法的类我们都可以称之为策略（Strategy），为了保证这些策略的一致性，一般会用一个抽象的策略类来做算法的定义，而具体每种算法则对应于一个具体策略类。  2 模式定义 #   策略模式（Strategy Pattern）是指定义一系列算法，将每一个算法封装起来，并让他们可以相互替换。 策略模式让算法独立于使用他的客户而变化，也称为政策模式（Policy Pattern）。  3 模式结构 #  策略模式包含如下角色：
+      <description>策略模式 #  1 模式动机 #   完成一项任务，往往可以有多种不同的方式，每一种方式称为一个策略，我们可以根据环境或者条件的不同选择不同的策略来完成该项任务。 在软件开发中也常常遇到类似的情况，实现某一个功能有多个路径，此时可以使用一种设计模式来使得系统可以灵活地选择解决路径，也能够方便地增加新的解决路径。 在软件系统中，有许多算法可以实现某一功能，如查找、排序等，一种常用的方法是硬编码在一个类中，如需要提供多种查找方法，可以将这些算法写到一个类中，在该类中提供多个方法，每一个方法对应一个具体的查找算法，当然也可以将这些查找算法封装在一个统一的方法中，通过if...else... 等条件判断语句来进行选择，这两种实现方法我们都称之为硬编码，如果需要增加一种新的查找算法，需要修改封装算法类的源代码，更换查找算法，也需要修改客户端调用代码，在这个算法类中封装了大量查找算法，该类代码将较复杂，维护较为困难。 除了提供专门的查找算法类之外，还可以在客户端程序中直接包含算法代码，这种做法更不可取，将导致客户端程序庞大而且难以维护，如果存在大量可供选择的算法时，问题将变得更加严重。 为了解决这些问题，可以定义一些独立的类来封装不同的算法，每一个类封装一个具体的算法，在这里，每一个封装算法的类我们都可以称之为策略（Strategy），为了保证这些策略的一致性，一般会用一个抽象的策略类来做算法的定义，而具体每种算法则对应于一个具体策略类。  2 模式定义 #   策略模式（Strategy Pattern）是指定义一系列算法，将每一个算法封装起来，并让他们可以相互替换。 策略模式让算法独立于使用他的客户而变化，也称为政策模式（Policy Pattern）。  3 模式结构 #  策略模式包含如下角色：
  「抽象策略（Strategy）」角色：是「具体策略」的父类，定义所有支持的算法的公共接口。 「具体策略（ConcreteStrategy）」角色：封装了具体的算法或行为。 「环境（Context）」角色：用一个「具体策略」来配置，维护一个对抽象策略对象的引用。   4 使用步骤 #  策略模式的使用主要包含四步：
  创建「抽象策略」类，并定义所有支持的算法的公共接口。 创建「具体策略」类，并定义具体的算法实现。 创建「环境」类，通过构造方法，传入具体的策略参数，并根据具体的策略对象来调用其算法。 外界通过调用「环境」类的方法，通过传入不同参数来实例化不同的策略，从而得到不同的结果。   5 示例 #  下面将通过一个商场的收银系统为例进行说明，商场收银系统需要能够处理正常收费、商品打折和节假日满减等各种活动，这里正常收费、打折和满减是该系统需要实现的具体算法，他们都共用一个收费接口。
 5.1 创建抽象策略类 #  创建 CashStrategy 的抽象策略类，并定义所支持的算法的公共接口 acceptCash()：
@@ -2049,7 +2046,7 @@ int1 = 500;    此时，分别打印 int1、int2 的值，会输出为 500、100
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/java/4NIO/4.1-%E6%A6%82%E8%BF%B0/</guid>
-      <description>1 简介 #   NIO 中的 N 可以理解为 Non-Blocking，是一种同步非阻塞的 I/O 模型，在 JDK 1.4 中引入了 NIO 框架，对应于 java.nio 包，提供了 Channel、Selector、Buffer 等抽象。 他支持面向缓冲的、基于通道的 I/O 操作方法，提供了与传统 I/O 模型中的 Socket 和 ServerSocket 相对应的 SocketChannel 和 ServerSocketChannel 两种不同的套接字通道实现，这两种通道都支持阻塞和非阻塞两种模式：  阻塞模式就像传统中的支持一样，比较简单，但是性能和可靠性都不好，一般用于低负载、低并发的应用程序，以此来提升开发速度和可维护性。 非阻塞模式正好与之相反，一般用于高负载、高并发的（网络）应用，以此来提升高性能和可靠性。    2 BIO、NIO、AIO 的区别 #   底层原理可参考 五种 IO 模型，下面介绍的主要是 Java 中 BIO、NIO、AIO 的区别。
+      <description>概述 #  1 简介 #   NIO 中的 N 可以理解为 Non-Blocking，是一种同步非阻塞的 I/O 模型，在 JDK 1.4 中引入了 NIO 框架，对应于 java.nio 包，提供了 Channel、Selector、Buffer 等抽象。 他支持面向缓冲的、基于通道的 I/O 操作方法，提供了与传统 I/O 模型中的 Socket 和 ServerSocket 相对应的 SocketChannel 和 ServerSocketChannel 两种不同的套接字通道实现，这两种通道都支持阻塞和非阻塞两种模式：  阻塞模式就像传统中的支持一样，比较简单，但是性能和可靠性都不好，一般用于低负载、低并发的应用程序，以此来提升开发速度和可维护性。 非阻塞模式正好与之相反，一般用于高负载、高并发的（网络）应用，以此来提升高性能和可靠性。    2 BIO、NIO、AIO 的区别 #   底层原理可参考 五种 IO 模型，下面介绍的主要是 Java 中 BIO、NIO、AIO 的区别。
  2.1 BIO 是阻塞的，NIO 是非阻塞的 #   BIO 的各种流是阻塞的，这就意味着，当一个线程调用 read() 或 write() 时，该线程被阻塞，直到有一些数据被读取，或数据完全写入，在此期间，该线程不能再干其他任何事，因此在任何时候都可能有大量的线程处于休眠状态，只是等待输入或者输出就绪，这可以算为对资源的一种浪费， NIO 使我们可以进行非阻塞IO 操作，比如说，单线程从通道读取数据到 Buffer，同时可以继续做别的事，当数据读取到 Buffer 中后，线程再进行处理数据，写数据也是一样的，一个线程请求写入一些数据到某通道，但不需要等待他完全写入，这个线程可以同时去做别的事情，这样可以提高线程的利用效率。  2.</description>
     </item>
     
@@ -2091,7 +2088,7 @@ public class UserService { private HikariConfig config = new HikariConfig(); pri
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/spring-family/2SpringBoot/2.1-SpringSpringBootSpringCloud%E7%9A%84%E8%81%94%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB/</guid>
-      <description>1 Spring #  1.1 含义 #   Spring是一个生态体系，包含了 Spring Framework、Spring Boot、Spring Cloud 等（还包括 Spring Cloud Data Flow、Spring Data、Spring Integration、Spring Batch、Spring Security、Spring Hateoas），是一站式的轻量级的 Java 开发框架，核心是 IoC（控制反转）和 AOP（面向切面），针对于开发的 WEB 层（SpringMVC）、业务层（IoC）、持久层（JdbcTemplate）等都提供了多种配置解决方案。  2 SpringBoot #  2.1 含义 #   SpringBoot使用了约定大于配置的理念，集成了多个快速开发的 Spring 插件，同时自动过滤不需要配置的多余的插件，简化了项目开发的配置流程，一定程度上取消了 XML 配置，是一套快速配置开发的脚手架，能快速开发单个微服务。  3 SpringCloud #  3.1 含义 #   SpringCloud是一套分布式服务治理的框架，本身不会提供具体功能性的操作，专注于服务之间的通讯、熔断、监控等，需要很多的 组件来支持一套功能。 SpringCloud依赖于 SpringBoot 开发，而 SpringBoot 可以独立开发。  3.2 组件 #  3.2.1 默默无闻服务 #   融合在每个微服务中，依赖其他组件并为其提供服务。</description>
+      <description>Spring、SpringBoot、SpringCloud的联系与区别 #  1 Spring #  1.1 含义 #   Spring是一个生态体系，包含了 Spring Framework、Spring Boot、Spring Cloud 等（还包括 Spring Cloud Data Flow、Spring Data、Spring Integration、Spring Batch、Spring Security、Spring Hateoas），是一站式的轻量级的 Java 开发框架，核心是 IoC（控制反转）和 AOP（面向切面），针对于开发的 WEB 层（SpringMVC）、业务层（IoC）、持久层（JdbcTemplate）等都提供了多种配置解决方案。  2 SpringBoot #  2.1 含义 #   SpringBoot使用了约定大于配置的理念，集成了多个快速开发的 Spring 插件，同时自动过滤不需要配置的多余的插件，简化了项目开发的配置流程，一定程度上取消了 XML 配置，是一套快速配置开发的脚手架，能快速开发单个微服务。  3 SpringCloud #  3.1 含义 #   SpringCloud是一套分布式服务治理的框架，本身不会提供具体功能性的操作，专注于服务之间的通讯、熔断、监控等，需要很多的 组件来支持一套功能。 SpringCloud依赖于 SpringBoot 开发，而 SpringBoot 可以独立开发。  3.2 组件 #  3.</description>
     </item>
     
   </channel>

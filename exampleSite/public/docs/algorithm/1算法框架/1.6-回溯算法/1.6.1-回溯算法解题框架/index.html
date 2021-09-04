@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="1 含义 #    回溯算法建立在 DFS 基础之上，与 DFS 的主要不同在于：
+<meta name="description" content="回溯算法解题框架 #  1 含义 #    回溯算法建立在 DFS 基础之上，与 DFS 的主要不同在于：
  DFS 是一个劲的往某一个方向搜索，等到到达一个方向的终点时，才恢复状态，回溯上一层。 回溯算法在达到结束条件后，就恢复状态，回溯上一层。    当问题需要回头，以此来查出所有的解的时候，使用回溯算法，即满足结束条件或者发现不是正确路径的时候（走不通），要撤销选择，回退到上一个状态，继续尝试，直到找出所有解为止。
   解决一个回溯算法时主要按照以下步骤：
  画出递归树，找到状态变量（回溯函数的参数），这一部非常重要。 根据题意，确定结束条件。 找准选择列表（与函数参数相关），与第一步紧密关联。 判断是否需要剪枝。 做出选择，递归调用，进入下一层。 撤销选择。    回溯算法的核心就是for 循环里面的递归，即在递归调用之前【做选择】，在递归调用之后【撤销选择】，解题框架如下：
 result = [] def backtrack(路径, 选择列表): if 满足结束条件: result.add(路径) return for 选择 in 选择列表: 做选择 backtrack(路径, 选择列表) 撤销选择   2 应用场景 #  回溯算法的应用场景主要包括以下几个方面：
   子集、组合。  全排列。 搜索。   需要注意的是，子集、组合与排列是不同性质的概念，子集、组合是无关顺序的，而排列是和元素顺序有关的，例如 [1, 2] 和 [2, 1] 是同一个组合（子集），但是是两种不一样的排列，因此被分为两类问题。">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="1 含义 #    回溯算法建立在 DFS 基础之上，与 DFS 的主要不同在于：
+<meta property="og:description" content="回溯算法解题框架 #  1 含义 #    回溯算法建立在 DFS 基础之上，与 DFS 的主要不同在于：
  DFS 是一个劲的往某一个方向搜索，等到到达一个方向的终点时，才恢复状态，回溯上一层。 回溯算法在达到结束条件后，就恢复状态，回溯上一层。    当问题需要回头，以此来查出所有的解的时候，使用回溯算法，即满足结束条件或者发现不是正确路径的时候（走不通），要撤销选择，回退到上一个状态，继续尝试，直到找出所有解为止。
   解决一个回溯算法时主要按照以下步骤：
  画出递归树，找到状态变量（回溯函数的参数），这一部非常重要。 根据题意，确定结束条件。 找准选择列表（与函数参数相关），与第一步紧密关联。 判断是否需要剪枝。 做出选择，递归调用，进入下一层。 撤销选择。    回溯算法的核心就是for 循环里面的递归，即在递归调用之前【做选择】，在递归调用之后【撤销选择】，解题框架如下：
@@ -26,7 +26,7 @@ result = [] def backtrack(路径, 选择列表): if 满足结束条件: result.a
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3363,7 +3363,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#回溯算法解题框架">回溯算法解题框架</a>
       <ul>
         <li><a href="#1-含义">1 含义</a></li>
         <li><a href="#2-应用场景">2 应用场景</a>
@@ -3428,7 +3428,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h2 id="1-含义">
+  <article class="markdown"><h1 id="回溯算法解题框架">
+  回溯算法解题框架
+  <a class="anchor" href="#%e5%9b%9e%e6%ba%af%e7%ae%97%e6%b3%95%e8%a7%a3%e9%a2%98%e6%a1%86%e6%9e%b6">#</a>
+</h1>
+<h2 id="1-含义">
   1 含义
   <a class="anchor" href="#1-%e5%90%ab%e4%b9%89">#</a>
 </h2>
@@ -4149,7 +4153,7 @@ res<span style="color:#f92672">.</span><span style="color:#a6e22e">toArray</span
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#回溯算法解题框架">回溯算法解题框架</a>
       <ul>
         <li><a href="#1-含义">1 含义</a></li>
         <li><a href="#2-应用场景">2 应用场景</a>

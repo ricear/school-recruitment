@@ -3,23 +3,21 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="1 为什么要用 B 树、B&#43; 树索引 #    常用的数据结构如二叉查找树（Binary Search Tree, BST）的每个节点只能容纳一个数据，导致树的高度很高，逻辑上挨着的节点的数据可能离得很远，如果在内存中操作数据的话，这样问题并不大，但是由于读写磁盘的速度相比内存慢很多，每次读写磁盘的单位要比读写内存的最小单位大很多。
+<meta name="description" content="B 树、B&#43;树索引算法原理 #  1 为什么要用 B 树、B&#43; 树索引 #    常用的数据结构如二叉查找树（Binary Search Tree, BST）的每个节点只能容纳一个数据，导致树的高度很高，逻辑上挨着的节点的数据可能离得很远，如果在内存中操作数据的话，这样问题并不大，但是由于读写磁盘的速度相比内存慢很多，每次读写磁盘的单位要比读写内存的最小单位大很多。
   因此，对应的数据结构应该尽量的满足局部性原理，即当一个数据被用到时，其附近的数据也通常会马上被使用，因此，逻辑上相邻的数据在物理上也尽量存储在一起，这样才能减少读写磁盘的数量。
   因此，对比起一个节点只能存储一个数据的 BST 类数据结构来说，要求这种数据结构在形状上更胖，更加扁平，即每个节点能容纳更多的数据，这样就能降低树的高度，同时让相邻的数据都能尽量的存储在物理上也相邻的硬盘空间上，减少磁盘读写。
   以下图为例，图中从根节点出发，查找数据 14 的过程中，经过的第二节点中有键值 [3,7,13]，这三个值在逻辑上是相邻的，如果他们在磁盘上的存储也能做到在物理上相邻，那么只需要一次读操作就能把这个节点的数据从磁盘上加载到内存中进行数据比较，这样整个过程就只需要两次磁盘读操作，这种数据结构具有两个特点：
  高扇出： 临近键值的数据局部性更好。 低高度： 遍历期间的寻道次数更少。     B 树和 B&#43; 树就是两种利用磁盘局部性原理进行优化的树结构。
  MySQL为什么不使用跳表作为索引的数据结构？
- 数据库的数据量比较大，如果数据库索引使用了跳表，那么：  跳表的层数太高，数据存储不紧凑，产生大量的空间浪费。 查询时会产生大量跨页IO，而且磁盘磁头无法对链表进行预读，会产生大量的随机IO，对磁盘的缓存不友好，查询效率较低。       2 B 树 #  2.1 B 树的定义及性质 #    在 B 树种，分为两种节点：
- 内部节点（Internal Node）： 存储了数据以及指向其子节点的指针。 叶子节点（Leaf Node）： 叶子节点只存储数据，没有子节点。    一个数据，既可能存在内部节点上，也可能存在叶子节点上，这一点是与 B&#43; 树最大的不同，B&#43; 树只会将数据存储在叶子节点上。">
+ 数据库的数据量比较大，如果数据库索引使用了跳表，那么：  跳表的层数太高，数据存储不紧凑，产生大量的空间浪费。 查询时会产生大量跨页IO，而且磁盘磁头无法对链表进行预读，会产生大量的随机IO，对磁盘的缓存不友好，查询效率较低。       2 B 树 #  2.1 B 树的定义及性质 #    在 B 树种，分为两种节点：">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="1 为什么要用 B 树、B&#43; 树索引 #    常用的数据结构如二叉查找树（Binary Search Tree, BST）的每个节点只能容纳一个数据，导致树的高度很高，逻辑上挨着的节点的数据可能离得很远，如果在内存中操作数据的话，这样问题并不大，但是由于读写磁盘的速度相比内存慢很多，每次读写磁盘的单位要比读写内存的最小单位大很多。
+<meta property="og:description" content="B 树、B&#43;树索引算法原理 #  1 为什么要用 B 树、B&#43; 树索引 #    常用的数据结构如二叉查找树（Binary Search Tree, BST）的每个节点只能容纳一个数据，导致树的高度很高，逻辑上挨着的节点的数据可能离得很远，如果在内存中操作数据的话，这样问题并不大，但是由于读写磁盘的速度相比内存慢很多，每次读写磁盘的单位要比读写内存的最小单位大很多。
   因此，对应的数据结构应该尽量的满足局部性原理，即当一个数据被用到时，其附近的数据也通常会马上被使用，因此，逻辑上相邻的数据在物理上也尽量存储在一起，这样才能减少读写磁盘的数量。
   因此，对比起一个节点只能存储一个数据的 BST 类数据结构来说，要求这种数据结构在形状上更胖，更加扁平，即每个节点能容纳更多的数据，这样就能降低树的高度，同时让相邻的数据都能尽量的存储在物理上也相邻的硬盘空间上，减少磁盘读写。
   以下图为例，图中从根节点出发，查找数据 14 的过程中，经过的第二节点中有键值 [3,7,13]，这三个值在逻辑上是相邻的，如果他们在磁盘上的存储也能做到在物理上相邻，那么只需要一次读操作就能把这个节点的数据从磁盘上加载到内存中进行数据比较，这样整个过程就只需要两次磁盘读操作，这种数据结构具有两个特点：
  高扇出： 临近键值的数据局部性更好。 低高度： 遍历期间的寻道次数更少。     B 树和 B&#43; 树就是两种利用磁盘局部性原理进行优化的树结构。
  MySQL为什么不使用跳表作为索引的数据结构？
- 数据库的数据量比较大，如果数据库索引使用了跳表，那么：  跳表的层数太高，数据存储不紧凑，产生大量的空间浪费。 查询时会产生大量跨页IO，而且磁盘磁头无法对链表进行预读，会产生大量的随机IO，对磁盘的缓存不友好，查询效率较低。       2 B 树 #  2.1 B 树的定义及性质 #    在 B 树种，分为两种节点：
- 内部节点（Internal Node）： 存储了数据以及指向其子节点的指针。 叶子节点（Leaf Node）： 叶子节点只存储数据，没有子节点。    一个数据，既可能存在内部节点上，也可能存在叶子节点上，这一点是与 B&#43; 树最大的不同，B&#43; 树只会将数据存储在叶子节点上。" />
+ 数据库的数据量比较大，如果数据库索引使用了跳表，那么：  跳表的层数太高，数据存储不紧凑，产生大量的空间浪费。 查询时会产生大量跨页IO，而且磁盘磁头无法对链表进行预读，会产生大量的随机IO，对磁盘的缓存不友好，查询效率较低。       2 B 树 #  2.1 B 树的定义及性质 #    在 B 树种，分为两种节点：" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.2-B-%E6%A0%91B&#43;%E6%A0%91%E7%B4%A2%E5%BC%95%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/" /><meta property="article:section" content="docs" />
 
@@ -30,7 +28,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3367,7 +3365,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#b-树b树索引算法原理">B 树、B+树索引算法原理</a>
       <ul>
         <li><a href="#1-为什么要用-b-树b-树索引">1 为什么要用 B 树、B+ 树索引</a></li>
         <li><a href="#2-b-树">2 B 树</a>
@@ -3415,7 +3413,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h2 id="1-为什么要用-b-树b-树索引">
+  <article class="markdown"><h1 id="b-树b树索引算法原理">
+  B 树、B+树索引算法原理
+  <a class="anchor" href="#b-%e6%a0%91b%e6%a0%91%e7%b4%a2%e5%bc%95%e7%ae%97%e6%b3%95%e5%8e%9f%e7%90%86">#</a>
+</h1>
+<h2 id="1-为什么要用-b-树b-树索引">
   1 为什么要用 B 树、B+ 树索引
   <a class="anchor" href="#1-%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e7%94%a8-b-%e6%a0%91b-%e6%a0%91%e7%b4%a2%e5%bc%95">#</a>
 </h2>
@@ -3851,7 +3853,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#b-树b树索引算法原理">B 树、B+树索引算法原理</a>
       <ul>
         <li><a href="#1-为什么要用-b-树b-树索引">1 为什么要用 B 树、B+ 树索引</a></li>
         <li><a href="#2-b-树">2 B 树</a>

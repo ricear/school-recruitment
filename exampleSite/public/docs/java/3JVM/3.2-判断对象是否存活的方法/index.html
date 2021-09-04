@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="判断对象是否存活的方法有两种，分别是 引用计数法、可达性分析算法。
+<meta name="description" content="判断对象是否存活的方法 #  判断对象是否存活的方法有两种，分别是 引用计数法、可达性分析算法。
 1. 引用计数法 #    引用计数法是指给对象添加一个引用计数器，每当有一个地方 引用它时，计数器值就加 1，当引用失效时，计数器值就减 1，任何时刻计数器为 0 的对象就是不可能再被使用的。
   缺点是它很难解决对象之间相互循环引用的问题。举个简单的例子，对象 objA 和 obB 都有字段 Instance,赋值令 obja instance=objB 及 obiB. Instance=ojA，除此之外，这两个对象再无任何引用,实际上这两个对象已经不可能再被访问,但是它们因为互相引用着对方，导致它们的引用计数都不为 0，于是引用计数算法无法通知 GC 收集器回收它们，具体代码如下：
 /** * @author peng.wei * @version 1.0 * @date 2021/9/3 16:17 * @Description 引用计数法 GC 测试 */ public class ReferenceCountingGC { public Object instance = null; private static final int _1MB = 1024 * 1024; /** * 这个成员属性的唯一意义就是占点内存，以便能在 GC 日志中看清楚是否有回收过 */ private byte[] bigSize = new byte[2 * _1MB]; public static void main(String[] args) { ReferenceCountingGC objA = new ReferenceCountingGC(); ReferenceCountingGC objB = new ReferenceCountingGC(); objA.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="判断对象是否存活的方法有两种，分别是 引用计数法、可达性分析算法。
+<meta property="og:description" content="判断对象是否存活的方法 #  判断对象是否存活的方法有两种，分别是 引用计数法、可达性分析算法。
 1. 引用计数法 #    引用计数法是指给对象添加一个引用计数器，每当有一个地方 引用它时，计数器值就加 1，当引用失效时，计数器值就减 1，任何时刻计数器为 0 的对象就是不可能再被使用的。
   缺点是它很难解决对象之间相互循环引用的问题。举个简单的例子，对象 objA 和 obB 都有字段 Instance,赋值令 obja instance=objB 及 obiB. Instance=ojA，除此之外，这两个对象再无任何引用,实际上这两个对象已经不可能再被访问,但是它们因为互相引用着对方，导致它们的引用计数都不为 0，于是引用计数算法无法通知 GC 收集器回收它们，具体代码如下：
 /** * @author peng.wei * @version 1.0 * @date 2021/9/3 16:17 * @Description 引用计数法 GC 测试 */ public class ReferenceCountingGC { public Object instance = null; private static final int _1MB = 1024 * 1024; /** * 这个成员属性的唯一意义就是占点内存，以便能在 GC 日志中看清楚是否有回收过 */ private byte[] bigSize = new byte[2 * _1MB]; public static void main(String[] args) { ReferenceCountingGC objA = new ReferenceCountingGC(); ReferenceCountingGC objB = new ReferenceCountingGC(); objA." />
@@ -22,7 +22,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3359,7 +3359,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#判断对象是否存活的方法">判断对象是否存活的方法</a>
       <ul>
         <li><a href="#1-引用计数法">1. 引用计数法</a></li>
         <li><a href="#2-可达性分析算法">2. 可达性分析算法</a></li>
@@ -3378,7 +3378,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><p>判断对象是否存活的方法有两种，分别是 <code>引用计数法</code>、<code>可达性分析算法</code>。</p>
+  <article class="markdown"><h1 id="判断对象是否存活的方法">
+  判断对象是否存活的方法
+  <a class="anchor" href="#%e5%88%a4%e6%96%ad%e5%af%b9%e8%b1%a1%e6%98%af%e5%90%a6%e5%ad%98%e6%b4%bb%e7%9a%84%e6%96%b9%e6%b3%95">#</a>
+</h1>
+<p>判断对象是否存活的方法有两种，分别是 <code>引用计数法</code>、<code>可达性分析算法</code>。</p>
 <h2 id="1-引用计数法">
   1. 引用计数法
   <a class="anchor" href="#1-%e5%bc%95%e7%94%a8%e8%ae%a1%e6%95%b0%e6%b3%95">#</a>
@@ -3618,7 +3622,7 @@ No, i am dead.
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#判断对象是否存活的方法">判断对象是否存活的方法</a>
       <ul>
         <li><a href="#1-引用计数法">1. 引用计数法</a></li>
         <li><a href="#2-可达性分析算法">2. 可达性分析算法</a></li>

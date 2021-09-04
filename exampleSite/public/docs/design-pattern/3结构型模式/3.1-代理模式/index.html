@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="1 含义 #    代理模式是指通过代理控制对象的访问，可以在这个对象调用方法之前、调用方法之后去处理/添加新的功能。
+<meta name="description" content="代理模式 #  1 含义 #    代理模式是指通过代理控制对象的访问，可以在这个对象调用方法之前、调用方法之后去处理/添加新的功能。
   代码在原有代码乃至原业务流程都不修改的情况下，直接在业务流程中切入新代码，增加新功能。
  关于代理，以下小例子可以帮助我们理解代理的含义：
  游戏代练 游戏代练这件事就是一个代理模式，所谓代练，就是 Proxy，也即代理类，代理的流程是我们把自己的账号交给代练人员，让他们帮我们打怪升级，而我们只需提供账号即可，代练人员那边，他所要做的就是登陆我们的账号，然后替我们打游戏，从第三者的角度看，我们这个角色在打怪升级，但这个第三者并不知道是不是我们本人在打游戏，他只能看到我们这个账号正在打怪升级，但并不需要知道后面打游戏的是谁，这就是代理模式，由他人代理玩游戏。 邀请明星 假设我们现在要邀请明星来上节目，我们应该先给他的经纪人打电话，然后再由经纪人通知到该明星，这里经纪人充当的就是代理的角色。     2 应用场景 #   当不想访问某个对象或访问某个对象存在困难时，就可以为这个对象创建一个代理，通过代理来间接的访问这个对象。 如果原始对象有不同的访问权限，可以使用代理控制对原始对象的访问，保护原始对象。 在访问原始对象时执行一些自己的附加条件。 为某个对象在不同的地址空间提供局部代理，使得系统可以将服务端的实现隐藏，客户端不必考虑服务端的存在。 具体应用场景主要包括Spring AOP、日志打印、异常处理、事务控制、权限控制。  3 分类 #  代理模式主要分为静态代理模式和动态代理模式两类，其中动态代理模式可分为 JDK 动态代理和 cglib 动态代理两种。
 3.1 静态代理 #  3.1.1 含义 #   静态代理是由程序员或工具生成代理类的源码，再编译代理类。 所谓静态也就是在程序运行之前就已经存在代理类的字节码文件，代理类和委托类的关系在运行前就确定了。  3.1.2 类图 #    Subject：抽象主题类，定义了代理对象和真实对象的共同接口方法，既可以是接口，也可以是抽象类。 RealSubject：真实主题类，该类可以称为被委托类或被代理类，该类定义了代理对象所表示的真实对象，实现了 Subject 接口，而 Client端通过代理类间接的调用真实主题类的方法，由其执行真实的业务逻辑。 ProxySubject：代理类，该类也被称为委托类或代理类，该类中持有一个真实主题类的引用，同样实现了 Subject 接口，在其实现的接口方法中调用真实主题类中相应的接口方法，以此起到代理的作用。 Client：客户端，使用代理。   相关近义词：">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="1 含义 #    代理模式是指通过代理控制对象的访问，可以在这个对象调用方法之前、调用方法之后去处理/添加新的功能。
+<meta property="og:description" content="代理模式 #  1 含义 #    代理模式是指通过代理控制对象的访问，可以在这个对象调用方法之前、调用方法之后去处理/添加新的功能。
   代码在原有代码乃至原业务流程都不修改的情况下，直接在业务流程中切入新代码，增加新功能。
  关于代理，以下小例子可以帮助我们理解代理的含义：
  游戏代练 游戏代练这件事就是一个代理模式，所谓代练，就是 Proxy，也即代理类，代理的流程是我们把自己的账号交给代练人员，让他们帮我们打怪升级，而我们只需提供账号即可，代练人员那边，他所要做的就是登陆我们的账号，然后替我们打游戏，从第三者的角度看，我们这个角色在打怪升级，但这个第三者并不知道是不是我们本人在打游戏，他只能看到我们这个账号正在打怪升级，但并不需要知道后面打游戏的是谁，这就是代理模式，由他人代理玩游戏。 邀请明星 假设我们现在要邀请明星来上节目，我们应该先给他的经纪人打电话，然后再由经纪人通知到该明星，这里经纪人充当的就是代理的角色。     2 应用场景 #   当不想访问某个对象或访问某个对象存在困难时，就可以为这个对象创建一个代理，通过代理来间接的访问这个对象。 如果原始对象有不同的访问权限，可以使用代理控制对原始对象的访问，保护原始对象。 在访问原始对象时执行一些自己的附加条件。 为某个对象在不同的地址空间提供局部代理，使得系统可以将服务端的实现隐藏，客户端不必考虑服务端的存在。 具体应用场景主要包括Spring AOP、日志打印、异常处理、事务控制、权限控制。  3 分类 #  代理模式主要分为静态代理模式和动态代理模式两类，其中动态代理模式可分为 JDK 动态代理和 cglib 动态代理两种。
@@ -24,7 +24,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3361,7 +3361,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#代理模式">代理模式</a>
       <ul>
         <li><a href="#1-含义">1 含义</a></li>
         <li><a href="#2-应用场景">2 应用场景</a></li>
@@ -3415,7 +3415,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h2 id="1-含义">
+  <article class="markdown"><h1 id="代理模式">
+  代理模式
+  <a class="anchor" href="#%e4%bb%a3%e7%90%86%e6%a8%a1%e5%bc%8f">#</a>
+</h1>
+<h2 id="1-含义">
   1 含义
   <a class="anchor" href="#1-%e5%90%ab%e4%b9%89">#</a>
 </h2>
@@ -3995,7 +3999,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#代理模式">代理模式</a>
       <ul>
         <li><a href="#1-含义">1 含义</a></li>
         <li><a href="#2-应用场景">2 应用场景</a></li>

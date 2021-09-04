@@ -3,21 +3,19 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="1 优化方法 #  1.1 SQL 语句的优化 #   优化 SQL 语句时可以按照以下的步骤来进行：
+<meta name="description" content="数据库优化 #  1 优化方法 #  1.1 SQL 语句的优化 #   优化 SQL 语句时可以按照以下的步骤来进行：
  首先分析慢查询日志，这里面记录了响应时间超过阈值 long_query_time 的 SQL 语句，通过日志找出 IO 大的 SQL 以及发现未命中索引的 SQL。 然后使用 EXPLAIN 对慢查询 SQL 进行分析，通过EXPLAIN 命令可以得到表的读取顺序、数据读取操作的操作类型、哪些索引可以使用、哪些索引被实际使用、表之间的引用以及被扫描的行数等问题。     应尽量避免在 WHERE 子句中使用 !=、&lt;、&gt;操作符或对字段进行 null 值判断，否则数据库引擎将放弃使用索引而进行全表扫描。
   只返回必要的列，最好不要用 SELECT * 语句。
   只返回必要的行，使用 LIMIT 语句来限制返回的数据。
   高并发高性能的应用中尽量对关联查询分解为单表查询，然后将结果在应用程序中进行关联，例如下面这个查询：
-select * from tag join tag_post on tag_post.tag_id=tag.id join post on tag_post.post_id=post.id where tag.tag=&#39;mysql&#39;; 可以分解成下面这些查询来代替：
-select * from tag where tag=&#39;mysql&#39;; select * from tag_post where tag_id=1234; select * from post where id in(123,456,567,9989,8909); 这种用分解关联查询的方式重构查询具有如下优势：">
+select * from tag join tag_post on tag_post.tag_id=tag.id join post on tag_post.post_id=post.id where tag.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="1 优化方法 #  1.1 SQL 语句的优化 #   优化 SQL 语句时可以按照以下的步骤来进行：
+<meta property="og:description" content="数据库优化 #  1 优化方法 #  1.1 SQL 语句的优化 #   优化 SQL 语句时可以按照以下的步骤来进行：
  首先分析慢查询日志，这里面记录了响应时间超过阈值 long_query_time 的 SQL 语句，通过日志找出 IO 大的 SQL 以及发现未命中索引的 SQL。 然后使用 EXPLAIN 对慢查询 SQL 进行分析，通过EXPLAIN 命令可以得到表的读取顺序、数据读取操作的操作类型、哪些索引可以使用、哪些索引被实际使用、表之间的引用以及被扫描的行数等问题。     应尽量避免在 WHERE 子句中使用 !=、&lt;、&gt;操作符或对字段进行 null 值判断，否则数据库引擎将放弃使用索引而进行全表扫描。
   只返回必要的列，最好不要用 SELECT * 语句。
   只返回必要的行，使用 LIMIT 语句来限制返回的数据。
   高并发高性能的应用中尽量对关联查询分解为单表查询，然后将结果在应用程序中进行关联，例如下面这个查询：
-select * from tag join tag_post on tag_post.tag_id=tag.id join post on tag_post.post_id=post.id where tag.tag=&#39;mysql&#39;; 可以分解成下面这些查询来代替：
-select * from tag where tag=&#39;mysql&#39;; select * from tag_post where tag_id=1234; select * from post where id in(123,456,567,9989,8909); 这种用分解关联查询的方式重构查询具有如下优势：" />
+select * from tag join tag_post on tag_post.tag_id=tag.id join post on tag_post.post_id=post.id where tag." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.7-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%98%E5%8C%96/" /><meta property="article:section" content="docs" />
 
@@ -28,7 +26,7 @@ select * from tag where tag=&#39;mysql&#39;; select * from tag_post where tag_id
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3365,7 +3363,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#数据库优化">数据库优化</a>
       <ul>
         <li><a href="#1-优化方法">1 优化方法</a>
           <ul>
@@ -3396,7 +3394,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h2 id="1-优化方法">
+  <article class="markdown"><h1 id="数据库优化">
+  数据库优化
+  <a class="anchor" href="#%e6%95%b0%e6%8d%ae%e5%ba%93%e4%bc%98%e5%8c%96">#</a>
+</h1>
+<h2 id="1-优化方法">
   1 优化方法
   <a class="anchor" href="#1-%e4%bc%98%e5%8c%96%e6%96%b9%e6%b3%95">#</a>
 </h2>
@@ -3940,7 +3942,7 @@ net.ipv4.tcp_fin_timeout = 10
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#数据库优化">数据库优化</a>
       <ul>
         <li><a href="#1-优化方法">1 优化方法</a>
           <ul>

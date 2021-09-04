@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="1 题目 #  给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
+<meta name="description" content="多数元素 #  1 题目 #  给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
 你可以假设数组是非空的，并且给定的数组总是存在多数元素。
 示例 1：
 输入：[3,2,3] 输出：3 示例 2：
 输入：[2,2,1,1,1,2,2] 输出：2 进阶：
  尝试设计时间复杂度为 O(n)、空间复杂度为 O(1) 的算法解决此问题。  2 解题思路 #  2.1 计数 #  2.1.1 问题分析 #   最原始的思路是通过一个 $map$，其中 $key$为数组中的元素，$value$为对应元素出现的次数，添加完元素后，如果当前元素的出现次数大于 $\frac{n}{2}$，则该元素即为多数元素，直接返回即可。  2.1.2 参考代码 #  /** * 169. 多数元素（版本 1：计数） * @param nums 数组 * @return 数组中出现次数 大于 ⌊ n/2 ⌋ 的元素 */ public int majorityElementV1(int[] nums) { Map&lt;Integer, Integer&gt; map = new HashMap&lt;&gt;(); int m = nums.">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
-<meta property="og:description" content="1 题目 #  给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
+<meta property="og:description" content="多数元素 #  1 题目 #  给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
 你可以假设数组是非空的，并且给定的数组总是存在多数元素。
 示例 1：
 输入：[3,2,3] 输出：3 示例 2：
@@ -26,7 +26,7 @@
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.d54c827212935f77565b872675a4a154786a11eb2c7ebae0d88234ab971de3b6.js" integrity="sha256-1UyCchKTX3dWW4cmdaShVHhqEessfrrg2II0q5cd47Y=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.9724c1dc2903d85c7e2881fb089f17394b1b7244ffe56414ae421199f2690fb4.js" integrity="sha256-lyTB3CkD2Fx&#43;KIH7CJ8XOUsbckT/5WQUrkIRmfJpD7Q=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -3363,7 +3363,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#多数元素">多数元素</a>
       <ul>
         <li><a href="#1-题目">1 题目</a></li>
         <li><a href="#2-解题思路">2 解题思路</a>
@@ -3403,7 +3403,11 @@ https://github.com/alex-shpak/hugo-book
 
       
       
-  <article class="markdown"><h2 id="1-题目">
+  <article class="markdown"><h1 id="多数元素">
+  多数元素
+  <a class="anchor" href="#%e5%a4%9a%e6%95%b0%e5%85%83%e7%b4%a0">#</a>
+</h1>
+<h2 id="1-题目">
   1 题目
   <a class="anchor" href="#1-%e9%a2%98%e7%9b%ae">#</a>
 </h2>
@@ -3620,7 +3624,7 @@ https://github.com/alex-shpak/hugo-book
   
 <nav id="TableOfContents">
   <ul>
-    <li>
+    <li><a href="#多数元素">多数元素</a>
       <ul>
         <li><a href="#1-题目">1 题目</a></li>
         <li><a href="#2-解题思路">2 解题思路</a>
