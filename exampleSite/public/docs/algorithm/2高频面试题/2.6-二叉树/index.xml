@@ -41,10 +41,10 @@
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.4-%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.3-%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.4-%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.3-%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91/</guid>
       <description>重建二叉树 #  1 题目 #  输入某二叉树的前序遍历和中序遍历的结果，请重建该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。
 例如，给出
 前序遍历 preorder = [3,9,20,15,7] 中序遍历 inorder = [9,3,15,20,7] 返回如下的二叉树：
@@ -53,21 +53,6 @@
 中序遍历性质：节点按照 [左子树 | 根节点 | 右子树] 排序。
 根据以上性质，可得出以下结论：
  前序遍历的首元素为树的根节点 node 的值。 在中序遍历中搜索根节点 node 的索引，可将中序遍历划分为 [左子树 | 根节点 | 右子树]。 根据中序遍历中的左/右子树的节点数量，可将前序遍历划分为 [根节点 | 左子树 | 右子树]。  通过以上三步，可确定三个节点：树的根节点、左子树根节点、右子树根节点。对于树的左、右子树，仍可使用以上步骤划分子树的左右子树。</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.5-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E8%B7%AF%E5%BE%84%E5%92%8C/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.5-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E8%B7%AF%E5%BE%84%E5%92%8C/</guid>
-      <description>二叉树中的最大路径和 #  1 题目 #  路径 被定义为一条从树中任意节点出发，沿父节点-子节点连接，达到任意节点的序列。同一个节点在一条路径序列中 至多出现一次 。该路径 至少包含一个 节点，且不一定经过根节点。
-路径和 是路径中各节点值的总和。
-给你一个二叉树的根节点 root ，返回其 最大路径和 。
-示例 1：
-输入：root = [1,2,3] 输出：6 解释：最优路径是 2 -&amp;gt; 1 -&amp;gt; 3 ，路径和为 2 + 1 + 3 = 6 示例 2：
-输入：root = [-10,9,20,null,null,15,7] 输出：42 解释：最优路径是 15 -&amp;gt; 20 -&amp;gt; 7 ，路径和为 15 + 20 + 7 = 42 提示：
- 树中节点数目范围是 [1, 3 * 104] -1000 &amp;lt;= Node.val &amp;lt;= 1000  2 解题思路 #  2.</description>
     </item>
     
   </channel>
