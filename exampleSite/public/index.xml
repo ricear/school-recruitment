@@ -68,10 +68,10 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/design-pattern/1%E6%A6%82%E8%BF%B0/</guid>
-      <description>1 设计模式分类 #   设计模式可以分为三大类，分别是创建型模式、结构型模式、行为型模式。
+      <description>概述 #  1 设计模式分类 #   设计模式可以分为三大类，分别是创建型模式、结构型模式、行为型模式。
 1.1 创建型模式 #  创建型模式共五种，分别是：
   工厂模式。 抽象工厂模式。  单例模式。 建造者模式。 原型模式。  1.2 结构型模式 #  结构型模式共七种，分别是：
- 适配器模式。 装饰器模式。  代理模式。 外观模式。 桥接模式。 组合模式。 享元模式。  1.3 行为型模式 #  行为型模式共十一种，分别是：
+ 适配器模式。  装饰器模式。  代理模式。 外观模式。 桥接模式。 组合模式。 享元模式。  1.3 行为型模式 #  行为型模式共十一种，分别是：
   策略模式。 模板模式。 观察者模式。 迭代子模式。 责任链模式。 命令模式。 备忘录模式。 状态模式。 访问者模式。 中介者模式。 解释器模式。  参考文献 #    设计模式面试题（总结最全面的面试题！！！）。  </description>
     </item>
     
@@ -609,18 +609,15 @@ F(0) = 0, F(1) = 1 F(N) = F(N - 1) + F(N - 2), 其中 N &amp;gt; 1. 斐波那契
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.1-Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BF%AB/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.1-%E4%B8%BA%E4%BB%80%E4%B9%88Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E8%BF%99%E4%B9%88%E5%BF%AB/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.1-Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BF%AB/</guid>
-      <description>Redis为什么这么快 #    完全基于内存，绝大部分请求是纯粹的内存操作，非常快速。
-  数据结构简单，对数据操作也简单，Redis 中的数据结构是专门进行设计的。
- Redis 的具体数据类型及数据结构可参考 3.1.2 Redis 数据类型。
-   采用单线程，避免了不必要的上下文切换和竞争条件，也不存在多进程或多线程导致的切换而消耗 CPU，不用去考虑各种锁的问题，不存在加锁释放锁操作，没有因为可能出现死锁而导致的性能消耗。
- Redis 为什么采用单线程，单线程有什么优点？
- 因为Redis 的操作都是基于内存的，绝大部分请求是纯粹的内存操作，非常迅速。 而CPU 的速度是远大于内存的速度的，因此CPU 不是 Redis 的瓶颈，Redis 的瓶颈最有可能是机器内存或者网络带宽。 而使用单线程可以省去多线程时 CPU 上下文切换的时间，也不用去考虑各种锁的问题，不存在加锁释放锁的操作，没有死锁问题导致的性能消耗。 对于内存系统来说，多次读写都是在一个 CPU 上，没有上下文切换效率就是最高的。 既然单线程容易实现，而且CPU 不会成为瓶颈，那么就顺理成章的采用单线程的方案了。     使用多路 I/O 复用模型，非阻塞 IO。
-  使用底层模型不同，他们之间底层实现方式以及与客户端之间通信的应用协议不一样，Redis 直接自己构建了 VM 机制，因为一般的系统调用函数的话，会浪费一定的时间去移动和请求。
-  参考文献 #    几率大的 Redis 面试题（含答案）。  Redis 面试题（总结最全面的面试题）。  面试官：Redis 为什么这么快？除了基于内存操作还有其他原因吗？  Redis 是单线程的，但 Redis 为什么这么快？  Redis 为什么是单线程？为什么有如此高的性能？  </description>
+      <guid>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.1-%E4%B8%BA%E4%BB%80%E4%B9%88Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E8%BF%99%E4%B9%88%E5%BF%AB/</guid>
+      <description>为什么Redis单线程还这么快 #   严格来说，Redis Server是多线程的，只是他的请求处理整个流程是单线程处理的，我们平时所说的Redis单线程快是指他的请求处理过程非常地快。
+ Redis的性能非常之高，每秒可以承受10W+的QPS，他如此优秀的性能主要取决于一下几个方面：
+ 纯内存操作。 使用I/O多路复用技术。 非CPU密集型任务。 单线程的优势。 多线程优化。  1 纯内存操作 #   Redis是一个内存数据库，他的数据都存储在内存中，这意味着我们读写数据都是在内存中完成，这个速度是非常快的。 Redis是一个KV内存数据库，他内部构建了一个哈希表，根据指定的Key访问时，只需要$O(1)$的时间复杂度就可以找到对应的数据，同时，Redis提供了丰富的 数据类型，并使用高效的操作方式进行操作，这些操作都在内存中进行，并不会大量消耗CPU资源，所以速度极快。  2 使用IO多路复用技术 #   为什么Redis中要使用I/O多路复用这种技术呢？
+这是因为Redis是跑在单线程中的，所有的操作都是按照顺序线性执行的，但是由于读写操作等待用户输入或输出都是阻塞的，所以I/O操作在一般情况下往往不能直接返回，这会导致某一文件的I/O阻塞导致整个进程无法对其他客户提供服务，而I/O多路复用就是为了解决这个问题而出现的。
+  Redis采用了 IO多路复用技术和 非阻塞IO，这个技术由操作系统实现提供，Redis可以方便地操作系统的API。 Redis可以在单线程中监听多个Socket的请求，在任意一个Socket可读/可写时，Redis去读取客户端请求，在内存中操作对应的数据，然后再写会到Socket中，整个过程非常高效，Redis利用了IO多路复用技术的 事件驱动模型，保证在监听多个Socket连接的情况下，只针对有活动的Socket采取反应。  3 非CPU密集型任务 #   采用单线程的缺点很明显，无法使用多核CPU，但是由于Redis的大部分操作并不是CPU密集型任务，Redis的瓶颈在于内存和网络带宽，因此在高并发请求下，Redis需要更多的内存和更高的网络带宽，否则瓶颈很容易出现在内存不够用和网络延迟等待的情况。 如果我们觉得单个Redis实例的性能不足以支撑业务，Redis作者推荐部署多个Redis节点，组成集群的方式来利用多核CPU的能力，而不是在单个实例上使用哪个多线程来处理。  4 单线程优势 #   基于以上特性，Redis采用单线程已足够达到非常高的性能，所以Redis没有采用多线程模型。 单线程模型带来了以下好处：  没有了多线程上下文切换的性能损耗。 没有了访问共享资源加锁的性能损耗。 开发和调试非常友好，可维护性高。   单线程模型同时也具有缺点，最大的缺点是如果前一个请求发生耗时比较久的操作，那么整个Redis就会阻塞住，其他请求也无法进来，直到这个耗时久的操作处理完成并返回，其他请求才能被处理到，我们平时遇到Redis变慢或长时间阻塞的问题，90%也都是因为Redis处理请求是单线程这个原因导致的，所以我们平时在使用Redis时，一定要避免非常耗时的操作，例如使用时间复杂度过高的方式获取数据、一次性获取过多的数据、大量key集中 过期导致Redis 淘汰key压力变大等等，这些场景都会阻塞住整个处理线程，知道他们处理完成，势必会影响业务的访问。  5 多线程优化 #   Redis Server本身是多线程的，除了请求处理流程是单线程处理之外，Redis还有其他工作线程在后台执行，他负责异步执行某些比较耗时的任务，例如 AOF每秒刷盘、 AOF文件重写都是在另一个线程中完成的。 在Redis 4.</description>
     </item>
     
     <item>
@@ -643,6 +640,15 @@ F(0) = 0, F(1) = 1 F(N) = F(N - 1) + F(N - 2), 其中 N &amp;gt; 1. 斐波那契
     
     <item>
       <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.5-%E9%AB%98%E5%8F%AF%E7%94%A8/3.5.1-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.5-%E9%AB%98%E5%8F%AF%E7%94%A8/3.5.1-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/</guid>
+      <description>主从复制 #  1 概述 #   主从复制是指将一台 Redis 服务器的数据复制到其他的 Redis 服务器，前者称为主节点（Master），后者称为从节点（Slave）。 数据的复制是单向的，只能由主节点到从节点。 主从复制的作用主要包括：  数据冗余：  主从复制实现了数据的热备份，是持久化之外的一种数据冗余方式。   故障恢复：  当主节点出现问题时，可以由从节点提供服务，实现快速的故障恢复，实际上是一种服务的冗余。   负载均衡：  在主从复制的基础上，配合读写分离，可以由主节点提供写服务，由从节点提供读服务，分担服务器负载，尤其在写少读多的场景下，通过多个从节点分担读负载，可以大大提高 Redis 服务器的并发量。   高可用：  除了上述作用外，主从复制还是哨兵和集群能够实施的基础，因此说主从复制是 Redis 高可用的基础。      2 实现 #  2.1 旧版复制功能 #  2.1.1 实现 #   Redis 的复制功能分为同步（Sync）和命令传播（Command Propagate）两个操作：  同步操作用于将从服务器的数据库状态更新至主服务器当前所处的数据库状态。 命令传播操作则用于在主服务器的数据库状态被修改，导致主从服务器的数据库状态出现不一致时，让主从服务器的数据库重新回到一致状态。    2.1.1.1 同步 #   当客户端向从服务器发送 SLAVEOF 命令，要求从服务器复制主服务器时，从服务器首先需要执行同步操作，也即是，将从服务器的数据库状态更新至主服务器当前所处的数据库状态。 从服务器对主服务器的同步操作需要通过向主服务器发送 SYNC 命令来完成，其主要步骤如下：   从服务器向主服务器发送 SYNC 命令。</description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.1-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -657,7 +663,7 @@ F(0) = 0, F(1) = 1 F(N) = F(N - 1) + F(N - 2), 其中 N &amp;gt; 1. 斐波那契
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/</guid>
-      <description>背包问题 #  1 含义 #   给定一个背包容量 $target$，再给定一个数组$nums$（物品），能否按一定方式选取 $nums$ 中的元素得到 $target$。 需要注意的是：  背包容量 $target$ 和物品 $nums$ 的类型可能是数，也可能是字符串。 $target$可能题目已经给出（显式），也可能是需要我们从题目的信息中挖掘出来（非显式）（常见的非显式 $target$ 比如 $sum / 2$ 等）。 选取的方式有常见的以下几种：  每个元素选一次。 每个元素选多次。 选元素进行排列组合。      2 分类及解题模板 #   常见的背包类型有以下几种：  0/1 背包问题：  每个元素最多选取一次。 外循环 $nums$，内循环（倒序）$target$，且 $target \ge num$。   完全背包问题：  每个元素可以重复选择。 外循环 $nums$，内循环（正序）$target$，且 $target \ge num$。   组合背包问题：  背包中的物品要考虑顺序。 外循环（正序）$target$，内循环 $nums$，且 $target \ge num$。   分组背包问题：  不止一个背包，需要遍历每一个背包。 这个比较特殊，需要三重循环，外循环背包 $bags$，内部两层循环根据题目的要求转化为上面三种背包类型的模板。     而每个背包问题要求的也是不同的，按照所求问题分类，又可以分为以下几种：  最值问题：  要求最大值或最小值。 $dp[i] = max/min(dp[i], dp[i - num] + 1)$ 或 $dp[i] = max/min(dp[i], dp[i - num] + num)$。   存在问题：  是否存在&amp;hellip;，满足&amp;hellip;。 $dp[i] = dp[i] || dp[i - num]$。   组合问题：  求所有满足&amp;hellip;的排列组合。 $dp[i] += dp[i - num]$。      3 题目示例 #  3.</description>
+      <description>背包问题 #  1 含义 #   给定一个背包容量 $target$，再给定一个数组$nums$（物品），能否按一定方式选取 $nums$ 中的元素得到 $target$。 需要注意的是：  背包容量 $target$ 和物品 $nums$ 的类型可能是数，也可能是字符串。 $target$可能题目已经给出（显式），也可能是需要我们从题目的信息中挖掘出来（非显式）（常见的非显式 $target$ 比如 $sum / 2$ 等）。 选取的方式有常见的以下几种：  每个元素选一次。 每个元素选多次。 选元素进行排列组合。      2 分类及解题模板 #   常见的背包类型有以下几种：  0/1 背包问题：  每个元素最多选取一次。 外循环 $nums$，内循环（倒序）$target$，且 $target \ge num$。   完全背包问题：  每个元素可以重复选择。 外循环 $nums$，内循环（正序）$target$，且 $target \ge num$。   组合背包问题：  背包中的物品要考虑顺序。 外循环（正序）$target$，内循环 $nums$，且 $target \ge num$。   分组背包问题：  不止一个背包，需要遍历每一个背包。 这个比较特殊，需要三重循环，外循环背包 $bags$，内部两层循环根据题目的要求转化为上面三种背包类型的模板。     而每个背包问题要求的也是不同的，按照所求问题分类，又可以分为以下几种：  最值问题：  要求最大值或最小值。 $dp[i] = max/min(dp[i], dp[i - num] + 1)$ 或 $dp[i] = max/min(dp[i], dp[i - num] + num)$。 一般需要把$dp[i]$初始化为 Integer.</description>
     </item>
     
     <item>
@@ -691,6 +697,21 @@ F(0) = 0, F(1) = 1 F(N) = F(N - 1) + F(N - 2), 其中 N &amp;gt; 1. 斐波那契
 typedef struct redisObject { unsigned [type] 4; unsigned [encoding] 4; unsigned [lru] REDIS_LRU_BITS; int refcount; void *ptr; } robj;   上面的几个字段的意义如下：
  type：数据类型，就是我们熟悉的string、hash、list 等。 encoding：内部编码，其实就是数据结构，指的是当前这个 value 底层是用的什么数据结构，因为同一个数据类型底层也有多种数据结构的实现，所以这里需要指定数据结构。 REDIS_LRU_BITS：当前对象可以保留的时长。 refcount：对象引用计数，用于 GC。 ptr：指针，指向以 encoding 的方式实现这个对象的实际地址。    整个 Redis 的数据结构组织如下图所示：
    2 数据类型 #  Redis 中主要有 5 种数据类型，分别是字符串（String）、列表（List）、集合（Set）、有序集合（ZSet）、哈希（Hash）。</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.5-%E9%AB%98%E5%8F%AF%E7%94%A8/3.5.2-%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.5-%E9%AB%98%E5%8F%AF%E7%94%A8/3.5.2-%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/</guid>
+      <description>哨兵模式 #  1 概述 #   哨兵模式是 Redis 的高可用的解决方案之一，由一个或多个哨兵实例组成的哨兵系统可以监视任意多个主服务器，以及这些主服务器属下的所有从服务器，并在被监视的主服务器进入下线状态时，自动将下线主服务器属下的某个从服务器升级为新的主服务器，然后由新的主服务器代替已下线的主服务器继续处理命令请求。 具体示例如下：   下图展示了一个哨兵系统监视服务器的例子，其中：
+  用双环图案表示的是当前的主服务器 server1。
+  用单环图案表示的是主服务器的三个从服务器 server2、server3、server4。
+  server2、server3、server4 三个从服务器正在复制主服务器 server1，而哨兵系统正在监视所有四个服务器。
+     假设这时，主服务器 server1 进入下线状态，那么从服务器 server2、server3、server4 对主服务器的复制操作将被终止，并且哨兵系统会察觉到 server1 已下线，如下图所示（下线的服务器用虚线表示）。
+   当 server1 的下线时长超过用户设定的下线时长上限时，哨兵系统就会对 server1 执行故障转移操作：
+ 首先，哨兵系统会挑选server1 属下的其中一个从服务器，并将这个被选中的从服务器升级为新的主服务器。 之后，哨兵系统会向server1 属下的所有从服务器发送新的复制指令，让他们成为新的主服务器的从服务器，当所有从服务器都开始复制新的主服务器时，故障转移操作执行完毕。 另外，哨兵还会继续监视已下线的server1，并在他重新上线时，将他设置为新的主服务器的从服务器。    例如，下图展示了哨兵系统将 server2 升级为新的主服务器，并让服务器 server3 和 server4 成为 server2 的从服务器的过程，之后，如果 server1 重新上线的话，他将被哨兵系统降级为 server2 的从服务器。</description>
     </item>
     
     <item>
@@ -744,6 +765,20 @@ typedef struct redisObject { unsigned [type] 4; unsigned [encoding] 4; unsigned 
     
     <item>
       <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.5-%E9%AB%98%E5%8F%AF%E7%94%A8/3.5.3-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/database/3Redis/3.5-%E9%AB%98%E5%8F%AF%E7%94%A8/3.5.3-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/</guid>
+      <description>集群模式 #   Redis 集群是 Redis 提供的分布式数据库方案，集群通过分片来进行数据共享，并提供复制和故障转移功能。 下面将对集群的节点、槽指派、命令执行、转向、故障转移、消息等各个方面进行介绍。  1 节点 #    一个 Redis 集群通常由多个节点组成，在刚开始的时候，每个节点都是相互独立的，他们都处于一个只包含自己的集群当中，要组建一个真正可工作的集群，我们必须将各个独立的节点连接起来，构成一个包含多个节点的集群。
+  连接各个节点的工作可以使用 CLUSTER MEET 命令来完成，该命令的格式如下：
+CLUSTER MEET &amp;lt;ip&amp;gt; &amp;lt;port&amp;gt; 向一个节点 node 发送 CLUSTER MEET 命令，可以让 node 节点与 ip 和 port 所指定的节点进行握手，当握手成功时，node节点就会将 ip 和 port 所指定的节点添加到 node 节点所在的集群中。
+  具体实例如下：
+   1.1 启动节点 #    一个节点就是一个运行在集群模式下的 Redis 服务器，Redis 服务器在启动时会根据 cluster_enabled 配置选项是否为 yes 来决定是否开启服务器的集群模式，如下图所示：
+   节点（运行在集群模式下的 Redis 服务器）会继续使用所有在单机模式中使用的服务器组件，比如说：</description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>https://books.grayson.top/school-recruitment/docs/java/3JVM/3.3-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -759,27 +794,18 @@ typedef struct redisObject { unsigned [type] 4; unsigned [encoding] 4; unsigned 
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.4-%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.4-%E5%BA%8F%E5%88%97%E5%92%8C%E6%95%B0%E7%BB%84%E7%B1%BB%E9%97%AE%E9%A2%98/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.4-%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/</guid>
-      <description>最长递增子序列 #  1 题目 #  给你一个整数数组 nums ，找到其中最长严格递增子序列的长度。
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.4-%E5%BA%8F%E5%88%97%E5%92%8C%E6%95%B0%E7%BB%84%E7%B1%BB%E9%97%AE%E9%A2%98/</guid>
+      <description>序列和数组类问题 #  1 序列类问题 #  1.1 最长递增子序列 #  1.1.1 题目 #  给你一个整数数组 nums ，找到其中最长严格递增子序列的长度。
 子序列是由数组派生而来的序列，删除（或不删除）数组中的元素而不改变其余元素的顺序。例如，[3,6,2,7] 是数组 [0,3,1,6,2,2,7] 的子序列。
 示例 1：
 输入：nums = [10,9,2,5,3,7,101,18] 输出：4 解释：最长递增子序列是 [2,3,7,101]，因此长度为 4 。 示例 2：
 输入：nums = [0,1,0,3,2,3] 输出：4 示例 3：
 输入：nums = [7,7,7,7,7,7,7] 输出：1 提示：
  1 &amp;lt;= nums.length &amp;lt;= 2500 -104 &amp;lt;= nums[i] &amp;lt;= 104  进阶：
- 你可以设计时间复杂度为 O(n2) 的解决方案吗？ 你能将算法的时间复杂度降低到 O(n log(n)) 吗?  2 解题思路 #  2.1 动态规划法 #  2.1.1 问题分析 #  动态规划的核心设计思想是数学归纳法。</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.4-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.4-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</guid>
-      <description>排序算法 #  1 简单选择排序 #  1.1 算法原理 #   简单排序算法的基本思想为每一趟从待排序的数据元素中选择最小（最大）的一个元素作为首元素，直到所有元素排完为止。  1.2 参考代码 #   在算法实现时，每一趟确定最小元素的时候会通过不断地比较交换来使得首位置为当前最小。 交换是个比较耗时的操作，其实我们很容易发现，在还未完全确定当前最小元素之前，这些交换都是无意义的。 我们可以通过设置一个变量minInd，每一次比较仅存储较小元素的数组下标，当这一轮循环结束之后，那这个变量存储的就是当前最小元素的下标，此时再执行交换操作即可。  /** * @author peng.wei * @version 1.0 * @date 2021/5/3 20:52 * @Description 简单选择排序算法 */ public class SimpleSelectionSort { public static void sort(int[] arr) { int m = arr.length; for (int i = 0; i &amp;lt; m - 1; i++) { int minInd = i; for (int j = minInd + 1; j &amp;lt; m; j++) { // 只记录最小元素的位置，而不是每一次比较都交换，减少交换的次数  if (arr[minInd] &amp;gt; arr[j]) {minInd = j;} } if (minInd !</description>
+ 你可以设计时间复杂度为 O(n2) 的解决方案吗？ 你能将算法的时间复杂度降低到 O(n log(n)) 吗?  1.1.2 解题思路 #  1.</description>
     </item>
     
     <item>
@@ -876,21 +902,12 @@ def EXPIRE(key, ttl_in_sec): # 将 TTL 转换成毫秒 ttl_in_ms = sec_to_ms(ttl
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.7-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E5%BA%8F%E5%88%97/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.7-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97%E9%80%9A%E8%A7%A3/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.7-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E5%BA%8F%E5%88%97/</guid>
-      <description>最长回文子序列 #  1 题目 #  给定一个字符串 s ，找到其中最长的回文子序列，并返回该序列的长度。可以假设 s 的最大长度为 1000 。 示例 1: 输入:
-&amp;quot;bbbab&amp;quot; 输出:
-4 一个可能的最长回文子序列为 &amp;ldquo;bbbb&amp;rdquo;。
-示例 2: 输入:
-&amp;quot;cbbd&amp;quot; 输出:
-2 一个可能的最长回文子序列为 &amp;ldquo;bb&amp;rdquo;。
-提示：
- 1 &amp;lt;= s.length &amp;lt;= 1000 s 只包含小写英文字母  2 解题思路 #  2.1 子序列问题处理模板 #  对于这种子序列问题，我们一般需要使用动态规划的方法来解决：
- 找状态关系（通过数学归纳获得）。 定义 dp 数组（根据状态转移方程获得）。  dp 数组的定义主要有两种方式，一种是定义一个一维数组，另一种是定义一个二维数组。
-2.1.1 一维 dp 数组 #  例如，在 最长递增子序列中，我们就是定义了一个一维数组，其含义为：在子数组 $array[0..i]$ 中，我们要求的子序列（最长递增子序列）的长度是 $dp[i]$。
-int n = array.</description>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.7-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97%E9%80%9A%E8%A7%A3/</guid>
+      <description>股票问题系列通解 #   本篇文章转载自 股票问题系列通解（转载翻译）。
+ 1 前言 #   股票问题一共有六道题，链接如下：   121. 买卖股票的最佳时机。  122. 买卖股票的最佳时机 II。  123. 买卖股票的最佳时机 III。  188. 买卖股票的最佳时机 IV。  309. 最佳买卖股票时机含冷冻期。  714. 买卖股票的最佳时机含手续费。   每个问题都有优质的题解，但是大多数题解没有建立起这些问题之间的联系，也没有给出股票问题系列的通解，这篇文章给出适用于全部股票问题的通解，以及对于每个特定问题的特解。  2 通用情况 #   这个想法基于如下问题，给定一个表示每天股票价格的数组，什么因素决定了可以获得的最大收益，相信大多数人可以很快给出答案，例如在那些天进行交易以及允许多少次交易，这些因素当然也很重要，在问题描述中也有这些因素，然而还有一个隐藏但是关键的因素决定了最大收益，下文将阐述这一点。 首先介绍一些符号：  用 $n$表示股票价格的数组。 用 $i$表示第 $i$ 天（$i$ 的取值范围是 0 到 $n - 1$）。 用 $k$表示允许的最大交易次数。 用 $T[i][k]$表示在第 $i$ 天结束时，最多进行 $k$ 次交易的情况下可以获得的最大收益。   基准情况为 $T[-1][k] = T[i][0] = 0$，表示没有进行股票交易时没有收益（注意第一天对应 $i = 0$，因此 $i = -1$ 表示没有股票交易）。 现在开始将 $T[i][k]$ 关联到子问题，得到状态转移方程：  第 $i$ 天可能有三个操作，分别为买入、卖出、休息。 我们并不知道哪个操作是最好的，但是可以通过计算得到选择每个操作可以得到的最大收益，假设没有别的限制条件，则可以尝试每一种操作，并选择可以最大化收益的一种操作，但是，题目中确实有限制条件，规定不能同时进行多次交易，因此如果决定在第 $i$ 天买入，在买入之前必须持有 0 份股票，如果决定在第 $i$ 天卖出，在卖出之前必须恰好持有 1 份股票，持有股票的数量是上文提及到的隐藏因素，该因素影响第 $i$ 天可以进行的操作，进而影响最大收益。 因此对 $T[i][k]$ 的定义需要分成两项：  $T[i][k][0]$表示第 $i$ 天结束时，最多进行 $k$ 次交易且在进行操作后持有 0 份股票的情况下可以获得的最大收益。 $T[i][k][1]$表示在第 $i$ 天结束时，最多进行 $k$ 次交易且在进行操作后持有 1 份股票的情况下可以获得的最大收益。   使用新的状态表示之后，可以得到基准情况和状态转移方程如下：   基准情况：</description>
     </item>
     
     <item>
@@ -905,19 +922,16 @@ int n = array.</description>
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.8-%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%92%8C/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.8-%E6%9C%80%E9%95%BF%E6%9C%89%E6%95%88%E6%8B%AC%E5%8F%B7/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.8-%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%92%8C/</guid>
-      <description>最大子序和 #  1 题目 #  给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.8-%E6%9C%80%E9%95%BF%E6%9C%89%E6%95%88%E6%8B%AC%E5%8F%B7/</guid>
+      <description>最长有效括号 #  1 题目 #  给你一个只包含 &amp;lsquo;(&amp;rsquo; 和 &amp;lsquo;)&amp;rsquo; 的字符串，找出最长有效（格式正确且连续）括号子串的长度。
 示例 1：
-输入：nums = [-2,1,-3,4,-1,2,1,-5,4] 输出：6 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。 示例 2：
-输入：nums = [1] 输出：1 示例 3：
-输入：nums = [0] 输出：0 示例 4：
-输入：nums = [-1] 输出：-1 示例 5：
-输入：nums = [-100000] 输出：-100000 提示：
- 1 &amp;lt;= nums.length &amp;lt;= 3 * 104 -105 &amp;lt;= nums[i] &amp;lt;= 105  进阶： 如果你已经实现复杂度为 O(n) 的解法，尝试使用更为精妙的 分治法 求解。
-2 解题思路 #  2.</description>
+输入：s = &amp;#34;(()&amp;#34; 输出：2 解释：最长有效括号子串是 &amp;#34;()&amp;#34; 示例 2：
+输入：s = &amp;#34;)()())&amp;#34; 输出：4 解释：最长有效括号子串是 &amp;#34;()()&amp;#34; 示例 3：
+输入：s = &amp;#34;&amp;#34; 输出：0 提示：
+ 0 &amp;lt;= s.length &amp;lt;= 3 * 104 s[i] 为 &amp;lsquo;(&amp;rsquo; 或 &amp;lsquo;)&amp;rsquo;  2 解题思路 #  2.1 动态规划 #  2.1.1 问题解析 #   对于这种最值型题目一般采用动态规划的方法来求解。 动态规划题目的分析分为以下 4 个步骤：  确定状态：  研究最优策略的最后一步。 化为子问题。   转移方程：  根据子问题定义得到。   初始条件和边界情况。 计算顺序。   首先，我们定义一个 $dp$ 数组，其中 $dp[i]$表示以下标为 $i$ 的字符结尾的最长有效子字符串的长度。 然后进行动态规划的求解：  确定状态：  对于最优的策略，一定有最后一个元素 $s[i]$，所以，我们先看第 $i$ 个位置，这个位置的元素 $s[i]$ 有两种情况：  $s[i] = &amp;lsquo;(&#39;$：这时 $s[i]$无法和其之前的元素组成有效的括号对，所以 $dp[i] = 0$。 $s[i] = &amp;lsquo;)&#39;$：这时，需要看其前面一个元素来判断是否为有效括号对：   $s[i - 1] = &amp;lsquo;(&#39;$：即 $s[i]$和 $s[i - 1]$ 组成一对有效括号，有效括号长度新增 2，此时以 $i$位置的字符结尾的最长有效括号长度为以 $(i - 2)$ 位置的字符结尾的最长有效括号长度加 2，我们无需知道 $(i - 2)$ 位置的字符是否可以组成有序括号对，此时有：</description>
     </item>
     
     <item>
@@ -1146,43 +1160,10 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.1-%E5%88%A0%E9%99%A4%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E9%A1%B9/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.1-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%B6%88%E5%A4%B1%E7%9A%84%E5%85%83%E7%B4%A0/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.1-%E5%88%A0%E9%99%A4%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E9%A1%B9/</guid>
-      <description>删除有序数组中的重复项 #  2.4.1 题目 #  给你一个有序数组 nums ，请你原地删除重复出现的元素，使每个元素只出现一次 ，返回删除后数组的新长度。
-不要使用额外的数组空间，你必须在 原地 修改输入数组 并在使用 O(1) 额外空间的条件下完成。
-说明:
-为什么返回数值是整数，但输出的答案是数组呢?
-请注意，输入数组是以「引用」方式传递的，这意味着在函数里修改输入数组对于调用者是可见的。
-你可以想象内部操作如下:
-// nums 是以“引用”方式传递的。也就是说，不对实参做任何拷贝 int len = removeDuplicates(nums);// 在函数里修改输入数组对于调用者是可见的。 // 根据你的函数返回的长度, 它会打印出数组中 该长度范围内 的所有元素。 for (int i = 0; i &amp;lt; len; i++) { print(nums[i]); } 示例 1：
-输入：nums = [1,1,2] 输出：2, nums = [1,2] 解释：函数应该返回新的长度 2 ，并且原数组 nums 的前两个元素被修改为 1, 2 。不需要考虑数组中超出新长度后面的元素。 示例 2：
-输入：nums = [0,0,1,1,1,2,2,3,3,4] 输出：5, nums = [0,1,2,3,4] 解释：函数应该返回新的长度 5 ， 并且原数组 nums 的前五个元素被修改为 0, 1, 2, 3, 4 。不需要考虑数组中超出新长度后面的元素。 2.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.2-%E6%89%BE%E5%87%BA%E6%95%B0%E7%BB%84%E6%B8%B8%E6%88%8F%E7%9A%84%E8%B5%A2%E5%AE%B6/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.2-%E6%89%BE%E5%87%BA%E6%95%B0%E7%BB%84%E6%B8%B8%E6%88%8F%E7%9A%84%E8%B5%A2%E5%AE%B6/</guid>
-      <description>找出数组游戏的赢家 #  1 题目 #  给你一个由 不同 整数组成的整数数组 arr 和一个整数 k 。
-每回合游戏都在数组的前两个元素（即 arr[0] 和 arr[1] ）之间进行。比较 arr[0] 与 arr[1] 的大小，较大的整数将会取得这一回合的胜利并保留在位置 0 ，较小的整数移至数组的末尾。当一个整数赢得 k 个连续回合时，游戏结束，该整数就是比赛的 赢家 。
-返回赢得比赛的整数。
-题目数据 保证 游戏存在赢家。
-示例 1：
-输入：arr = [2,1,3,5,4,6,7], k = 2 输出：5 解释：一起看一下本场游戏每回合的情况：因此将进行 4 回合比赛，其中 5 是赢家，因为它连胜 2 回合。 示例 2：
-输入：arr = [3,2,1], k = 10 输出：3 解释：3 将会在前 10 个回合中连续获胜。 示例 3：
-输入：arr = [1,9,8,2,3,7,6,4,5], k = 7 输出：9 示例 4：</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.4-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%B6%88%E5%A4%B1%E7%9A%84%E5%85%83%E7%B4%A0/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.4-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%B6%88%E5%A4%B1%E7%9A%84%E5%85%83%E7%B4%A0/</guid>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.1-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%B6%88%E5%A4%B1%E7%9A%84%E5%85%83%E7%B4%A0/</guid>
       <description>如何寻找消失的元素 #  1 题目 #  数组 nums 包含从 0 到 n 的所有整数，但其中缺了一个。请编写代码找出那个缺失的整数。你有办法在 O(n)时间内完成吗？
 注意： 本题相对书上原题稍作改动
 示例 1：
@@ -1198,10 +1179,10 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.5-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E7%BC%BA%E5%A4%B1%E5%92%8C%E9%87%8D%E5%A4%8D%E7%9A%84%E5%85%83%E7%B4%A0/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.2-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E7%BC%BA%E5%A4%B1%E5%92%8C%E9%87%8D%E5%A4%8D%E7%9A%84%E5%85%83%E7%B4%A0/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.5-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E7%BC%BA%E5%A4%B1%E5%92%8C%E9%87%8D%E5%A4%8D%E7%9A%84%E5%85%83%E7%B4%A0/</guid>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.2-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E7%BC%BA%E5%A4%B1%E5%92%8C%E9%87%8D%E5%A4%8D%E7%9A%84%E5%85%83%E7%B4%A0/</guid>
       <description>如何寻找缺失和重复的元素 #  1 题目 #  集合 s 包含从 1 到 n 的整数。不幸的是，因为数据错误，导致集合里面某一个数字复制了成了集合里面的另外一个数字的值，导致集合 丢失了一个数字 并且 有一个数字重复 。
 给定一个数组 nums 代表了集合 S 发生错误后的结果。
 请你找出重复出现的整数，再找到丢失的整数，将它们以数组的形式返回。
@@ -1219,10 +1200,26 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.6-%E6%9C%80%E5%A4%A7%E6%95%B0/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.3-%E6%89%BE%E5%87%BA%E6%95%B0%E7%BB%84%E6%B8%B8%E6%88%8F%E7%9A%84%E8%B5%A2%E5%AE%B6/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.6-%E6%9C%80%E5%A4%A7%E6%95%B0/</guid>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.3-%E6%89%BE%E5%87%BA%E6%95%B0%E7%BB%84%E6%B8%B8%E6%88%8F%E7%9A%84%E8%B5%A2%E5%AE%B6/</guid>
+      <description>找出数组游戏的赢家 #  1 题目 #  给你一个由 不同 整数组成的整数数组 arr 和一个整数 k 。
+每回合游戏都在数组的前两个元素（即 arr[0] 和 arr[1] ）之间进行。比较 arr[0] 与 arr[1] 的大小，较大的整数将会取得这一回合的胜利并保留在位置 0 ，较小的整数移至数组的末尾。当一个整数赢得 k 个连续回合时，游戏结束，该整数就是比赛的 赢家 。
+返回赢得比赛的整数。
+题目数据 保证 游戏存在赢家。
+示例 1：
+输入：arr = [2,1,3,5,4,6,7], k = 2 输出：5 解释：一起看一下本场游戏每回合的情况：因此将进行 4 回合比赛，其中 5 是赢家，因为它连胜 2 回合。 示例 2：
+输入：arr = [3,2,1], k = 10 输出：3 解释：3 将会在前 10 个回合中连续获胜。 示例 3：
+输入：arr = [1,9,8,2,3,7,6,4,5], k = 7 输出：9 示例 4：</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.4-%E6%9C%80%E5%A4%A7%E6%95%B0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.4-%E6%9C%80%E5%A4%A7%E6%95%B0/</guid>
       <description>最大数 #  1 题目 #  给定一组非负整数 nums，重新排列每个数的顺序（每个数不可拆分）使之组成一个最大的整数。
 注意：输出结果可能非常大，所以你需要返回一个字符串而不是整数。
 示例 1：
@@ -1235,10 +1232,10 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.7-%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.5-%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.7-%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/</guid>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.5-%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/</guid>
       <description>二维数组中的查找 #  1 题目 #  在一个 n * m 的二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。请完成一个高效的函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
 示例:
 现有矩阵 matrix 如下：
@@ -1250,10 +1247,10 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.8-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.6-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.8-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/</guid>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.6-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/</guid>
       <description>两数之和 #  1 题目 #  给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 的那 两个 整数，并返回它们的数组下标。
 你可以假设每种输入只会对应一个答案。但是，数组中同一个元素在答案里不能重复出现。
 你可以按任意顺序返回答案。
@@ -1266,10 +1263,10 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.9-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.7-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.9-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/</guid>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.7-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/</guid>
       <description>三数之和 #  1 题目 #  给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有和为 0 且不重复的三元组。
 注意： 答案中不可以包含重复的三元组。
 示例 1：
@@ -1281,10 +1278,10 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.8-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/</guid>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.8-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/</guid>
       <description>合并两个有序数组 #  1 题目 #  给你两个有序整数数组 nums1 和 nums2，请你将 nums2 合并到 nums1 中，使 nums1 成为一个有序数组。
 初始化 nums1 和 nums2 的元素数量分别为 m 和 n 。你可以假设 nums1 的空间大小等于 m + n，这样它就有足够的空间保存来自 nums2 的元素。
 示例 1：
@@ -1295,10 +1292,10 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.9-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/</guid>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.9-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/</guid>
       <description>下一个排列 #  1 题目 #  实现获取 下一个排列 的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列（即，组合出下一个更大的整数）。
 如果不存在下一个更大的排列，则将数字重新排列成最小的排列（即升序排列）。
 必须 原地 修改，只允许使用额外常数空间。
@@ -1312,10 +1309,10 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/</guid>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/</guid>
       <description>缺失的第一个正数 #  1 题目 #  给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
 请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。 示例 1：
 输入：nums = [1,2,0] 输出：3 示例 2：
@@ -1326,10 +1323,10 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</guid>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/</guid>
       <description>寻找两个正序数组的中位数 #  1 题目 #  给定两个大小分别为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。请你找出并返回这两个正序数组的 中位数 。
 示例 1：
 输入：nums1 = [1,3], nums2 = [2] 输出：2.00000 解释：合并数组 = [1,2,3] ，中位数 2 示例 2：
@@ -1340,10 +1337,10 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/</guid>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/</guid>
       <description>多数元素 #  1 题目 #  给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
 你可以假设数组是非空的，并且给定的数组总是存在多数元素。
 示例 1：
@@ -1354,16 +1351,31 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.15-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.15-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</guid>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/</guid>
       <description>最长连续序列 #  1 题目 #  给定一个未排序的整数数组 nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。
 请你设计并实现时间复杂度为 O(n) 的算法解决此问题。
 示例 1：
 输入：nums = [100,4,200,1,3,2] 输出：4 解释：最长数字连续序列是 [1, 2, 3, 4]。它的长度为 4。 示例 2：
 输入：nums = [0,3,7,2,5,8,4,6,0,1] 输出：9 提示：
  0 &amp;lt;= nums.length &amp;lt;= 105 -109 &amp;lt;= nums[i] &amp;lt;= 109  2 解题思路 #  2.1 哈希表 #  2.1.1 问题分析 #   有意题目要求的时间复杂度为 $O(n)$，因此我们可以使用哈希表来解决这个问题。 我们使用哈希表来存储每个端点值对应连续区间的长度，其中 $key$为端点值，$value$为对应连续区间的长度。 然后按以下步骤计算每个端点值对应连续区间的长度：  若该端点已经在哈希表中存在，则直接跳过即可。 否则：  计算出该端点左右两个相邻端点 $nums[i] - 1$ 和 $nums[i] + 1$ 的连续区间的长度分别为 $left$ 和 $right$。 则当前端点对应连续区间的长度$currentLength$为 $left + right + 1$，然后更新最后的结果值 $res$ 为所有已计算端点连续区间长度的最大值。 更新当前端点 $nums[i]$ 及所在连续区间两边端点 $nums[i] - left$ 和 $nums[i] + right$ 的连续区间的长度为当前端点对应连续区间的长度 $currentLength$。       2.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E7%BB%99%E5%AE%9A%E6%95%B0%E5%AD%97%E8%83%BD%E7%BB%84%E6%88%90%E7%9A%84%E6%9C%80%E5%A4%A7%E6%97%B6%E9%97%B4/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E7%BB%99%E5%AE%9A%E6%95%B0%E5%AD%97%E8%83%BD%E7%BB%84%E6%88%90%E7%9A%84%E6%9C%80%E5%A4%A7%E6%97%B6%E9%97%B4/</guid>
+      <description>给定数字能组成的最大时间 #  1 题目 #  给定一个由 4 位数字组成的数组，返回可以设置的符合 24 小时制的最大时间。
+24 小时格式为 &amp;ldquo;HH:MM&amp;rdquo; ，其中 HH 在 00 到 23 之间，MM 在 00 到 59 之间。最小的 24 小时制时间是 00:00 ，而最大的是 23:59 。从 00:00 （午夜）开始算起，过得越久，时间越大。
+以长度为 5 的字符串，按 &amp;ldquo;HH:MM&amp;rdquo; 格式返回答案。如果不能确定有效时间，则返回空字符串。
+示例 1：
+输入：arr = [1,2,3,4] 输出：&amp;#34;23:41&amp;#34; 解释：有效的 24 小时制时间是 &amp;#34;12:34&amp;#34;，&amp;#34;12:43&amp;#34;，&amp;#34;13:24&amp;#34;，&amp;#34;13:42&amp;#34;，&amp;#34;14:23&amp;#34;，&amp;#34;14:32&amp;#34;，&amp;#34;21:34&amp;#34;，&amp;#34;21:43&amp;#34;，&amp;#34;23:14&amp;#34; 和 &amp;#34;23:41&amp;#34; 。这些时间中，&amp;#34;23:41&amp;#34; 是最大时间。 示例 2：
+输入：arr = [5,5,5,5] 输出：&amp;#34;&amp;#34; 解释：不存在有效的 24 小时制时间，因为 &amp;#34;55:55&amp;#34; 无效。 示例 3：
+输入：arr = [0,0,0,0] 输出：&amp;#34;00:00&amp;#34; 示例 4：</description>
     </item>
     
     <item>
@@ -1422,10 +1434,46 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.2-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACk%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.2-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.2-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACk%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0/</guid>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.2-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/</guid>
+      <description>相交链表 #  1 题目 #  编写一个程序，找到两个单链表相交的起始节点。
+如下面的两个链表：
+ 在节点 c1 开始相交。
+示例 1：
+ 输入：intersectVal = 8, listA = [4,1,8,4,5], listB = [5,0,1,8,4,5], skipA = 2, skipB = 3 输出：Reference of the node with value = 8 输入解释：相交节点的值为 8 （注意，如果两个链表相交则不能为 0）。从各自的表头开始算起，链表 A 为 [4,1,8,4,5]，链表 B 为 [5,0,1,8,4,5]。在 A 中，相交节点前有 2 个节点；在 B 中，相交节点前有 3 个节点。 示例 2：
+ 输入：intersectVal = 2, listA = [0,9,1,2,4], listB = [3,2,4], skipA = 3, skipB = 1 输出：Reference of the node with value = 2 输入解释：相交节点的值为 2 （注意，如果两个链表相交则不能为 0）。从各自的表头开始算起，链表 A 为 [0,9,1,2,4]，链表 B 为 [3,2,4]。在 A 中，相交节点前有 3 个节点；在 B 中，相交节点前有 1 个节点。 示例 3：</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.3-%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E8%8A%82%E7%82%B9/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.3-%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E8%8A%82%E7%82%B9/</guid>
+      <description>链表中倒数第k个节点 #  1 题目 #  输入一个链表，输出该链表中倒数第 k 个节点。为了符合大多数人的习惯，本题从 1 开始计数，即链表的尾节点是倒数第 1 个节点。
+例如，一个链表有 6 个节点，从头节点开始，它们的值依次是 1、2、3、4、5、6。这个链表的倒数第 3 个节点是值为 4 的节点。
+示例：
+给定一个链表: 1-&amp;gt;2-&amp;gt;3-&amp;gt;4-&amp;gt;5, 和 k = 2. 返回链表 4-&amp;gt;5.  和该题目类似的题目还有：
+  19. 删除链表的倒数第 N 个结点。   2 解题思路 #  2.1 两次遍历 #  2.1.1 问题分析 #   先遍历一下链表，统计一下总的节点个数 $total$。 然后再遍历一下链表，将指针 $p$ 向前移动 $total - k$ 步，此时 $p$ 指向的节点即为倒数第 $k$ 个节点。  2.1.2 参考代码 #  /** * 剑指 Offer 22.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.4-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/1.4.1-%E5%B8%B8%E8%A7%81%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.4-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/1.4.1-%E5%B8%B8%E8%A7%81%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</guid>
+      <description>常见排序算法 #  1 简单选择排序 #  1.1 算法原理 #   简单排序算法的基本思想为每一趟从待排序的数据元素中选择最小（最大）的一个元素作为首元素，直到所有元素排完为止。  1.2 参考代码 #   在算法实现时，每一趟确定最小元素的时候会通过不断地比较交换来使得首位置为当前最小。 交换是个比较耗时的操作，其实我们很容易发现，在还未完全确定当前最小元素之前，这些交换都是无意义的。 我们可以通过设置一个变量minInd，每一次比较仅存储较小元素的数组下标，当这一轮循环结束之后，那这个变量存储的就是当前最小元素的下标，此时再执行交换操作即可。  /** * @author peng.wei * @version 1.0 * @date 2021/5/3 20:52 * @Description 简单选择排序算法 */ public class SimpleSelectionSort { public static void sort(int[] arr) { int m = arr.length; for (int i = 0; i &amp;lt; m - 1; i++) { int minInd = i; for (int j = minInd + 1; j &amp;lt; m; j++) { // 只记录最小元素的位置，而不是每一次比较都交换，减少交换的次数  if (arr[minInd] &amp;gt; arr[j]) {minInd = j;} } if (minInd !</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.4-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/1.4.2-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACk%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.4-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/1.4.2-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACk%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0/</guid>
       <description>数组中的第k个最大元素 #  1 题目 #  在未排序的数组中找到第 k 个最大的元素。请注意，你需要找的是数组排序后的第 k 个最大的元素，而不是第 k 个不同的元素。
 示例 1:
 输入: [3,2,1,5,6,4] 和 k = 2 输出: 5 示例 2:
@@ -1433,20 +1481,6 @@ private int i = 0; private static int j = 0; private final SynchronizedTest inst
 你可以假设 k 总是有效的，且 1 ≤ k ≤ 数组的长度。
 2 解题思路 #  下面代码中用到的 CommonUtils 工具类代码如下：
 /** * @author peng.wei * @version 1.0 * @date 2021/5/3 20:53 * @Description 通用工具类 */ public class CommonUtils { /** * 交换数组中两个指定位置的元素 * @param arr 数组 * @param i 下标 1 * @param j 下标 2 */ public static void swap(int[] arr, int i, int j) { int temp = arr[i]; arr[i] = arr[j]; arr[j] = temp; } } 2.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.3-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.3-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</guid>
-      <description>二叉树的最近公共祖先 #  1 题目 #  给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
- 百度百科中最近公共祖先的定义为：“对于有根树 T 的两个节点 p、q，最近公共祖先表示为一个节点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
-示例 1：
- 输入：root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1 输出：3 解释：节点 5 和节点 1 的最近公共祖先是节点 3 。 示例 2：
- 输入：root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4 输出：5 解释：节点 5 和节点 4 的最近公共祖先是节点 5 。因为根据定义最近公共祖先节点可以为节点本身。 示例 3：
-输入：root = [1,2], p = 1, q = 2 输出：1 提示：</description>
     </item>
     
     <item>
@@ -1492,7 +1526,7 @@ void traverse(TreeNode root) { // 判断 base case  if (root == null) { return; 
       
       <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.4-%E4%BA%8C%E5%8F%89%E6%A0%91%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98/</guid>
       <description>二叉树路径问题 #  1 问题分类 #  二叉树路径的问题大致可以分为两类，分别是自顶向下和非自顶向下。
-1.1 自顶向下 #  1.1.1 概述 #   自顶向下就是从某一个节点（不一定是根节点）出发，从上向下寻找路径，到某一个节点（不一定是叶节点）结束，继续细分的话，还可以分为一般路径和定和路径。 这类题通常用 深度优先搜索（DFS）和 广度优先搜索（BFS）解决，BFS 一般比 DFS 更为繁琐，这里为了简洁只展现 DFS 代码。 这类题型需要注意以下几点：  如果是找路径和等于给定 $target$ 的路径的，那么可以不用新增一个临时变量来判断当前路径和，只需要用给定和 $target$ 减去节点值，最终结束条件判断 $target == 0$ 即可。 二叉树的问题大部分是不需要回溯的，因为：  二叉树的递归部分（dfs(root -&amp;gt; left)、dfs(root -&amp;gt; right)）已经把可能的路径穷尽了，因此到任意节点的路径只可能有一条，绝对不可能出现另外的路径也到这个满足条件的叶节点的。 而对比二维数组（例如 岛屿问题）的 DFS，for循环向四个方向查找每次只能朝向一个方向，并没有穷尽路径，因此某一个满足条件的点可能是多条路径到该点的，并且 visited数组标记已经走过的路径是会受到另外路径是否访问的影响，这时候必须回溯。   至于找到路径后是否需要 return，这取决于是否要求找到叶节点满足条件的路径：  如果必须找到叶节点，那么就要 return。 如果是到任意节点都可以，那么必不能 return，因为这条路径下面还可能有更深的路径满足条件，还要在此基础上继续递归。   至于是否需要双重递归（即调用根节点的 dfs 函数后，继续调用根左右节点的 pathsum 函数），需要看题目是要求从根节点开始，还是从任意节点开始。    1.1.2 解题模板 #  1.</description>
+1.1 自顶向下 #  1.1.1 概述 #   自顶向下就是从某一个节点（不一定是根节点）出发，从上向下寻找路径，到某一个节点（不一定是叶节点）结束，继续细分的话，还可以分为一般路径和定和路径。 这类题通常用 深度优先搜索（DFS）和 广度优先搜索（BFS）解决，BFS 一般比 DFS 更为繁琐，这里为了简洁只展现 DFS 代码。 这类题型需要注意以下几点：  如果是找路径和等于给定 $target$ 的路径的，那么可以不用新增一个临时变量来判断当前路径和，只需要用给定和 $target$ 减去节点值，最终结束条件判断 $target == 0$ 即可。 二叉树的问题大部分是不需要回溯的，因为：  二叉树的递归部分（dfs(root -&amp;gt; left)、dfs(root -&amp;gt; right)）已经把可能的路径穷尽了，因此到任意节点的路径只可能有一条，绝对不可能出现另外的路径也到这个满足条件的叶节点的。 而对比二维数组（例如 岛屿问题）的 DFS，for循环向四个方向查找每次只能朝向一个方向，并没有穷尽路径，因此某一个满足条件的点可能是多条路径到该点的，并且visited数组标记已经走过的路径是会受到另外路径是否访问的影响，这时候必须回溯。   至于找到路径后是否需要 return，这取决于是否要求找到叶节点满足条件的路径：  如果必须找到叶节点，那么就要 return。 如果是到任意节点都可以，那么必不能 return，因为这条路径下面还可能有更深的路径满足条件，还要在此基础上继续递归。   至于是否需要双重递归（即调用根节点的dfs 函数后，继续调用根左右节点的pathsum 函数），需要看题目是要求从根节点开始，还是从任意节点开始。    1.1.2 解题模板 #  1.1.2.1 一般路径 #  /** * 自顶向下（版本 1：一般路径） * @param root * @param path */ public void dfsFromTopToBottomV1(TreeNode root, List&amp;lt;Integer&amp;gt; path) { // 根节点为空直接返回  if (root == null) {return;} // 做出选择（将节点的值添加到路径中）  List&amp;lt;Integer&amp;gt; pathTemp = new ArrayList&amp;lt;&amp;gt;(path); pathTemp.</description>
     </item>
     
     <item>
@@ -1510,6 +1544,20 @@ Input: preorder = [-1], inorder = [-1] Output: [-1] 提示:
     
     <item>
       <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.6-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.6-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</guid>
+      <description>二叉树的最近公共祖先 #  1 题目 #  给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
+ 百度百科中最近公共祖先的定义为：“对于有根树 T 的两个节点 p、q，最近公共祖先表示为一个节点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+示例 1：
+ 输入：root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1 输出：3 解释：节点 5 和节点 1 的最近公共祖先是节点 3 。 示例 2：
+ 输入：root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4 输出：5 解释：节点 5 和节点 4 的最近公共祖先是节点 5 。因为根据定义最近公共祖先节点可以为节点本身。 示例 3：
+输入：root = [1,2], p = 1, q = 2 输出：1 提示：</description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.1-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E8%A7%A3%E9%A2%98%E6%A1%86%E6%9E%B6/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -1519,7 +1567,7 @@ Input: preorder = [-1], inorder = [-1] Output: [-1] 提示:
   解决一个回溯算法时主要按照以下步骤：
  画出递归树，找到状态变量（回溯函数的参数），这一部非常重要。 根据题意，确定结束条件。 找准选择列表（与函数参数相关），与第一步紧密关联。 判断是否需要剪枝。 做出选择，递归调用，进入下一层。 撤销选择。    回溯算法的核心就是for 循环里面的递归，即在递归调用之前【做选择】，在递归调用之后【撤销选择】，解题框架如下：
 result = [] def backtrack(路径, 选择列表): if 满足结束条件: result.add(路径) return for 选择 in 选择列表: 做选择 backtrack(路径, 选择列表) 撤销选择   2 应用场景 #  回溯算法的应用场景主要包括以下几个方面：
-  子集、组合。  全排列。 搜索。   需要注意的是，子集、组合与排列是不同性质的概念，子集、组合是无关顺序的，而排列是和元素顺序有关的，例如 [1, 2] 和 [2, 1] 是同一个组合（子集），但是是两种不一样的排列，因此被分为两类问题。</description>
+  子集、组合（$i$从 $start$ 开始）：  子集：  数组中的元素互不相同（没有结束条件）。 数组中包含重复元素（先排序，然后当 $i &amp;gt; 0 \space &amp;amp;&amp;amp; \space nums[i] == nums[i - 1]$ 时跳过）。   组合：  数组中的元素可以重复使用，数字之和等于目标和（递归时依然从 $i$ 开始）。      全排列（$i$ 从 0 开始，同时添加 $used$ 数组）：  数组中的元素互不相同（处理方式与子集类似）。 数组中包含重复元素（处理方式与子集类似）。   搜索。   需要注意的是，子集、组合与排列是不同性质的概念，子集、组合是无关顺序的，而排列是和元素顺序有关的，例如 [1, 2] 和 [2, 1] 是同一个组合（子集），但是是两种不一样的排列，因此被分为两类问题。</description>
     </item>
     
     <item>
@@ -1535,6 +1583,103 @@ result = [] def backtrack(路径, 选择列表): if 满足结束条件: result.a
  输入：n = 4 输出：[[&amp;#34;.Q..&amp;#34;,&amp;#34;...Q&amp;#34;,&amp;#34;Q...&amp;#34;,&amp;#34;..Q.&amp;#34;],[&amp;#34;..Q.&amp;#34;,&amp;#34;Q...&amp;#34;,&amp;#34;...Q&amp;#34;,&amp;#34;.Q..&amp;#34;]] 解释：如上图所示，4 皇后问题存在两个不同的解法。 示例 2：
 输入：n = 1 输出：[[&amp;#34;Q&amp;#34;]] 提示：
  1 &amp;lt;= n &amp;lt;= 9 皇后彼此不能相互攻击，也就是说：任何两个皇后都不能处于同一条横行、纵行或斜线上。  2 解题思路 #  2.1 回溯算法 #  2.1.1 问题分析 #   N 皇后的问题本质上跟 全排列问题差不多，决策树的每一层表示棋盘的每一行，每个节点可以做出的选择是在该行的任意一列放置一个皇后。 函数backtrack 依然像个在决策树上游走的指针，通过row 和col 就可以表示函数遍历到的位置，通过isValid 函数可以将不符合条件的情况进行剪枝。   2.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.7-%E6%95%B0%E7%BB%84/1.7.1-%E5%88%A0%E9%99%A4%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E9%A1%B9/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.7-%E6%95%B0%E7%BB%84/1.7.1-%E5%88%A0%E9%99%A4%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E9%A1%B9/</guid>
+      <description>删除有序数组中的重复项 #  1 题目 #  给你一个有序数组 nums ，请你原地删除重复出现的元素，使每个元素只出现一次 ，返回删除后数组的新长度。
+不要使用额外的数组空间，你必须在 原地 修改输入数组 并在使用 O(1) 额外空间的条件下完成。
+说明:
+为什么返回数值是整数，但输出的答案是数组呢?
+请注意，输入数组是以「引用」方式传递的，这意味着在函数里修改输入数组对于调用者是可见的。
+你可以想象内部操作如下:
+// nums 是以“引用”方式传递的。也就是说，不对实参做任何拷贝 int len = removeDuplicates(nums);// 在函数里修改输入数组对于调用者是可见的。 // 根据你的函数返回的长度, 它会打印出数组中 该长度范围内 的所有元素。 for (int i = 0; i &amp;lt; len; i++) { print(nums[i]); } 示例 1：
+输入：nums = [1,1,2] 输出：2, nums = [1,2] 解释：函数应该返回新的长度 2 ，并且原数组 nums 的前两个元素被修改为 1, 2 。不需要考虑数组中超出新长度后面的元素。 示例 2：
+输入：nums = [0,0,1,1,1,2,2,3,3,4] 输出：5, nums = [0,1,2,3,4] 解释：函数应该返回新的长度 5 ， 并且原数组 nums 的前五个元素被修改为 0, 1, 2, 3, 4 。不需要考虑数组中超出新长度后面的元素。 类似的题目还有：</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.7-%E6%95%B0%E7%BB%84/1.7.2-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%80%E5%A4%A7%E5%80%BC/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.7-%E6%95%B0%E7%BB%84/1.7.2-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%80%E5%A4%A7%E5%80%BC/</guid>
+      <description>滑动窗口最大值 #  1 题目 #  给你一个整数数组 nums，有一个大小为 k 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口内的 k 个数字。滑动窗口每次只向右移动一位。
+返回滑动窗口中的最大值。
+示例 1：
+输入：nums = [1,3,-1,-3,5,3,6,7], k = 3 输出：[3,3,5,5,6,7] 解释： 滑动窗口的位置 最大值 [1 3 -1] -3 5 3 6 7 3 1 [3 -1 -3] 5 3 6 7 3 1 3 [-1 -3 5] 3 6 7 5 1 3 -1 [-3 5 3] 6 7 5 1 3 -1 -3 [5 3 6] 7 6 1 3 -1 -3 5 [3 6 7] 7 示例 2：</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.1-%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.1-%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2/</guid>
+      <description>最小覆盖子串 #  1 题目 #  给你一个字符串 s 、一个字符串 t 。返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串 &amp;quot;&amp;quot; 。
+注意：
+ 对于 t 中重复字符，我们寻找的子字符串中该字符数量必须不少于 t 中该字符数量。 如果 s 中存在这样的子串，我们保证它是唯一的答案。  示例 1：
+输入：s = &amp;#34;ADOBECODEBANC&amp;#34;, t = &amp;#34;ABC&amp;#34; 输出：&amp;#34;BANC&amp;#34; 示例 2：
+输入：s = &amp;#34;a&amp;#34;, t = &amp;#34;a&amp;#34; 输出：&amp;#34;a&amp;#34; 示例 3:
+输入: s = &amp;#34;a&amp;#34;, t = &amp;#34;aa&amp;#34; 输出: &amp;#34;&amp;#34; 解释: t 中两个字符 &amp;#39;a&amp;#39; 均应包含在 s 的子串中，因此没有符合条件的子字符串，返回空字符串。 提示：</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.2-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E4%B9%98/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.2-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E4%B9%98/</guid>
+      <description>字符串相乘 #  1 题目 #  给定两个以字符串形式表示的非负整数 num1 和 num2，返回 num1 和 num2 的乘积，它们的乘积也表示为字符串形式。
+示例 1:
+输入: num1 = &amp;#34;2&amp;#34;, num2 = &amp;#34;3&amp;#34; 输出: &amp;#34;6&amp;#34; 示例 2:
+输入: num1 = &amp;#34;123&amp;#34;, num2 = &amp;#34;456&amp;#34; 输出: &amp;#34;56088&amp;#34; 说明：
+ num1 和 num2 的长度小于 110。 num1 和 num2 只包含数字 0-9。 num1 和 num2 均不以零开头，除非是数字 0 本身。 不能使用任何标准库的大数类型（比如 BigInteger）或直接将输入转换为整数来处理。  2 问题分析 #   该算法是通过两数相乘时，乘数某位与被乘数某位相乘，与产生结果的位置的规律来完成，具体规律如下：  乘数 $num_1$位数为 $M$，被乘数$num_2$位数为 $N$，$num_1 \times num_2$结果$res$最大总位数为 $M + N$。 $num_1[i] \times num_2[j]$的结果为$tmp$（位数为两位，形如0x、xy），其中第一位位于 $res[i + j]$，第二位位于$res[i + j + 1]$。     3 参考代码 #  /** * 43.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.3-%E6%AF%94%E8%BE%83%E7%89%88%E6%9C%AC%E5%8F%B7/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.3-%E6%AF%94%E8%BE%83%E7%89%88%E6%9C%AC%E5%8F%B7/</guid>
+      <description>比较版本号 #  1 题目 #  给你两个版本号 version1 和 version2 ，请你比较它们。
+版本号由一个或多个修订号组成，各修订号由一个 &amp;lsquo;.&amp;rsquo; 连接。每个修订号由 多位数字 组成，可能包含 前导零 。每个版本号至少包含一个字符。修订号从左到右编号，下标从 0 开始，最左边的修订号下标为 0 ，下一个修订号下标为 1 ，以此类推。例如，2.5.33 和 0.1 都是有效的版本号。
+比较版本号时，请按从左到右的顺序依次比较它们的修订号。比较修订号时，只需比较 忽略任何前导零后的整数值 。也就是说，修订号 1 和修订号 001 相等 。如果版本号没有指定某个下标处的修订号，则该修订号视为 0 。例如，版本 1.0 小于版本 1.1 ，因为它们下标为 0 的修订号相同，而下标为 1 的修订号分别为 0 和 1 ，0 &amp;lt; 1 。
+返回规则如下：
+ 如果 version1 &amp;gt; version2 返回 1， 如果 version1 &amp;lt; version2 返回 -1， 除此之外返回 0。  示例 1：</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.4-%E9%AA%8C%E8%AF%81IP%E5%9C%B0%E5%9D%80/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.4-%E9%AA%8C%E8%AF%81IP%E5%9C%B0%E5%9D%80/</guid>
+      <description>验证IP地址 #  1 题目 #  编写一个函数来验证输入的字符串是否是有效的 IPv4 或 IPv6 地址。
+如果是有效的 IPv4 地址，返回 &amp;ldquo;IPv4&amp;rdquo; ； 如果是有效的 IPv6 地址，返回 &amp;ldquo;IPv6&amp;rdquo; ； 如果不是上述类型的 IP 地址，返回 &amp;ldquo;Neither&amp;rdquo; 。 IPv4 地址由十进制数和点来表示，每个地址包含 4 个十进制数，其范围为 0 - 255， 用(&amp;quot;.&amp;quot;)分割。比如，172.16.254.1；
+同时，IPv4 地址内的数不会以 0 开头。比如，地址 172.16.254.01 是不合法的。
+IPv6 地址由 8 组 16 进制的数字来表示，每组表示 16 比特。这些组数字通过 (&amp;quot;:&amp;quot;)分割。比如, 2001:0db8:85a3:0000:0000:8a2e:0370:7334 是一个有效的地址。而且，我们可以加入一些以 0 开头的数字，字母可以使用大写，也可以是小写。所以， 2001:db8:85a3:0:0:8A2E:0370:7334 也是一个有效的 IPv6 address 地址 (即，忽略 0 开头，忽略大小写)。
+然而，我们不能因为某个组的值为 0，而使用一个空的组，以至于出现 (::) 的情况。 比如， 2001:0db8:85a3::8A2E:0370:7334 是无效的 IPv6 地址。</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.5-%E5%9F%BA%E6%9C%AC%E8%AE%A1%E7%AE%97%E5%99%A8-II/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.5-%E5%9F%BA%E6%9C%AC%E8%AE%A1%E7%AE%97%E5%99%A8-II/</guid>
+      <description>基本计算器 II #  1 题目 #  给你一个字符串表达式 s ，请你实现一个基本计算器来计算并返回它的值。
+整数除法仅保留整数部分。
+示例 1：
+输入：s = &amp;#34;3+2*2&amp;#34; 输出：7 示例 2：
+输入：s = &amp;#34; 3/2 &amp;#34; 输出：1 示例 3：
+输入：s = &amp;#34; 3+5 / 2 &amp;#34; 输出：5 提示：
+ 1 &amp;lt;= s.length &amp;lt;= 3 * 105 s 由整数和算符 (&#39;+&#39;, &amp;lsquo;-&amp;rsquo;, &amp;lsquo;*&amp;rsquo;, &amp;lsquo;/&#39;) 组成，中间由一些空格隔开 s 表示一个 有效表达式 表达式中的所有整数都是非负整数，且在范围 [0, 231 - 1] 内 题目数据保证答案是一个 32-bit 整数 通过次数 90,862 提交次数 207,522  2 问题分析 #   对于【任何表达式】而言，我们都使用两个栈nums和 ops：  nums：存放所有的数字。 ops：存放所有的数字以外的操作。   然后从前往后做，对遍历到的字符做分情况讨论：  空格：跳过。 (：直接加入 ops 中，等待与之匹配的 )。 )：使用现有的 nums 和 ops 进行计算，直到遇到左边最近的一个左括号为止，计算结果放到 nums。 数字：从当前位置开始继续往后取，将一个连续数字整体取出，加入 nums。 + - * / ^ %：需要将操作放入 ops 中，在放入之前先把栈内可以算的都算掉（只有【栈内运算符】比【当前运算符】优先级高/同等，才进行运算），使用现有的 nums 和 ops 进行计算，直到没有操作或者遇到左括号，计算结果放到 nums。   【栈内运算符】比【当前运算符】优先级高/同等，才进行运算的含义：  因为我们是从前往后做的，假设我们当前已经扫描到 2 + 1 了，此时栈内的操作为 +：  如果后面出现的 + 2 或者 - 1 的话，满足【栈内运算符】比【当前运算符】优先级高/同等，可以将 2 + 1 算掉，把结果放到 nums 中。 如果后面出现的是 * 2 或者 / 1 的话，不满足【栈内运算符】比【当前运算符】优先级高/同等，这时候不能计算 2 + 1。     一些细节：  由于第一个数可能是负数，为了减少边界判断，一个小技巧是先往 nums 添加一个 0。 为防止 () 内出现的首个字符为运算符，将所有的空格去掉，并将 (- 替换为 (0-，(+替换为 (0+。 从理论上分析，nums最好存放的是 long，而不是 int，因为可能存在 大数 + 大数 + 大数 + .</description>
     </item>
     
     <item>
@@ -1743,20 +1888,17 @@ superPow(a, [1,5,6,4]) =&amp;gt; superPow(a, [1,5,6]) 根据这个规律，我�
     
     <item>
       <title></title>
-      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.3-K-%E4%B8%AA%E4%B8%80%E7%BB%84%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/</link>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.3-%E5%90%88%E5%B9%B6K%E4%B8%AA%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.3-K-%E4%B8%AA%E4%B8%80%E7%BB%84%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/</guid>
-      <description>K 个一组翻转链表 #  1 题目 #  给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
-k 是一个正整数，它的值小于或等于链表的长度。
-如果节点总数不是 k 的整数倍，那么请将最后剩余的节点保持原有顺序。
-进阶：
- 你可以设计一个只使用常数额外空间的算法来解决此问题吗？ 你不能只是单纯的改变节点内部的值，而是需要实际进行节点交换。  示例 1：
- 输入：head = [1,2,3,4,5], k = 2 输出：[2,1,4,3,5] 示例 2：
- 输入：head = [1,2,3,4,5], k = 3 输出：[3,2,1,4,5] 示例 3：
-输入：head = [1,2,3,4,5], k = 1 输出：[1,2,3,4,5] 示例 4：
-输入：head = [1], k = 1 输出：[1] 提示：
- 列表中节点的数量在范围 sz 内 1 &amp;lt;= sz &amp;lt;= 5000 0 &amp;lt;= Node.</description>
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.3-%E5%90%88%E5%B9%B6K%E4%B8%AA%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/</guid>
+      <description>合并K个升序链表 #  1 题目 #  给你一个链表数组，每个链表都已经按升序排列。
+请你将所有链表合并到一个升序链表中，返回合并后的链表。
+示例 1：
+输入：lists = [[1,4,5],[1,3,4],[2,6]] 输出：[1,1,2,3,4,4,5,6] 解释：链表数组如下： [ 1-&amp;gt;4-&amp;gt;5, 1-&amp;gt;3-&amp;gt;4, 2-&amp;gt;6 ] 将它们合并到一个有序链表中得到。 1-&amp;gt;1-&amp;gt;2-&amp;gt;3-&amp;gt;4-&amp;gt;4-&amp;gt;5-&amp;gt;6 示例 2：
+输入：lists = [] 输出：[] 示例 3：
+输入：lists = [[]] 输出：[] 提示：
+ k == lists.length 0 &amp;lt;= k &amp;lt;= 10^4 0 &amp;lt;= lists[i].length &amp;lt;= 500 -10^4 &amp;lt;= lists[i][j] &amp;lt;= 10^4 lists[i] 按 升序 排列 lists[i].length 的总和不超过 10^4  2 解题思路 #  2.1 两两合并 #  2.</description>
     </item>
     
     <item>
@@ -2038,6 +2180,19 @@ transient Object[] elementData; private static final Object[] DEFAULTCAPACITY_EM
 int int1 = 100;    声明一个基本数据类型 int2，并赋值为 int1，对于基本数据类型来说，赋值（=号）就相当于拷贝了一份值，把 int1 的值 100，拷贝给 int2。：
 int int2 = int1;    将 int1 的值修改为 500：
 int1 = 500;    此时，分别打印 int1、int2 的值，会输出为 500、100。</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.5-%E6%8A%BD%E8%B1%A1%E7%B1%BB%E4%B8%8E%E6%8E%A5%E5%8F%A3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.5-%E6%8A%BD%E8%B1%A1%E7%B1%BB%E4%B8%8E%E6%8E%A5%E5%8F%A3/</guid>
+      <description>抽象类与接口 #  1 抽象类 #    在了解抽象类之前，先来了解一下抽象方法，抽象方法是一种特殊的方法，他只有声明，而没有具体的实现，抽象方法的声明格式为：
+abstract void fun();   抽象方法必须用 abstract 关键字修饰，如果一个类含有抽象方法，则称这个类为抽象类，抽象类必须在类前用 abstract 关键字修饰，因为抽象类中含有无具体实现的方法，所以不能用抽象类创建对象。
+  包含抽象方法的类称为抽象类，但并不意味着抽象类中只能有抽象方法，他和普通类一样，同样可以拥有成员变量和普通的成员方法，抽象类和普通类主要有以下区别：
+ 抽象方法必须为 public 或者 protected（因为如果为private，则不能被子类继承，子类便无法实现该方法），缺省情况下默认为 public。 抽象类不能用来创建对象，因为抽象类中含有无具体实现的方法。 如果一个类继承于一个抽象类，则子类必须实现父类的抽象方法，如果子类没有实现父类的抽象方法，则必须将子类也定义为 abstract 类。 其他方面，抽象类和普通类并没有区别。    2 接口 #    接口，英文称作 interface，泛指供别人调用的方法或者函数，他是对行为的抽象，定义一个接口的格式如下：
+[public] interface InterfaceName { }   接口中可以含有变量和方法，但是要注意，接口中的变量会被隐式地指定为 public static final 变量（并且只能是 public static final 变量，用 private 修饰会报编译错误），而方法会被隐式地指定为 public abstract 方法（并且只能是 public abstract 方法，用 private、protected 等修饰会报编译错误），并且接口中所有的方法不能有具体的实现，也就是说，接口中的方法必须都是抽象方法，因此接口是一种极度抽象的类型，他比抽象类更加抽象，并且一般情况下不在接口中定义变量。</description>
     </item>
     
     <item>

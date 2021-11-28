@@ -54,5 +54,18 @@ int int2 = int1;    将 int1 的值修改为 500：
 int1 = 500;    此时，分别打印 int1、int2 的值，会输出为 500、100。</description>
     </item>
     
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.5-%E6%8A%BD%E8%B1%A1%E7%B1%BB%E4%B8%8E%E6%8E%A5%E5%8F%A3/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.5-%E6%8A%BD%E8%B1%A1%E7%B1%BB%E4%B8%8E%E6%8E%A5%E5%8F%A3/</guid>
+      <description>抽象类与接口 #  1 抽象类 #    在了解抽象类之前，先来了解一下抽象方法，抽象方法是一种特殊的方法，他只有声明，而没有具体的实现，抽象方法的声明格式为：
+abstract void fun();   抽象方法必须用 abstract 关键字修饰，如果一个类含有抽象方法，则称这个类为抽象类，抽象类必须在类前用 abstract 关键字修饰，因为抽象类中含有无具体实现的方法，所以不能用抽象类创建对象。
+  包含抽象方法的类称为抽象类，但并不意味着抽象类中只能有抽象方法，他和普通类一样，同样可以拥有成员变量和普通的成员方法，抽象类和普通类主要有以下区别：
+ 抽象方法必须为 public 或者 protected（因为如果为private，则不能被子类继承，子类便无法实现该方法），缺省情况下默认为 public。 抽象类不能用来创建对象，因为抽象类中含有无具体实现的方法。 如果一个类继承于一个抽象类，则子类必须实现父类的抽象方法，如果子类没有实现父类的抽象方法，则必须将子类也定义为 abstract 类。 其他方面，抽象类和普通类并没有区别。    2 接口 #    接口，英文称作 interface，泛指供别人调用的方法或者函数，他是对行为的抽象，定义一个接口的格式如下：
+[public] interface InterfaceName { }   接口中可以含有变量和方法，但是要注意，接口中的变量会被隐式地指定为 public static final 变量（并且只能是 public static final 变量，用 private 修饰会报编译错误），而方法会被隐式地指定为 public abstract 方法（并且只能是 public abstract 方法，用 private、protected 等修饰会报编译错误），并且接口中所有的方法不能有具体的实现，也就是说，接口中的方法必须都是抽象方法，因此接口是一种极度抽象的类型，他比抽象类更加抽象，并且一般情况下不在接口中定义变量。</description>
+    </item>
+    
   </channel>
 </rss>

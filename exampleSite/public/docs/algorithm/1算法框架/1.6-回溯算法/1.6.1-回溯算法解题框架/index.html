@@ -8,14 +8,14 @@
   解决一个回溯算法时主要按照以下步骤：
  画出递归树，找到状态变量（回溯函数的参数），这一部非常重要。 根据题意，确定结束条件。 找准选择列表（与函数参数相关），与第一步紧密关联。 判断是否需要剪枝。 做出选择，递归调用，进入下一层。 撤销选择。    回溯算法的核心就是for 循环里面的递归，即在递归调用之前【做选择】，在递归调用之后【撤销选择】，解题框架如下：
 result = [] def backtrack(路径, 选择列表): if 满足结束条件: result.add(路径) return for 选择 in 选择列表: 做选择 backtrack(路径, 选择列表) 撤销选择   2 应用场景 #  回溯算法的应用场景主要包括以下几个方面：
-  子集、组合。  全排列。 搜索。   需要注意的是，子集、组合与排列是不同性质的概念，子集、组合是无关顺序的，而排列是和元素顺序有关的，例如 [1, 2] 和 [2, 1] 是同一个组合（子集），但是是两种不一样的排列，因此被分为两类问题。">
+  子集、组合（$i$从 $start$ 开始）：  子集：  数组中的元素互不相同（没有结束条件）。 数组中包含重复元素（先排序，然后当 $i &gt; 0 \space &amp;&amp; \space nums[i] == nums[i - 1]$ 时跳过）。   组合：  数组中的元素可以重复使用，数字之和等于目标和（递归时依然从 $i$ 开始）。      全排列（$i$ 从 0 开始，同时添加 $used$ 数组）：  数组中的元素互不相同（处理方式与子集类似）。 数组中包含重复元素（处理方式与子集类似）。   搜索。   需要注意的是，子集、组合与排列是不同性质的概念，子集、组合是无关顺序的，而排列是和元素顺序有关的，例如 [1, 2] 和 [2, 1] 是同一个组合（子集），但是是两种不一样的排列，因此被分为两类问题。">
 <meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
 <meta property="og:description" content="回溯算法解题框架 #  1 含义 #    回溯算法建立在 DFS 基础之上，与 DFS 的主要不同在于：
  DFS 是一个劲的往某一个方向搜索，等到到达一个方向的终点时，才恢复状态，回溯上一层。 回溯算法在达到结束条件后，就恢复状态，回溯上一层。    当问题需要回头，以此来查出所有的解的时候，使用回溯算法，即满足结束条件或者发现不是正确路径的时候（走不通），要撤销选择，回退到上一个状态，继续尝试，直到找出所有解为止。
   解决一个回溯算法时主要按照以下步骤：
  画出递归树，找到状态变量（回溯函数的参数），这一部非常重要。 根据题意，确定结束条件。 找准选择列表（与函数参数相关），与第一步紧密关联。 判断是否需要剪枝。 做出选择，递归调用，进入下一层。 撤销选择。    回溯算法的核心就是for 循环里面的递归，即在递归调用之前【做选择】，在递归调用之后【撤销选择】，解题框架如下：
 result = [] def backtrack(路径, 选择列表): if 满足结束条件: result.add(路径) return for 选择 in 选择列表: 做选择 backtrack(路径, 选择列表) 撤销选择   2 应用场景 #  回溯算法的应用场景主要包括以下几个方面：
-  子集、组合。  全排列。 搜索。   需要注意的是，子集、组合与排列是不同性质的概念，子集、组合是无关顺序的，而排列是和元素顺序有关的，例如 [1, 2] 和 [2, 1] 是同一个组合（子集），但是是两种不一样的排列，因此被分为两类问题。" />
+  子集、组合（$i$从 $start$ 开始）：  子集：  数组中的元素互不相同（没有结束条件）。 数组中包含重复元素（先排序，然后当 $i &gt; 0 \space &amp;&amp; \space nums[i] == nums[i - 1]$ 时跳过）。   组合：  数组中的元素可以重复使用，数字之和等于目标和（递归时依然从 $i$ 开始）。      全排列（$i$ 从 0 开始，同时添加 $used$ 数组）：  数组中的元素互不相同（处理方式与子集类似）。 数组中包含重复元素（处理方式与子集类似）。   搜索。   需要注意的是，子集、组合与排列是不同性质的概念，子集、组合是无关顺序的，而排列是和元素顺序有关的，例如 [1, 2] 和 [2, 1] 是同一个组合（子集），但是是两种不一样的排列，因此被分为两类问题。" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.1-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E8%A7%A3%E9%A2%98%E6%A1%86%E6%9E%B6/" /><meta property="article:section" content="docs" />
 
@@ -26,7 +26,7 @@ result = [] def backtrack(路径, 选择列表): if 满足结束条件: result.a
 <link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
 <link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
   <script defer src="/school-recruitment/flexsearch.min.js"></script>
-  <script defer src="/school-recruitment/en.search.min.7bbd06cb6208fbd8206562c1c0fdb8da9b0a3891a9c03c00c1133212c05fe978.js" integrity="sha256-e70Gy2II&#43;9ggZWLBwP242psKOJGpwDwAwRMyEsBf6Xg=" crossorigin="anonymous"></script>
+  <script defer src="/school-recruitment/en.search.min.ddcf6bcf59f53a854992903fddbc3eb404e9294c5826045ce92334fde6a3e27e.js" integrity="sha256-3c9rz1n1OoVJkpA/3bw&#43;tATpKUxYJgRc6SM0/eaj4n4=" crossorigin="anonymous"></script>
 
   <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
 <!--
@@ -189,7 +189,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.4-%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E5%BA%8F%E5%88%97/" class="">1.1.4 最长递增子序列</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.4-%E5%BA%8F%E5%88%97%E5%92%8C%E6%95%B0%E7%BB%84%E7%B1%BB%E9%97%AE%E9%A2%98/" class="">1.1.4 序列和数组类问题</a>
   
 
         </li>
@@ -228,7 +228,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.7-%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E5%BA%8F%E5%88%97/" class="">1.1.7 最长回文子序列</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.7-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97%E9%80%9A%E8%A7%A3/" class="">1.1.7 股票问题系列通解</a>
   
 
         </li>
@@ -241,7 +241,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.8-%E6%9C%80%E5%A4%A7%E5%AD%90%E5%BA%8F%E5%92%8C/" class="">1.1.8 最大子序和</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.8-%E6%9C%80%E9%95%BF%E6%9C%89%E6%95%88%E6%8B%AC%E5%8F%B7/" class="">1.1.8 最长有效括号</a>
   
 
         </li>
@@ -387,7 +387,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.2-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACk%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0/" class="">1.3.2 数组中的第k个最大元素</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.2-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/" class="">1.3.2 相交链表</a>
   
 
         </li>
@@ -400,7 +400,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.3-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/" class="">1.3.3 二叉树的最近公共祖先</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.3-%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E8%8A%82%E7%82%B9/" class="">1.3.3 链表中倒数第k个节点</a>
   
 
         </li>
@@ -418,11 +418,42 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <input type="checkbox" id="section-6c6359aa6ff642b64a85093d9888f8ad" class="toggle"  />
-    <label for="section-6c6359aa6ff642b64a85093d9888f8ad" class="flex justify-between">
-      <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.4-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" class="">1.4 排序算法</a>
+    <input type="checkbox" id="section-2adde4460efeae2e3f7fc587adb365a8" class="toggle"  />
+    <label for="section-2adde4460efeae2e3f7fc587adb365a8" class="flex justify-between">
+      <a role="button" class="">1.4 排序算法</a>
     </label>
   
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.4-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/1.4.1-%E5%B8%B8%E8%A7%81%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" class="">1.4.1 常见排序算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.4-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/1.4.2-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACk%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0/" class="">1.4.2 数组中的第k个最大元素</a>
+  
+
+        </li>
+      
+    
+  </ul>
 
         </li>
       
@@ -508,6 +539,19 @@ https://github.com/alex-shpak/hugo-book
         </li>
       
     
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.6-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/" class="">1.5.6 二叉树的最近公共祖先</a>
+  
+
+        </li>
+      
+    
   </ul>
 
         </li>
@@ -550,6 +594,139 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-N%E7%9A%87%E5%90%8E/" class="">1.6.2 N皇后</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d6fac765b0c7fea77c79961a611f9f8f" class="toggle"  />
+    <label for="section-d6fac765b0c7fea77c79961a611f9f8f" class="flex justify-between">
+      <a role="button" class="">1.7 数组</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.7-%E6%95%B0%E7%BB%84/1.7.1-%E5%88%A0%E9%99%A4%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E9%A1%B9/" class="">1.7.1 删除有序数组中的重复项</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.7-%E6%95%B0%E7%BB%84/1.7.2-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%80%E5%A4%A7%E5%80%BC/" class="">1.7.2 滑动窗口最大值</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-07c6c41b5fb22f09768b6f4e1da46596" class="toggle"  />
+    <label for="section-07c6c41b5fb22f09768b6f4e1da46596" class="flex justify-between">
+      <a role="button" class="">1.8 字符串</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.1-%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2/" class="">1.8.1 最小覆盖子串</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.2-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E4%B9%98/" class="">1.8.2 字符串相乘</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.3-%E6%AF%94%E8%BE%83%E7%89%88%E6%9C%AC%E5%8F%B7/" class="">1.8.3 比较版本号</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.4-%E9%AA%8C%E8%AF%81IP%E5%9C%B0%E5%9D%80/" class="">1.8.4 验证 Ip地址</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.5-%E5%9F%BA%E6%9C%AC%E8%AE%A1%E7%AE%97%E5%99%A8-II/" class="">1.8.5 基本计算器 Ii</a>
   
 
         </li>
@@ -693,7 +870,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.1-%E5%88%A0%E9%99%A4%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E9%A1%B9/" class="">2.3.1 删除有序数组中的重复项</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.1-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%B6%88%E5%A4%B1%E7%9A%84%E5%85%83%E7%B4%A0/" class="">2.3.1 如何寻找消失的元素</a>
   
 
         </li>
@@ -706,7 +883,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.2-%E6%89%BE%E5%87%BA%E6%95%B0%E7%BB%84%E6%B8%B8%E6%88%8F%E7%9A%84%E8%B5%A2%E5%AE%B6/" class="">2.3.2 找出数组游戏的赢家</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.2-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E7%BC%BA%E5%A4%B1%E5%92%8C%E9%87%8D%E5%A4%8D%E7%9A%84%E5%85%83%E7%B4%A0/" class="">2.3.2 如何寻找缺失和重复的元素</a>
   
 
         </li>
@@ -719,7 +896,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.4-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%B6%88%E5%A4%B1%E7%9A%84%E5%85%83%E7%B4%A0/" class="">2.3.4 如何寻找消失的元素</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.3-%E6%89%BE%E5%87%BA%E6%95%B0%E7%BB%84%E6%B8%B8%E6%88%8F%E7%9A%84%E8%B5%A2%E5%AE%B6/" class="">2.3.3 找出数组游戏的赢家</a>
   
 
         </li>
@@ -732,7 +909,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.5-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E7%BC%BA%E5%A4%B1%E5%92%8C%E9%87%8D%E5%A4%8D%E7%9A%84%E5%85%83%E7%B4%A0/" class="">2.3.5 如何寻找缺失和重复的元素</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.4-%E6%9C%80%E5%A4%A7%E6%95%B0/" class="">2.3.4 最大数</a>
   
 
         </li>
@@ -745,7 +922,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.6-%E6%9C%80%E5%A4%A7%E6%95%B0/" class="">2.3.6 最大数</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.5-%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/" class="">2.3.5 二维数组中的查找</a>
   
 
         </li>
@@ -758,7 +935,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.7-%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/" class="">2.3.7 二维数组中的查找</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.6-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/" class="">2.3.6 两数之和</a>
   
 
         </li>
@@ -771,7 +948,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.8-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/" class="">2.3.8 两数之和</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.7-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" class="">2.3.7 三数之和</a>
   
 
         </li>
@@ -784,7 +961,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.9-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" class="">2.3.9 三数之和</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.8-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">2.3.8 合并两个有序数组</a>
   
 
         </li>
@@ -797,7 +974,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">2.3.10 合并两个有序数组</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.9-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/" class="">2.3.9 下一个排列</a>
   
 
         </li>
@@ -810,7 +987,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/" class="">2.3.11 下一个排列</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/" class="">2.3.10 缺失的第一个正数</a>
   
 
         </li>
@@ -823,7 +1000,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/" class="">2.3.12 缺失的第一个正数</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/" class="">2.3.11 寻找两个正序数组的中位数</a>
   
 
         </li>
@@ -836,7 +1013,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/" class="">2.3.13 寻找两个正序数组的中位数</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/" class="">2.3.12 多数元素</a>
   
 
         </li>
@@ -849,7 +1026,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/" class="">2.3.14 多数元素</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/" class="">2.3.13 最长连续序列</a>
   
 
         </li>
@@ -862,7 +1039,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.15-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/" class="">2.3.15 最长连续序列</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E7%BB%99%E5%AE%9A%E6%95%B0%E5%AD%97%E8%83%BD%E7%BB%84%E6%88%90%E7%9A%84%E6%9C%80%E5%A4%A7%E6%97%B6%E9%97%B4/" class="">2.3.14 给定数字能组成的最大时间</a>
   
 
         </li>
@@ -1047,7 +1224,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.3-K-%E4%B8%AA%E4%B8%80%E7%BB%84%E7%BF%BB%E8%BD%AC%E9%93%BE%E8%A1%A8/" class="">2.5.3 K 个一组翻转链表</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.3-%E5%90%88%E5%B9%B6K%E4%B8%AA%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/" class="">2.5.3 合并 K个升序链表</a>
   
 
         </li>
@@ -2415,7 +2592,7 @@ https://github.com/alex-shpak/hugo-book
   
 
   
-    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.1-Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BF%AB/" class="">3.1.1 Redis为什么这么快</a>
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.1-%E4%B8%BA%E4%BB%80%E4%B9%88Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E8%BF%99%E4%B9%88%E5%BF%AB/" class="">3.1.1 为什么 Redis单线程还这么快</a>
   
 
         </li>
@@ -2541,6 +2718,66 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.4-%E7%BC%93%E5%AD%98%E5%BC%82%E5%B8%B8/3.4.1-%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/" class="">3.4.1 缓存穿透、缓存击穿、缓存雪崩</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c0c910bcaee9694f45ce547519533401" class="toggle"  />
+    <label for="section-c0c910bcaee9694f45ce547519533401" class="flex justify-between">
+      <a role="button" class="">3.5 高可用</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.5-%E9%AB%98%E5%8F%AF%E7%94%A8/3.5.1-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" class="">3.5.1 主从复制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.5-%E9%AB%98%E5%8F%AF%E7%94%A8/3.5.2-%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/" class="">3.5.2 哨兵模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.5-%E9%AB%98%E5%8F%AF%E7%94%A8/3.5.3-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/" class="">3.5.3 集群模式</a>
   
 
         </li>
@@ -2802,6 +3039,19 @@ https://github.com/alex-shpak/hugo-book
 
   
     <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.4-%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="">1.4 深拷贝与浅拷贝</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.5-%E6%8A%BD%E8%B1%A1%E7%B1%BB%E4%B8%8E%E6%8E%A5%E5%8F%A3/" class="">1.5 抽象类与接口</a>
   
 
         </li>
@@ -3388,6 +3638,12 @@ https://github.com/alex-shpak/hugo-book
                     <li><a href="#2132-参考代码">2.1.3.2 参考代码</a></li>
                   </ul>
                 </li>
+                <li><a href="#214-复原-ip-地址httpsleetcode-cncomproblemsrestore-ip-addresses">2.1.4 <a href="https://leetcode-cn.com/problems/restore-ip-addresses">复原 IP 地址</a></a>
+                  <ul>
+                    <li><a href="#2141-问题分析">2.1.4.1 问题分析</a></li>
+                    <li><a href="#2142-参考代码">2.1.4.2 参考代码</a></li>
+                  </ul>
+                </li>
               </ul>
             </li>
             <li><a href="#22-全排列">2.2 全排列</a>
@@ -3479,9 +3735,28 @@ https://github.com/alex-shpak/hugo-book
 <p>回溯算法的应用场景主要包括以下几个方面：</p>
 <ol>
 <li>
-  <a href="/school-recruitment/#2-1-%e5%ad%90%e9%9b%86-%e7%bb%84%e5%90%88">子集、组合</a>。</li>
+  <a href="/school-recruitment/#2-1-%e5%ad%90%e9%9b%86-%e7%bb%84%e5%90%88">子集、组合</a>（$i$<strong>从 $start$ 开始</strong>）：
+<ol>
+<li><strong>子集</strong>：
+<ol>
+<li><strong>数组中的元素互不相同</strong>（没有结束条件）。</li>
+<li><strong>数组中包含重复元素</strong>（先<strong>排序</strong>，然后<strong>当 $i &gt; 0 \space &amp;&amp; \space nums[i] == nums[i - 1]$ 时跳过</strong>）。</li>
+</ol>
+</li>
+<li><strong>组合</strong>：
+<ol>
+<li><strong>数组中的元素可以重复使用</strong>，<strong>数字之和等于目标和</strong>（<strong>递归时依然从 $i$ 开始</strong>）。</li>
+</ol>
+</li>
+</ol>
+</li>
 <li>
-  <a href="/school-recruitment/#2-2-1-%e5%85%a8%e6%8e%92%e5%88%97">全排列</a>。</li>
+  <a href="/school-recruitment/#2-2-1-%e5%85%a8%e6%8e%92%e5%88%97">全排列</a>（$i$ 从 0 开始，同时添加 $used$ 数组）：
+<ol>
+<li><strong>数组中的元素互不相同</strong>（处理方式与子集类似）。</li>
+<li><strong>数组中包含重复元素</strong>（处理方式与子集类似）。</li>
+</ol>
+</li>
 <li>搜索。</li>
 </ol>
 <blockquote>
@@ -3747,9 +4022,9 @@ backtrack<span style="color:#f92672">(</span>candidates<span style="color:#f9267
 </span><span style="color:#75715e"> * @return candidates 中所有可以使数字和为目标数 target 的唯一组合
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">combinationSum</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> candidates<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-		LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
-		backtrack<span style="color:#f92672">(</span>candidates<span style="color:#f92672">,</span> list<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> target<span style="color:#f92672">);</span>
-		<span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
+    LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+    backtrack<span style="color:#f92672">(</span>candidates<span style="color:#f92672">,</span> list<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> target<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e">/**
@@ -3762,27 +4037,191 @@ backtrack<span style="color:#f92672">(</span>candidates<span style="color:#f9267
 </span><span style="color:#75715e"> * @param target     目标和
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> candidates<span style="color:#f92672">,</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> sum<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-		<span style="color:#75715e">/**
-</span><span style="color:#75715e">		 * 判断结束条件:
-</span><span style="color:#75715e">		 *  如果当前路径中元素和与目标和相等，则将路径添加到结果列表中
-</span><span style="color:#75715e">		 *  如果当前路径中元素和大于目标和，则直接返回
-</span><span style="color:#75715e">		 */</span>
-		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">==</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-				LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">);</span>
-				res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>list<span style="color:#f92672">);</span>
-				<span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-		<span style="color:#f92672">}</span>
-		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">&gt;</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-				<span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-		<span style="color:#f92672">}</span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 判断结束条件:
+</span><span style="color:#75715e">     *  如果当前路径中元素和与目标和相等，则将路径添加到结果列表中
+</span><span style="color:#75715e">     *  如果当前路径中元素和大于目标和，则直接返回
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">==</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">);</span>
+        res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>list<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">&gt;</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-		<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> start<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> candidates<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-				<span style="color:#75715e">//  做选择：将节点添加到路径中
-</span><span style="color:#75715e"></span>				track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>candidates<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
-				backtrack<span style="color:#f92672">(</span>candidates<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> sum <span style="color:#f92672">+</span> candidates<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> target<span style="color:#f92672">);</span>
-				<span style="color:#75715e">//  撤销选择：将节点从路径中移除
-</span><span style="color:#75715e"></span>				track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
-		<span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> start<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> candidates<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//  做选择：将节点添加到路径中
+</span><span style="color:#75715e"></span>        track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>candidates<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+        backtrack<span style="color:#f92672">(</span>candidates<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> sum <span style="color:#f92672">+</span> candidates<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> target<span style="color:#f92672">);</span>
+        <span style="color:#75715e">//  撤销选择：将节点从路径中移除
+</span><span style="color:#75715e"></span>        track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>2.1.4 <h4 id="214-复原-ip-地址httpsleetcode-cncomproblemsrestore-ip-addresses">
+  
+  <a href="https://leetcode-cn.com/problems/restore-ip-addresses">复原 IP 地址</a>
+  <a class="anchor" href="#214-%e5%a4%8d%e5%8e%9f-ip-%e5%9c%b0%e5%9d%80httpsleetcode-cncomproblemsrestore-ip-addresses">#</a>
+</h4>
+<h5 id="2141-问题分析">
+  2.1.4.1 问题分析
+  <a class="anchor" href="#2141-%e9%97%ae%e9%a2%98%e5%88%86%e6%9e%90">#</a>
+</h5>
+<ol>
+<li>
+<p><strong>递归树</strong>：
+  <img src="../../../media/202111/2021-11-09_2146160.4472708671924466.png" alt="「力扣」第 93 题：复原 IP 地址-1.png" /></p>
+<ol>
+<li>
+<p>观察上图可知，<strong>选择列表里的数</strong>，<strong>都是选择路径后面的数</strong>，比如[255.255.11]这条路径，他后面的选择列表只有1、3、5，[255.255.111]这条路径，他后面的选择列表只有3、5，那么这个时候，<strong>需要使用一个参数 <code>start</code></strong>，<strong>来标识当前的选择列表的起始位置</strong>。</p>
+</li>
+<li>
+<p>同时，由于<strong>整个ip字符串只能切分4段</strong>（<strong>有段数限制</strong>），因此，还<strong>需要一个参数 <code>split</code></strong>，<strong>来标识当前字符串切分的次数</strong>。</p>
+</li>
+<li>
+<p>最终函数签名如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 回溯算法求解复原 IP 地址问题
+</span><span style="color:#75715e"> * @param s 字符串
+</span><span style="color:#75715e"> * @param split 字符串切分次数
+</span><span style="color:#75715e"> * @param track 路径
+</span><span style="color:#75715e"> * @param start 每一次切分的起始位置
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> split<span style="color:#f92672">,</span> LinkedList<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> track<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">)</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p><strong>找结束条件</strong>：</p>
+<ol>
+<li>
+<p>如果<strong>当前切分的起始位置等于字符串的长度</strong>，就应该<strong>直接返回</strong>，而且如果<strong>当前字符串切分次数刚好 4 次</strong>，则<strong>将路径按照 <code>.</code>进行拼接后</strong>，<strong>添加到结果列表中</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">int</span> len <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">==</span> len<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>split <span style="color:#f92672">==</span> 4<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>String<span style="color:#f92672">.</span><span style="color:#a6e22e">join</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;.&#34;</span><span style="color:#f92672">,</span> track<span style="color:#f92672">));</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div></li>
+<li>
+<p>如果<strong>剩下的字符串不够了或者超过剩余切分次数所需要字符串的最大限制</strong>，则<strong>直接返回</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> len <span style="color:#f92672">-</span> start<span style="color:#f92672">;</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> <span style="color:#f92672">(</span>4 <span style="color:#f92672">-</span> split<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> left <span style="color:#f92672">&gt;</span> 3 <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>4 <span style="color:#f92672">-</span> split<span style="color:#f92672">))</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span><span style="color:#f92672">;}</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p><strong>找选择列表</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 3<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span>
+</code></pre></div></li>
+<li>
+<p><strong>判断是否需要剪枝</strong>：</p>
+<ol>
+<li>
+<p>如果在<strong>从选择列表中选择元素时超过字符串长度</strong>，则<strong>直接返回</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">+</span> i <span style="color:#f92672">&gt;=</span> len<span style="color:#f92672">)</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span><span style="color:#f92672">;}</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p><strong>做出选择</strong>：</p>
+<ol>
+<li>
+<p><strong>将切分的节点添加到路径中</strong>，并且<strong>将切分的次数加1</strong>，然后<strong>从下一个字符开始截切分</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ipSegment <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">);</span>
+backtrack<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> split <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> start <span style="color:#f92672">+</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>
+</code></pre></div></li>
+</ol>
+</li>
+<li>
+<p><strong>撤销选择</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
+</code></pre></div></li>
+</ol>
+<h5 id="2142-参考代码">
+  2.1.4.2 参考代码
+  <a class="anchor" href="#2142-%e5%8f%82%e8%80%83%e4%bb%a3%e7%a0%81">#</a>
+</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//  最后结果
+</span><span style="color:#75715e"></span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 93. 复原 IP 地址
+</span><span style="color:#75715e"> * @param s 字符串
+</span><span style="color:#75715e"> * @return  所有可能从 s 获得的 有效 IP 地址
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">restoreIpAddresses</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">//  开始进行回溯
+</span><span style="color:#75715e"></span>    LinkedList<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> track <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+    <span style="color:#75715e">//  字符串切分次数
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> split <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#75715e">//  每一次切分的起始位置
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    backtrack<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> split<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> start<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 回溯算法求解复原 IP 地址问题
+</span><span style="color:#75715e"> * @param s 字符串
+</span><span style="color:#75715e"> * @param split 字符串切分次数
+</span><span style="color:#75715e"> * @param track 路径
+</span><span style="color:#75715e"> * @param start 每一次切分的起始位置
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> split<span style="color:#f92672">,</span> LinkedList<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> track<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 判断结束条件:
+</span><span style="color:#75715e">     *  1. 如果当前切分的起始位置等于字符串的长度，就应该直接返回，而且如果当前字符串切分次数刚好 4 次，则将路径按照 . 进行拼接后，添加到结果列表中
+</span><span style="color:#75715e">     *  2. 如果剩下的字符串不够了或者超过剩余切分次数所需要字符串的最大限制，则直接返回
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">int</span> len <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">==</span> len<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>split <span style="color:#f92672">==</span> 4<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>String<span style="color:#f92672">.</span><span style="color:#a6e22e">join</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;.&#34;</span><span style="color:#f92672">,</span> track<span style="color:#f92672">));</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> len <span style="color:#f92672">-</span> start<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> <span style="color:#f92672">(</span>4 <span style="color:#f92672">-</span> split<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> left <span style="color:#f92672">&gt;</span> 3 <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>4 <span style="color:#f92672">-</span> split<span style="color:#f92672">))</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span><span style="color:#f92672">;}</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 3<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">//  如果超过字符串长度，则直接返回
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">+</span> i <span style="color:#f92672">&gt;=</span> len<span style="color:#f92672">)</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span><span style="color:#f92672">;}</span>
+
+        <span style="color:#66d9ef">int</span> ipSegment <span style="color:#f92672">=</span> judgeIfIpSegment<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> start<span style="color:#f92672">,</span> start <span style="color:#f92672">+</span> i<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ipSegment <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">//  做选择：将节点添加到路径中
+</span><span style="color:#75715e"></span>            track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ipSegment <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">);</span>
+            backtrack<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> split <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> start <span style="color:#f92672">+</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>
+            <span style="color:#75715e">//  撤销选择：将节点从路径中移除
+</span><span style="color:#75715e"></span>            track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 判断截取的 ip 段是否符合要求
+</span><span style="color:#75715e"> * @param s 字符串
+</span><span style="color:#75715e"> * @param left  ip 段截取的起始位置
+</span><span style="color:#75715e"> * @param right ip 段截取的结束位置
+</span><span style="color:#75715e"> * @return  截取的 ip 段是否符合要求，如果符合，则返回截取的 ip 段，否则返回 -1
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">judgeIfIpSegment</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> len <span style="color:#f92672">=</span> right <span style="color:#f92672">-</span> left <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#75715e">//  大于 1 位的时候，不能以 0 开头
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>len <span style="color:#f92672">&gt;</span> 1 <span style="color:#f92672">&amp;&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>left<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;}</span>
+
+    <span style="color:#75715e">//  转成 int 类型，并判断是否大于 255
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> left<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> right<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        res <span style="color:#f92672">=</span> res <span style="color:#f92672">*</span> 10 <span style="color:#f92672">+</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>res <span style="color:#f92672">&gt;</span> 255<span style="color:#f92672">)</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;}</span>
+
+    <span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h3 id="22-全排列">
   2.2 全排列
@@ -3811,8 +4250,8 @@ backtrack<span style="color:#f92672">(</span>candidates<span style="color:#f9267
 <li>
 <p><strong>找结束条件</strong>：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> track<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-     res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">));</span>
-     <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">));</span>
+    <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div></li>
 <li>
@@ -3825,7 +4264,7 @@ backtrack<span style="color:#f92672">(</span>candidates<span style="color:#f9267
 <li>
 <p>如果当前节点已经使用过，则直接遍历下一个节点：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>used<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-      <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div></li>
 </ol>
@@ -3856,25 +4295,25 @@ used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <s
 </span><span style="color:#75715e"> * @param used  是否使用过标识
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> track<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-				res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">));</span>
-				<span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-		<span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> track<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">));</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-		<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-				<span style="color:#75715e">/**
-</span><span style="color:#75715e">				 * 剪枝：
-</span><span style="color:#75715e">				 *  1. 如果使用过，则遍历下一个节点
-</span><span style="color:#75715e">				 */</span>
-				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>used<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-						<span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
-				<span style="color:#f92672">}</span>
-				track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
-				used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-				backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
-				track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
-				used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-		<span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">/**
+</span><span style="color:#75715e">         * 剪枝：
+</span><span style="color:#75715e">         *  1. 如果使用过，则遍历下一个节点
+</span><span style="color:#75715e">         */</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>used<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+        used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
+        track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
+        used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e">/**
@@ -3884,11 +4323,11 @@ used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <s
 </span><span style="color:#75715e"> * @return 数组元素的全排列
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">permute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-		<span style="color:#75715e">//  记录【路径】
-</span><span style="color:#75715e"></span>		LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
-		<span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
-		backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
-		<span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
+    <span style="color:#75715e">//  记录【路径】
+</span><span style="color:#75715e"></span>    LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+    <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
+    backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>2.2.2 <h4 id="222-全排列-iihttpsleetcode-cncomproblemspermutations-ii">
   
@@ -3937,12 +4376,12 @@ used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <s
 </span><span style="color:#75715e"> * @return 所有不重复的全排列
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">permuteUnique</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-		LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
-		<span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
-		<span style="color:#75715e">//  因为数组中有重复元素，而这些重复元素可能并不在一起（回溯算法中时通过数组中前后元素是否一致来判断子集是否重复的），从而可能导致后面结果出现重复的子集，因此需要先对子集进行排序，使得重复的元素都在一起
-</span><span style="color:#75715e"></span>		Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">);</span>
-		backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
-		<span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
+    LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+    <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
+    <span style="color:#75715e">//  因为数组中有重复元素，而这些重复元素可能并不在一起（回溯算法中时通过数组中前后元素是否一致来判断子集是否重复的），从而可能导致后面结果出现重复的子集，因此需要先对子集进行排序，使得重复的元素都在一起
+</span><span style="color:#75715e"></span>    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">);</span>
+    backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e">/**
@@ -3953,30 +4392,30 @@ used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <s
 </span><span style="color:#75715e"> * @param used  是否使用过标识
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> LinkedList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> track<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-		<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>track<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-				List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">);</span>
-				res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>list<span style="color:#f92672">);</span>
-				<span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-		<span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>track<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>track<span style="color:#f92672">);</span>
+        res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>list<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-		<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-				<span style="color:#75715e">/**
-</span><span style="color:#75715e">				 * 剪枝：
-</span><span style="color:#75715e">				 *  1. 如果使用过，则遍历下一个节点
-</span><span style="color:#75715e">				 *  2. 如果当前节点和上一个节点的值相等，且上一个节点已经使用过，则当前排列全排列一定为重复的全排列，直接遍历下一个节点
-</span><span style="color:#75715e">				 */</span>
-				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>used<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-						<span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
-				<span style="color:#f92672">}</span>
-				<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> used<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-						<span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
-				<span style="color:#f92672">}</span>
-				track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
-				used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-				backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
-				used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-				track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
-		<span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">/**
+</span><span style="color:#75715e">         * 剪枝：
+</span><span style="color:#75715e">         *  1. 如果使用过，则遍历下一个节点
+</span><span style="color:#75715e">         *  2. 如果当前节点和上一个节点的值相等，且上一个节点已经使用过，则当前排列全排列一定为重复的全排列，直接遍历下一个节点
+</span><span style="color:#75715e">         */</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>used<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> used<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        track<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+        used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        backtrack<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> track<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
+        used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        track<span style="color:#f92672">.</span><span style="color:#a6e22e">removeLast</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h5 id="2223-扩展题目">
   2.2.2.3 扩展题目
@@ -4013,13 +4452,13 @@ res<span style="color:#f92672">.</span><span style="color:#a6e22e">toArray</span
 </span><span style="color:#75715e"> * @return 字符串中字符的所有排列
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">public</span> String<span style="color:#f92672">[]</span> <span style="color:#a6e22e">permutation</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-     StringBuffer buffer <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuffer<span style="color:#f92672">();</span>
-     <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()];</span>
-     <span style="color:#75715e">//  因为数组中有重复元素，而这些重复元素可能并不在一起（回溯算法中时通过数组中前后元素是否一致来判断子集是否重复的），从而可能导致后面结果出现重复的子集，因此需要先对子集进行排序，使得重复的元素都在一起
-</span><span style="color:#75715e"></span>     <span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> arr <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">();</span>
-     Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">);</span>
-     backtrack<span style="color:#f92672">(</span>arr<span style="color:#f92672">,</span> buffer<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
-     <span style="color:#66d9ef">return</span> res<span style="color:#f92672">.</span><span style="color:#a6e22e">toArray</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> String<span style="color:#f92672">[</span>res<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()]);</span>
+    StringBuffer buffer <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuffer<span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()];</span>
+    <span style="color:#75715e">//  因为数组中有重复元素，而这些重复元素可能并不在一起（回溯算法中时通过数组中前后元素是否一致来判断子集是否重复的），从而可能导致后面结果出现重复的子集，因此需要先对子集进行排序，使得重复的元素都在一起
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> arr <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">();</span>
+    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">);</span>
+    backtrack<span style="color:#f92672">(</span>arr<span style="color:#f92672">,</span> buffer<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">return</span> res<span style="color:#f92672">.</span><span style="color:#a6e22e">toArray</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> String<span style="color:#f92672">[</span>res<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()]);</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e">/**
@@ -4030,29 +4469,29 @@ res<span style="color:#f92672">.</span><span style="color:#a6e22e">toArray</span
 </span><span style="color:#75715e"> * @param used   是否使用过标识
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtrack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> arr<span style="color:#f92672">,</span> StringBuffer buffer<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> used<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-     <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-             res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
-             <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-     <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-             <span style="color:#75715e">/**
-</span><span style="color:#75715e">              * 剪枝：
-</span><span style="color:#75715e">              *  1. 如果使用过，则遍历下一个节点
-</span><span style="color:#75715e">              *  2. 如果当前节点和上一个节点的值相等，且上一个节点已经使用过，则当前排列全排列一定为重复的全排列，直接遍历下一个节点
-</span><span style="color:#75715e">              */</span>
-             <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>used<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-                     <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
-             <span style="color:#f92672">}</span>
-             <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> arr<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> used<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-                     <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
-             <span style="color:#f92672">}</span>
-             buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
-             used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-             backtrack<span style="color:#f92672">(</span>arr<span style="color:#f92672">,</span> buffer<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
-             used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-             buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">deleteCharAt</span><span style="color:#f92672">(</span>buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
-     <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">/**
+</span><span style="color:#75715e">         * 剪枝：
+</span><span style="color:#75715e">         *  1. 如果使用过，则遍历下一个节点
+</span><span style="color:#75715e">         *  2. 如果当前节点和上一个节点的值相等，且上一个节点已经使用过，则当前排列全排列一定为重复的全排列，直接遍历下一个节点
+</span><span style="color:#75715e">         */</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>used<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> arr<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> used<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+        used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        backtrack<span style="color:#f92672">(</span>arr<span style="color:#f92672">,</span> buffer<span style="color:#f92672">,</span> used<span style="color:#f92672">);</span>
+        used<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">deleteCharAt</span><span style="color:#f92672">(</span>buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div></li>
 </ol>
@@ -4077,6 +4516,10 @@ res<span style="color:#f92672">.</span><span style="color:#a6e22e">toArray</span
   <a href="https://leetcode-cn.com/problems/permutations-ii">47. 全排列 II</a>。</li>
 <li>
   <a href="https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof">剑指 Offer 38. 字符串的排列</a>。</li>
+<li>
+  <a href="https://leetcode-cn.com/problems/restore-ip-addresses">93. 复原 IP 地址</a>。</li>
+<li>
+  <a href="https://leetcode-cn.com/problems/restore-ip-addresses/solution/hui-su-suan-fa-hua-tu-fen-xi-jian-zhi-tiao-jian-by"> 回溯算法（画图分析剪枝条件）</a>。</li>
 </ol>
 </article>
  
@@ -4176,6 +4619,12 @@ res<span style="color:#f92672">.</span><span style="color:#a6e22e">toArray</span
                   <ul>
                     <li><a href="#2131-问题分析">2.1.3.1 问题分析</a></li>
                     <li><a href="#2132-参考代码">2.1.3.2 参考代码</a></li>
+                  </ul>
+                </li>
+                <li><a href="#214-复原-ip-地址httpsleetcode-cncomproblemsrestore-ip-addresses">2.1.4 <a href="https://leetcode-cn.com/problems/restore-ip-addresses">复原 IP 地址</a></a>
+                  <ul>
+                    <li><a href="#2141-问题分析">2.1.4.1 问题分析</a></li>
+                    <li><a href="#2142-参考代码">2.1.4.2 参考代码</a></li>
                   </ul>
                 </li>
               </ul>

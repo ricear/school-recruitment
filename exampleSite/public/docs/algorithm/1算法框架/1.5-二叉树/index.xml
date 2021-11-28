@@ -48,7 +48,7 @@ void traverse(TreeNode root) { // 判断 base case  if (root == null) { return; 
       
       <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.4-%E4%BA%8C%E5%8F%89%E6%A0%91%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98/</guid>
       <description>二叉树路径问题 #  1 问题分类 #  二叉树路径的问题大致可以分为两类，分别是自顶向下和非自顶向下。
-1.1 自顶向下 #  1.1.1 概述 #   自顶向下就是从某一个节点（不一定是根节点）出发，从上向下寻找路径，到某一个节点（不一定是叶节点）结束，继续细分的话，还可以分为一般路径和定和路径。 这类题通常用 深度优先搜索（DFS）和 广度优先搜索（BFS）解决，BFS 一般比 DFS 更为繁琐，这里为了简洁只展现 DFS 代码。 这类题型需要注意以下几点：  如果是找路径和等于给定 $target$ 的路径的，那么可以不用新增一个临时变量来判断当前路径和，只需要用给定和 $target$ 减去节点值，最终结束条件判断 $target == 0$ 即可。 二叉树的问题大部分是不需要回溯的，因为：  二叉树的递归部分（dfs(root -&amp;gt; left)、dfs(root -&amp;gt; right)）已经把可能的路径穷尽了，因此到任意节点的路径只可能有一条，绝对不可能出现另外的路径也到这个满足条件的叶节点的。 而对比二维数组（例如 岛屿问题）的 DFS，for循环向四个方向查找每次只能朝向一个方向，并没有穷尽路径，因此某一个满足条件的点可能是多条路径到该点的，并且 visited数组标记已经走过的路径是会受到另外路径是否访问的影响，这时候必须回溯。   至于找到路径后是否需要 return，这取决于是否要求找到叶节点满足条件的路径：  如果必须找到叶节点，那么就要 return。 如果是到任意节点都可以，那么必不能 return，因为这条路径下面还可能有更深的路径满足条件，还要在此基础上继续递归。   至于是否需要双重递归（即调用根节点的 dfs 函数后，继续调用根左右节点的 pathsum 函数），需要看题目是要求从根节点开始，还是从任意节点开始。    1.1.2 解题模板 #  1.</description>
+1.1 自顶向下 #  1.1.1 概述 #   自顶向下就是从某一个节点（不一定是根节点）出发，从上向下寻找路径，到某一个节点（不一定是叶节点）结束，继续细分的话，还可以分为一般路径和定和路径。 这类题通常用 深度优先搜索（DFS）和 广度优先搜索（BFS）解决，BFS 一般比 DFS 更为繁琐，这里为了简洁只展现 DFS 代码。 这类题型需要注意以下几点：  如果是找路径和等于给定 $target$ 的路径的，那么可以不用新增一个临时变量来判断当前路径和，只需要用给定和 $target$ 减去节点值，最终结束条件判断 $target == 0$ 即可。 二叉树的问题大部分是不需要回溯的，因为：  二叉树的递归部分（dfs(root -&amp;gt; left)、dfs(root -&amp;gt; right)）已经把可能的路径穷尽了，因此到任意节点的路径只可能有一条，绝对不可能出现另外的路径也到这个满足条件的叶节点的。 而对比二维数组（例如 岛屿问题）的 DFS，for循环向四个方向查找每次只能朝向一个方向，并没有穷尽路径，因此某一个满足条件的点可能是多条路径到该点的，并且visited数组标记已经走过的路径是会受到另外路径是否访问的影响，这时候必须回溯。   至于找到路径后是否需要 return，这取决于是否要求找到叶节点满足条件的路径：  如果必须找到叶节点，那么就要 return。 如果是到任意节点都可以，那么必不能 return，因为这条路径下面还可能有更深的路径满足条件，还要在此基础上继续递归。   至于是否需要双重递归（即调用根节点的dfs 函数后，继续调用根左右节点的pathsum 函数），需要看题目是要求从根节点开始，还是从任意节点开始。    1.1.2 解题模板 #  1.1.2.1 一般路径 #  /** * 自顶向下（版本 1：一般路径） * @param root * @param path */ public void dfsFromTopToBottomV1(TreeNode root, List&amp;lt;Integer&amp;gt; path) { // 根节点为空直接返回  if (root == null) {return;} // 做出选择（将节点的值添加到路径中）  List&amp;lt;Integer&amp;gt; pathTemp = new ArrayList&amp;lt;&amp;gt;(path); pathTemp.</description>
     </item>
     
     <item>
@@ -62,6 +62,20 @@ void traverse(TreeNode root) { // 判断 base case  if (root == null) { return; 
  Input: preorder = [3,9,20,15,7], inorder = [9,3,15,20,7] Output: [3,9,20,null,null,15,7] 示例 2:
 Input: preorder = [-1], inorder = [-1] Output: [-1] 提示:
  1 &amp;lt;= preorder.length &amp;lt;= 3000 inorder.length == preorder.length -3000 &amp;lt;= preorder[i], inorder[i] &amp;lt;= 3000 preorder 和 inorder 均无重复元素 inorder 均出现在 preorder preorder 保证为二叉树的前序遍历序列 inorder 保证为二叉树的中序遍历序列  1.3 解题思路 #  1.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.6-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.6-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/</guid>
+      <description>二叉树的最近公共祖先 #  1 题目 #  给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
+ 百度百科中最近公共祖先的定义为：“对于有根树 T 的两个节点 p、q，最近公共祖先表示为一个节点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+示例 1：
+ 输入：root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1 输出：3 解释：节点 5 和节点 1 的最近公共祖先是节点 3 。 示例 2：
+ 输入：root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4 输出：5 解释：节点 5 和节点 4 的最近公共祖先是节点 5 。因为根据定义最近公共祖先节点可以为节点本身。 示例 3：
+输入：root = [1,2], p = 1, q = 2 输出：1 提示：</description>
     </item>
     
   </channel>

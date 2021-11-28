@@ -1,0 +1,4708 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="集群模式 #   Redis 集群是 Redis 提供的分布式数据库方案，集群通过分片来进行数据共享，并提供复制和故障转移功能。 下面将对集群的节点、槽指派、命令执行、转向、故障转移、消息等各个方面进行介绍。  1 节点 #    一个 Redis 集群通常由多个节点组成，在刚开始的时候，每个节点都是相互独立的，他们都处于一个只包含自己的集群当中，要组建一个真正可工作的集群，我们必须将各个独立的节点连接起来，构成一个包含多个节点的集群。
+  连接各个节点的工作可以使用 CLUSTER MEET 命令来完成，该命令的格式如下：
+CLUSTER MEET &lt;ip&gt; &lt;port&gt; 向一个节点 node 发送 CLUSTER MEET 命令，可以让 node 节点与 ip 和 port 所指定的节点进行握手，当握手成功时，node节点就会将 ip 和 port 所指定的节点添加到 node 节点所在的集群中。
+  具体实例如下：
+   1.1 启动节点 #    一个节点就是一个运行在集群模式下的 Redis 服务器，Redis 服务器在启动时会根据 cluster_enabled 配置选项是否为 yes 来决定是否开启服务器的集群模式，如下图所示：
+   节点（运行在集群模式下的 Redis 服务器）会继续使用所有在单机模式中使用的服务器组件，比如说：">
+<meta name="theme-color" content="#FFFFFF"><meta property="og:title" content="" />
+<meta property="og:description" content="集群模式 #   Redis 集群是 Redis 提供的分布式数据库方案，集群通过分片来进行数据共享，并提供复制和故障转移功能。 下面将对集群的节点、槽指派、命令执行、转向、故障转移、消息等各个方面进行介绍。  1 节点 #    一个 Redis 集群通常由多个节点组成，在刚开始的时候，每个节点都是相互独立的，他们都处于一个只包含自己的集群当中，要组建一个真正可工作的集群，我们必须将各个独立的节点连接起来，构成一个包含多个节点的集群。
+  连接各个节点的工作可以使用 CLUSTER MEET 命令来完成，该命令的格式如下：
+CLUSTER MEET &lt;ip&gt; &lt;port&gt; 向一个节点 node 发送 CLUSTER MEET 命令，可以让 node 节点与 ip 和 port 所指定的节点进行握手，当握手成功时，node节点就会将 ip 和 port 所指定的节点添加到 node 节点所在的集群中。
+  具体实例如下：
+   1.1 启动节点 #    一个节点就是一个运行在集群模式下的 Redis 服务器，Redis 服务器在启动时会根据 cluster_enabled 配置选项是否为 yes 来决定是否开启服务器的集群模式，如下图所示：
+   节点（运行在集群模式下的 Redis 服务器）会继续使用所有在单机模式中使用的服务器组件，比如说：" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.5-%E9%AB%98%E5%8F%AF%E7%94%A8/3.5.3-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/" /><meta property="article:section" content="docs" />
+
+
+
+<title>3.5.3 集群模式 | Computer Cookbook School Recruitment</title>
+<link rel="manifest" href="/school-recruitment/manifest.json">
+<link rel="icon" href="/school-recruitment/favicon.png" type="image/x-icon">
+<link rel="stylesheet" href="/school-recruitment/book.min.57f7f660871517a5bfcfb5e2de853d806f7e34d94ebd5f3f3bad62e9ddbae209.css" integrity="sha256-V/f2YIcVF6W/z7Xi3oU9gG9&#43;NNlOvV8/O61i6d264gk=" crossorigin="anonymous">
+  <script defer src="/school-recruitment/flexsearch.min.js"></script>
+  <script defer src="/school-recruitment/en.search.min.ddcf6bcf59f53a854992903fddbc3eb404e9294c5826045ce92334fde6a3e27e.js" integrity="sha256-3c9rz1n1OoVJkpA/3bw&#43;tATpKUxYJgRc6SM0/eaj4n4=" crossorigin="anonymous"></script>
+
+  <script defer src="/school-recruitment/sw.min.07899fc95e217f83f76b676678ae96a3d8d0d0b042f9f17c3f23eec2551b7b12.js" integrity="sha256-B4mfyV4hf4P3a2dmeK6Wo9jQ0LBC&#43;fF8PyPuwlUbexI=" crossorigin="anonymous"></script>
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+  
+</head>
+<body dir="ltr">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+
+  <a href="https://github.com/wpwbb510582246/ComputerCookbook-SchoolRecruitment" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#64CEAA; color:#fff; position: absolute; top: 0; border: 0; right: 0;z-index: 100;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+  <main class="container flex">
+    <aside class="book-menu">
+      <div class="book-menu-content">
+        
+  <nav>
+<h2 class="book-brand">
+  <a href="/school-recruitment/"><span>Computer Cookbook School Recruitment</span>
+  </a>
+</h2>
+
+
+<div class="book-search">
+  <input type="text" id="book-search-input" placeholder="Search" aria-label="Search" maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+
+
+
+
+
+
+  
+<ul>
+  
+  <li>
+    <a href="https://www.grayson.top" target="_blank" rel="noopener">
+        Blog
+      </a>
+  </li>
+  
+  <li>
+    <a href="https://github.com/graysonwp" target="_blank" rel="noopener">
+        Github
+      </a>
+  </li>
+  
+</ul>
+
+
+
+
+
+
+<hr>
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-353f7a5578fa41dbc42c73ea30fe2255" class="toggle"  />
+    <label for="section-353f7a5578fa41dbc42c73ea30fe2255" class="flex justify-between">
+      <a role="button" class="">第一章 算法</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e0c159ebe8e8b165cd558008fb5f5074" class="toggle"  />
+    <label for="section-e0c159ebe8e8b165cd558008fb5f5074" class="flex justify-between">
+      <a role="button" class="">1、算法框架</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a9fe725cb6a0f216530b1ac2b85e3b7a" class="toggle"  />
+    <label for="section-a9fe725cb6a0f216530b1ac2b85e3b7a" class="flex justify-between">
+      <a role="button" class="">1.1 动态规划</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.1-%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97/" class="">1.1.1 斐波那契数列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.2-%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98/" class="">1.1.2 背包问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.3-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="">1.1.3 贪心算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.4-%E5%BA%8F%E5%88%97%E5%92%8C%E6%95%B0%E7%BB%84%E7%B1%BB%E9%97%AE%E9%A2%98/" class="">1.1.4 序列和数组类问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.5-%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB/" class="">1.1.5 编辑距离</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.6-%E9%AB%98%E6%A5%BC%E6%89%94%E9%B8%A1%E8%9B%8B/" class="">1.1.6 高楼扔鸡蛋</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.7-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97%E9%80%9A%E8%A7%A3/" class="">1.1.7 股票问题系列通解</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.8-%E6%9C%80%E9%95%BF%E6%9C%89%E6%95%88%E6%8B%AC%E5%8F%B7/" class="">1.1.8 最长有效括号</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.9-%E8%82%A1%E7%A5%A8%E9%97%AE%E9%A2%98%E7%B3%BB%E5%88%97%E9%80%9A%E8%A7%A3/" class="">1.1.9 股票问题系列通解</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.10-%E6%9C%80%E9%95%BF%E9%87%8D%E5%A4%8D%E5%AD%90%E6%95%B0%E7%BB%84/" class="">1.1.10 最长重复子数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.1-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/1.1.11-%E6%9C%80%E9%95%BF%E6%9C%89%E6%95%88%E6%8B%AC%E5%8F%B7/" class="">1.1.11 最长有效括号</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e36081c41f3a4d8d8355cae83c46c9b8" class="toggle"  />
+    <label for="section-e36081c41f3a4d8d8355cae83c46c9b8" class="flex justify-between">
+      <a role="button" class="">1.2 二分查找</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/1.2.1-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E6%A1%86%E6%9E%B6/" class="">1.2.1 二分查找框架</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/1.2.2-%E6%90%9C%E7%B4%A2%E6%97%8B%E8%BD%AC%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">1.2.2 搜索旋转排序数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/1.2.3-%E5%A6%82%E4%BD%95%E8%BF%90%E7%94%A8%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95/" class="">1.2.3 如何运用二分查找算法</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2ac9691c4865fdec0880b3cb638bc594" class="toggle"  />
+    <label for="section-2ac9691c4865fdec0880b3cb638bc594" class="flex justify-between">
+      <a role="button" class="">1.3 数据结构</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.1-%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/" class="">1.3.1 反转链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.2-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/" class="">1.3.2 相交链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.3-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.3.3-%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E8%8A%82%E7%82%B9/" class="">1.3.3 链表中倒数第k个节点</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2adde4460efeae2e3f7fc587adb365a8" class="toggle"  />
+    <label for="section-2adde4460efeae2e3f7fc587adb365a8" class="flex justify-between">
+      <a role="button" class="">1.4 排序算法</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.4-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/1.4.1-%E5%B8%B8%E8%A7%81%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" class="">1.4.1 常见排序算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.4-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/1.4.2-%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E7%AC%ACk%E4%B8%AA%E6%9C%80%E5%A4%A7%E5%85%83%E7%B4%A0/" class="">1.4.2 数组中的第k个最大元素</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9b9f975ded87a304ee48569c44f19492" class="toggle"  />
+    <label for="section-9b9f975ded87a304ee48569c44f19492" class="flex justify-between">
+      <a role="button" class="">1.5 二叉树</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.1-%E4%BA%8C%E5%8F%89%E6%A0%91%E9%81%8D%E5%8E%86/" class="">1.5.1 二叉树遍历</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.2-%E5%B2%9B%E5%B1%BF%E9%97%AE%E9%A2%98/" class="">1.5.2 岛屿问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.3-%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" class="">1.5.3 平衡二叉树</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.4-%E4%BA%8C%E5%8F%89%E6%A0%91%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98/" class="">1.5.4 二叉树路径问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.5-%E6%9E%84%E9%80%A0%E4%BA%8C%E5%8F%89%E6%A0%91/" class="">1.5.5 构造二叉树</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.5-%E4%BA%8C%E5%8F%89%E6%A0%91/1.5.6-%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%9C%80%E8%BF%91%E5%85%AC%E5%85%B1%E7%A5%96%E5%85%88/" class="">1.5.6 二叉树的最近公共祖先</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-4571e95d0021653ce2d27ee4b0838ca0" class="toggle"  />
+    <label for="section-4571e95d0021653ce2d27ee4b0838ca0" class="flex justify-between">
+      <a role="button" class="">1.6 回溯算法</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.1-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95%E8%A7%A3%E9%A2%98%E6%A1%86%E6%9E%B6/" class="">1.6.1 回溯算法解题框架</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.6-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/1.6.2-N%E7%9A%87%E5%90%8E/" class="">1.6.2 N皇后</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d6fac765b0c7fea77c79961a611f9f8f" class="toggle"  />
+    <label for="section-d6fac765b0c7fea77c79961a611f9f8f" class="flex justify-between">
+      <a role="button" class="">1.7 数组</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.7-%E6%95%B0%E7%BB%84/1.7.1-%E5%88%A0%E9%99%A4%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%87%8D%E5%A4%8D%E9%A1%B9/" class="">1.7.1 删除有序数组中的重复项</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.7-%E6%95%B0%E7%BB%84/1.7.2-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E6%9C%80%E5%A4%A7%E5%80%BC/" class="">1.7.2 滑动窗口最大值</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-07c6c41b5fb22f09768b6f4e1da46596" class="toggle"  />
+    <label for="section-07c6c41b5fb22f09768b6f4e1da46596" class="flex justify-between">
+      <a role="button" class="">1.8 字符串</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.1-%E6%9C%80%E5%B0%8F%E8%A6%86%E7%9B%96%E5%AD%90%E4%B8%B2/" class="">1.8.1 最小覆盖子串</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.2-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E4%B9%98/" class="">1.8.2 字符串相乘</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.3-%E6%AF%94%E8%BE%83%E7%89%88%E6%9C%AC%E5%8F%B7/" class="">1.8.3 比较版本号</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.4-%E9%AA%8C%E8%AF%81IP%E5%9C%B0%E5%9D%80/" class="">1.8.4 验证 Ip地址</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/1%E7%AE%97%E6%B3%95%E6%A1%86%E6%9E%B6/1.8-%E5%AD%97%E7%AC%A6%E4%B8%B2/1.8.5-%E5%9F%BA%E6%9C%AC%E8%AE%A1%E7%AE%97%E5%99%A8-II/" class="">1.8.5 基本计算器 Ii</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-8b579ed4452b6a8d2017a24343689b5c" class="toggle"  />
+    <label for="section-8b579ed4452b6a8d2017a24343689b5c" class="flex justify-between">
+      <a role="button" class="">2、高频面试题</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5a653711e83b11abc9ab6143b1a9fd64" class="toggle"  />
+    <label for="section-5a653711e83b11abc9ab6143b1a9fd64" class="flex justify-between">
+      <a role="button" class="">2.1 数学</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.1-%E5%BF%AB%E9%80%9F%E6%A8%A1%E5%B9%82%E7%AE%97%E6%B3%95/" class="">2.1.1 快速模幂算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.2-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/" class="">2.1.2 搜索二维矩阵</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.3-%E8%9E%BA%E6%97%8B%E7%9F%A9%E9%98%B5/" class="">2.1.3 螺旋矩阵</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.1-%E6%95%B0%E5%AD%A6/2.1.4-x-%E7%9A%84%E5%B9%B3%E6%96%B9%E6%A0%B9/" class="">2.1.4 X 的平方根</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5c279474332677699cd0b53888bd51ba" class="toggle"  />
+    <label for="section-5c279474332677699cd0b53888bd51ba" class="flex justify-between">
+      <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.2-%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" class="">2.2 二分查找</a>
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e057e8659d2f838952397ed15d20f46c" class="toggle"  />
+    <label for="section-e057e8659d2f838952397ed15d20f46c" class="flex justify-between">
+      <a role="button" class="">2.3 数组</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.1-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%B6%88%E5%A4%B1%E7%9A%84%E5%85%83%E7%B4%A0/" class="">2.3.1 如何寻找消失的元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.2-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E7%BC%BA%E5%A4%B1%E5%92%8C%E9%87%8D%E5%A4%8D%E7%9A%84%E5%85%83%E7%B4%A0/" class="">2.3.2 如何寻找缺失和重复的元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.3-%E6%89%BE%E5%87%BA%E6%95%B0%E7%BB%84%E6%B8%B8%E6%88%8F%E7%9A%84%E8%B5%A2%E5%AE%B6/" class="">2.3.3 找出数组游戏的赢家</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.4-%E6%9C%80%E5%A4%A7%E6%95%B0/" class="">2.3.4 最大数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.5-%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/" class="">2.3.5 二维数组中的查找</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.6-%E4%B8%A4%E6%95%B0%E4%B9%8B%E5%92%8C/" class="">2.3.6 两数之和</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.7-%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C/" class="">2.3.7 三数之和</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.8-%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84/" class="">2.3.8 合并两个有序数组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.9-%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%8E%92%E5%88%97/" class="">2.3.9 下一个排列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.10-%E7%BC%BA%E5%A4%B1%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%AD%A3%E6%95%B0/" class="">2.3.10 缺失的第一个正数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.11-%E5%AF%BB%E6%89%BE%E4%B8%A4%E4%B8%AA%E6%AD%A3%E5%BA%8F%E6%95%B0%E7%BB%84%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/" class="">2.3.11 寻找两个正序数组的中位数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.12-%E5%A4%9A%E6%95%B0%E5%85%83%E7%B4%A0/" class="">2.3.12 多数元素</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.13-%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E5%BA%8F%E5%88%97/" class="">2.3.13 最长连续序列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.3-%E6%95%B0%E7%BB%84/2.3.14-%E7%BB%99%E5%AE%9A%E6%95%B0%E5%AD%97%E8%83%BD%E7%BB%84%E6%88%90%E7%9A%84%E6%9C%80%E5%A4%A7%E6%97%B6%E9%97%B4/" class="">2.3.14 给定数字能组成的最大时间</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b0bb9f9be9775f7e7856b63f7c5be80e" class="toggle"  />
+    <label for="section-b0bb9f9be9775f7e7856b63f7c5be80e" class="flex justify-between">
+      <a role="button" class="">2.4 字符串</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.1-%E6%9E%84%E9%80%A0-K-%E4%B8%AA%E5%9B%9E%E6%96%87%E5%AD%97%E7%AC%A6%E4%B8%B2/" class="">2.4.1 构造 K 个回文字符串</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.2-%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%9C%80%E5%9B%9E%E4%B8%B2/" class="">2.4.2 如何寻找最 回 串</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.3-%E5%A6%82%E4%BD%95%E5%88%A4%E5%AE%9A%E6%8B%AC%E5%8F%B7%E7%9A%84%E5%90%88%E6%B3%95%E6%80%A7/" class="">2.4.3 如何判定括号的合法性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.4-%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E6%8D%A2%E6%95%B4%E6%95%B0-atoi/" class="">2.4.4 字符串转换整数 (Atoi)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.5-%E9%95%BF%E5%BA%A6%E4%B8%BA3%E7%9A%84%E4%B8%8D%E5%90%8C%E5%9B%9E%E6%96%87%E5%AD%90%E5%BA%8F%E5%88%97/" class="">2.4.5 长度为3的不同回文子序列</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.6-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/" class="">2.4.6 无重复字符的最长子串</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.7-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9B%B8%E5%8A%A0/" class="">2.4.7 字符串相加</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.4-%E5%AD%97%E7%AC%A6%E4%B8%B2/2.4.8-%E7%BF%BB%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2%E9%87%8C%E7%9A%84%E5%8D%95%E8%AF%8D/" class="">2.4.8 翻转字符串里的单词</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c2cc4653d849ecb4e8d0df9162693740" class="toggle"  />
+    <label for="section-c2cc4653d849ecb4e8d0df9162693740" class="flex justify-between">
+      <a role="button" class="">2.5 链表</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.1-%E7%8E%AF%E5%BD%A2%E9%93%BE%E8%A1%A8-II/" class="">2.5.1 环形链表 Ii</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.2-%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E5%88%A4%E6%96%AD%E5%9B%9E%E6%96%87%E9%93%BE%E8%A1%A8/" class="">2.5.2 如何高效判断回文链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.3-%E5%90%88%E5%B9%B6K%E4%B8%AA%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/" class="">2.5.3 合并 K个升序链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.4-%E7%9B%B8%E4%BA%A4%E9%93%BE%E8%A1%A8/" class="">2.5.4 相交链表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.5-%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E8%8A%82%E7%82%B9/" class="">2.5.5 链表中倒数第k个节点</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.5-%E9%93%BE%E8%A1%A8/2.5.6-%E5%90%88%E5%B9%B6K%E4%B8%AA%E5%8D%87%E5%BA%8F%E9%93%BE%E8%A1%A8/" class="">2.5.6 合并 K个升序链表</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-95a636b3d00f4ce42d96beeef34d9742" class="toggle"  />
+    <label for="section-95a636b3d00f4ce42d96beeef34d9742" class="flex justify-between">
+      <a role="button" class="">2.6 二叉树</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.1-%E5%9C%A8%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E5%88%86%E9%85%8D%E7%A1%AC%E5%B8%81/" class="">2.6.1 在二叉树中分配硬币</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.2-%E5%B0%86%E6%9C%89%E5%BA%8F%E6%95%B0%E7%BB%84%E8%BD%AC%E6%8D%A2%E4%B8%BA%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91/" class="">2.6.2 将有序数组转换为二叉搜索树</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.4-%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91/" class="">2.6.4 重建二叉树</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.6-%E4%BA%8C%E5%8F%89%E6%A0%91/2.6.5-%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E8%B7%AF%E5%BE%84%E5%92%8C/" class="">2.6.5 二叉树中的最大路径和</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2dca4a28932da6fd2ab80d6adf86f380" class="toggle"  />
+    <label for="section-2dca4a28932da6fd2ab80d6adf86f380" class="flex justify-between">
+      <a role="button" class="">2.7 队列</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.7-%E9%98%9F%E5%88%97/2.7.1-%E7%94%A8%E6%A0%88%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97/" class="">2.7.1 用栈实现队列</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9868fca37e026543bb4220219b385440" class="toggle"  />
+    <label for="section-9868fca37e026543bb4220219b385440" class="flex justify-between">
+      <a role="button" class="">2.8 动态规划</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.8-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/2.8.1-%E5%A6%82%E4%BD%95%E9%AB%98%E6%95%88%E8%A7%A3%E5%86%B3%E6%8E%A5%E9%9B%A8%E6%B0%B4%E9%97%AE%E9%A2%98/" class="">2.8.1 如何高效解决接雨水问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.8-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/2.8.2-%E6%9C%80%E5%B0%91%E4%BE%A7%E8%B7%B3%E6%AC%A1%E6%95%B0/" class="">2.8.2 最少侧跳次数</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2b868ec58580c16b57b76d0e583b5ec9" class="toggle"  />
+    <label for="section-2b868ec58580c16b57b76d0e583b5ec9" class="flex justify-between">
+      <a role="button" class="">2.9 设计</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.9-%E8%AE%BE%E8%AE%A1/2.9.1-%E5%AE%9E%E7%8E%B0-Trie-%E5%89%8D%E7%BC%80%E6%A0%91/" class="">2.9.1 实现 Trie (前缀树)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/algorithm/2%E9%AB%98%E9%A2%91%E9%9D%A2%E8%AF%95%E9%A2%98/2.9-%E8%AE%BE%E8%AE%A1/2.9.2-LRU-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/" class="">2.9.2 Lru 缓存机制</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0922907dd56f7a4a192db7338c0e7143" class="toggle"  />
+    <label for="section-0922907dd56f7a4a192db7338c0e7143" class="flex justify-between">
+      <a role="button" class="">第二章 计算机基础</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e090ea075956ea0a88f3be27eb8b8174" class="toggle"  />
+    <label for="section-e090ea075956ea0a88f3be27eb8b8174" class="flex justify-between">
+      <a role="button" class="">1、计算机网络</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-043e7911fd2d67fbc52b823c1516a0d8" class="toggle"  />
+    <label for="section-043e7911fd2d67fbc52b823c1516a0d8" class="flex justify-between">
+      <a role="button" class="">1.1 传输层： Tcp和 UDP</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.1-%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B/" class="">1.1.1 三次握手</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.2-%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/" class="">1.1.2 四次挥手</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.3-%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/" class="">1.1.3 流量控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.5-%E6%8B%A5%E5%A1%9E%E6%8E%A7%E5%88%B6/" class="">1.1.5 拥塞控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.6-TCP%E5%92%8CUDP%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.1.6 Tcp和 Udp的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.7-TCP%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E4%BC%A0%E8%BE%93%E7%9A%84%E5%8F%AF%E9%9D%A0%E6%80%A7/" class="">1.1.7 Tcp如何保证传输的可靠性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.1-%E4%BC%A0%E8%BE%93%E5%B1%82TCP%E5%92%8CUDP/1.1.8-TCP%E9%95%BF%E8%BF%9E%E6%8E%A5%E5%92%8C%E7%9F%AD%E8%BF%9E%E6%8E%A5/" class="">1.1.8 Tcp长连接和短连接</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c1e479729a89ea5ddbe8dd67b5f3ed4e" class="toggle"  />
+    <label for="section-c1e479729a89ea5ddbe8dd67b5f3ed4e" class="flex justify-between">
+      <a role="button" class="">1.2 应用层：HTTP和HTTPS</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.1-HTTP%E5%92%8CHTTPS%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.2.1 Http和 HTTP S的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.2-GET%E5%92%8CPOST%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.2.2 Get和 Post的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.3-Session%E4%B8%8ECookie%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.2.3 Session与 Cookie的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.4-%E4%BB%8E%E8%BE%93%E5%85%A5%E7%BD%91%E5%9D%80%E5%88%B0%E8%8E%B7%E5%BE%97%E9%A1%B5%E9%9D%A2%E7%9A%84%E8%BF%87%E7%A8%8B%E8%B6%8A%E8%AF%A6%E7%BB%86%E8%B6%8A%E5%A5%BD/" class="">1.2.4 从输入网址到获得页面的过程（越详细越好）</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.5-HTTP%E8%AF%B7%E6%B1%82%E6%9C%89%E5%93%AA%E4%BA%9B%E5%B8%B8%E8%A7%81%E7%9A%84%E7%8A%B6%E6%80%81%E7%A0%81/" class="">1.2.5 Http请求有哪些常见的状态码</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.6-%E4%BB%80%E4%B9%88%E6%98%AFRIP%E7%AE%97%E6%B3%95%E6%98%AF%E4%BB%80%E4%B9%88/" class="">1.2.6 什么是 Rip，算法是什么</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.7-HTTP1.0HTTP1.1%E5%92%8CHTTP2.0%E7%9A%84%E4%B8%BB%E8%A6%81%E5%8C%BA%E5%88%AB/" class="">1.2.7 Http1.0、 Http1.1和 Http2.0的主要区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.8-DNS/" class="">1.2.8 DNS</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.9-HTTPS%E5%8A%A0%E5%AF%86%E5%92%8C%E8%AE%A4%E8%AF%81%E8%BF%87%E7%A8%8B/" class="">1.2.9 HTTP S加密和认证过程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.10-%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB/" class="">1.2.10 常见网络攻击</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.2-%E5%BA%94%E7%94%A8%E5%B1%82HTTP%E5%92%8CHTTPS/1.2.11-REST/" class="">1.2.11 Rest</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.3-%E8%AE%A1%E7%AE%97%E5%85%B6%E7%BD%91%E7%BB%9C%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/" class="">1.3 计算其网络体系结构</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9a70073e95afd0aa2b7107f6cb77a3ce" class="toggle"  />
+    <label for="section-9a70073e95afd0aa2b7107f6cb77a3ce" class="flex justify-between">
+      <a role="button" class="">1.4 网络层协议</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.1-IP%E5%9C%B0%E5%9D%80%E7%9A%84%E5%88%86%E7%B1%BB/" class="">1.4.1 Ip地址的分类</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.2-%E5%88%92%E5%88%86%E5%AD%90%E7%BD%91/" class="">1.4.2 划分子网</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.3-%E4%BB%80%E4%B9%88%E6%98%AFARP%E5%8D%8F%E8%AE%AE/" class="">1.4.3 什么是 Arp协议</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/1%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/1.4-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/1.4.4-NAT%E5%8D%8F%E8%AE%AE/" class="">1.4.4 Nat协议</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-09f7d8995bc26810475d1c56597a312e" class="toggle"  />
+    <label for="section-09f7d8995bc26810475d1c56597a312e" class="flex justify-between">
+      <a role="button" class="">2、操作系统</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-2f767bf946d6dc8ddeda6b6435471e5b" class="toggle"  />
+    <label for="section-2f767bf946d6dc8ddeda6b6435471e5b" class="flex justify-between">
+      <a role="button" class="">2.1 进程和线程</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.1.1 进程和线程的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.2-%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F/" class="">2.1.2 进程间通信方式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.3-%E8%BF%9B%E7%A8%8B%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98/" class="">2.1.3 进程同步问题</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.4-%E8%BF%9B%E7%A8%8B%E6%9C%89%E5%93%AA%E5%87%A0%E7%A7%8D%E7%8A%B6%E6%80%81/" class="">2.1.4 进程有哪几种状态</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.5-%E8%BF%9B%E7%A8%8B%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5/" class="">2.1.5 进程调度策略</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.6-%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B/" class="">2.1.6 僵尸进程和孤儿进程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.7-%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/" class="">2.1.7 线程同步</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.8-%E5%8D%8F%E7%A8%8B/" class="">2.1.8 协程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.9-%E5%BC%82%E5%B8%B8%E6%8E%A7%E5%88%B6%E6%B5%81/" class="">2.1.9 异常控制流</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.10-IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8/" class="">2.1.10 Io多路复用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.1-%E8%BF%9B%E7%A8%8B%E5%92%8C%E7%BA%BF%E7%A8%8B/2.1.11-%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/" class="">2.1.11 用户态和内核态</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.2-%E6%AD%BB%E9%94%81/" class="">2.2 死锁</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b2b1a78994c9898abed1b08fef134abd" class="toggle"  />
+    <label for="section-b2b1a78994c9898abed1b08fef134abd" class="flex justify-between">
+      <a role="button" class="">2.3 内存管理</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.1-%E5%88%86%E9%A1%B5%E5%92%8C%E5%88%86%E6%AE%B5/" class="">2.3.1 分页和分段</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.2-%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98/" class="">2.3.2 虚拟内存</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.3-%E9%A1%B5%E9%9D%A2%E7%BD%AE%E6%8D%A2%E7%AE%97%E6%B3%95/" class="">2.3.3 页面置换算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.4-%E5%B1%80%E9%83%A8%E6%80%A7%E5%8E%9F%E7%90%86/" class="">2.3.4 局部性原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.3-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/2.3.5-%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA/" class="">2.3.5 缓冲区溢出</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/computer-basics/2%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/2.4-%E7%A3%81%E7%9B%98%E8%B0%83%E5%BA%A6/" class="">2.4 磁盘调度</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e28cc33fe5745d14abf4a0147d0624a5" class="toggle" checked />
+    <label for="section-e28cc33fe5745d14abf4a0147d0624a5" class="flex justify-between">
+      <a role="button" class="">第三章 数据库</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6fd3cab540793410b1ce567d790deadc" class="toggle"  />
+    <label for="section-6fd3cab540793410b1ce567d790deadc" class="flex justify-between">
+      <a role="button" class="">1、数据库基础</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.1-%E4%BA%8B%E5%8A%A1%E7%9A%84%E6%A6%82%E5%BF%B5%E5%92%8C%E7%89%B9%E6%80%A7/" class="">1.1 事务的概念和特性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.2-%E9%94%81/" class="">1.2 锁</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.3-%E9%94%81%E5%8D%8F%E8%AE%AE/" class="">1.3 锁协议</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.4-%E4%BA%8B%E5%8A%A1%E6%97%A5%E5%BF%97/" class="">1.4 事务日志</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.5-MVCC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">1.5 Mvcc实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-12290256fbd76ac6014c39648c5827fe" class="toggle"  />
+    <label for="section-12290256fbd76ac6014c39648c5827fe" class="flex justify-between">
+      <a role="button" class="">1.6 基础知识</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.1-%E4%B8%89%E8%8C%83%E5%BC%8F/" class="">1.6.1 三范式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.2-%E5%A4%9A%E8%A1%A8%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F/" class="">1.6.2 多表连接方式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.3-%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/" class="">1.6.3 存储过程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.4-DELETETRUNCATE%E5%92%8CDROP%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.6.4 Delete、 Truncate和 Drop的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.5-%E8%A7%A6%E5%8F%91%E5%99%A8/" class="">1.6.5 触发器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/1%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80/1.6-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/1.6.6-%E8%A7%86%E5%9B%BE/" class="">1.6.6 视图</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d1b14978df09adfe15777e58b9b435ec" class="toggle"  />
+    <label for="section-d1b14978df09adfe15777e58b9b435ec" class="flex justify-between">
+      <a role="button" class="">2、 My SQL</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.1-%E7%B4%A2%E5%BC%95/" class="">2.1 索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.2-B-%E6%A0%91B&#43;%E6%A0%91%E7%B4%A2%E5%BC%95%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/" class="">2.2 B 树、 B 树索引算法原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.3-%E7%B4%A2%E5%BC%95%E7%BB%84%E7%BB%87%E8%A1%A8/" class="">2.3 索引组织表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.4-InnoDB%E5%92%8CMyISAM%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">2.4 Inno Db和 My Isam的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.5-Checkpoint%E6%8A%80%E6%9C%AF/" class="">2.5 Checkpoint技术</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.6-%E5%AE%95%E6%9C%BA%E6%81%A2%E5%A4%8D%E5%8E%9F%E7%90%86/" class="">2.6 宕机恢复原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.7-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BC%98%E5%8C%96/" class="">2.7 数据库优化</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.8-%E5%88%86%E5%BA%93%E5%88%86%E8%A1%A8/" class="">2.8 分库分表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.9-%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E7%AE%97%E6%B3%95/" class="">2.9 一致性哈希算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/2MySQL/2.10-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" class="">2.10 主从复制</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-53f351d3e26dfa58c34e937b76a0c4ce" class="toggle" checked />
+    <label for="section-53f351d3e26dfa58c34e937b76a0c4ce" class="flex justify-between">
+      <a role="button" class="">3、 Redis</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-356f36d039b40fdb10be19d36f2f2793" class="toggle"  />
+    <label for="section-356f36d039b40fdb10be19d36f2f2793" class="flex justify-between">
+      <a role="button" class="">3.1 概述</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.1-%E4%B8%BA%E4%BB%80%E4%B9%88Redis%E5%8D%95%E7%BA%BF%E7%A8%8B%E8%BF%98%E8%BF%99%E4%B9%88%E5%BF%AB/" class="">3.1.1 为什么 Redis单线程还这么快</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.2-Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="">3.1.2 Redis数据类型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.3-%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6/" class="">3.1.3 持久化机制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.1-%E6%A6%82%E8%BF%B0/3.1.4-%E8%BF%87%E6%9C%9F%E6%9C%BA%E5%88%B6%E5%92%8C%E5%86%85%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5/" class="">3.1.4 过期机制和内存淘汰策略</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.2-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B/" class="">3.2 线程模型</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-4731e97839509d5614da88af39acf326" class="toggle"  />
+    <label for="section-4731e97839509d5614da88af39acf326" class="flex justify-between">
+      <a role="button" class="">3.3 分布式问题</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.3-%E5%88%86%E5%B8%83%E5%BC%8F%E9%97%AE%E9%A2%98/3.3.1-Redis%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="">3.3.1 Redis实现分布式锁</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-555105a060edfd5dfac44ac6d49d31e5" class="toggle"  />
+    <label for="section-555105a060edfd5dfac44ac6d49d31e5" class="flex justify-between">
+      <a role="button" class="">3.4 缓存异常</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.4-%E7%BC%93%E5%AD%98%E5%BC%82%E5%B8%B8/3.4.1-%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9/" class="">3.4.1 缓存穿透、缓存击穿、缓存雪崩</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c0c910bcaee9694f45ce547519533401" class="toggle" checked />
+    <label for="section-c0c910bcaee9694f45ce547519533401" class="flex justify-between">
+      <a role="button" class="">3.5 高可用</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.5-%E9%AB%98%E5%8F%AF%E7%94%A8/3.5.1-%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/" class="">3.5.1 主从复制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.5-%E9%AB%98%E5%8F%AF%E7%94%A8/3.5.2-%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F/" class="">3.5.2 哨兵模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/database/3Redis/3.5-%E9%AB%98%E5%8F%AF%E7%94%A8/3.5.3-%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/" class=" active">3.5.3 集群模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f0d841e400bf38796a65a65ef72b420e" class="toggle"  />
+    <label for="section-f0d841e400bf38796a65a65ef72b420e" class="flex justify-between">
+      <a role="button" class="">第四章 设计模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/1%E6%A6%82%E8%BF%B0/" class="">1、概述</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e796a2fc1bf6b4e9454f5a191dd15040" class="toggle"  />
+    <label for="section-e796a2fc1bf6b4e9454f5a191dd15040" class="flex justify-between">
+      <a role="button" class="">2、创建型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/2%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/2.1-%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="">2.1 单例模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/2%E5%88%9B%E5%BB%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/2.2-%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" class="">2.2 工厂模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="toggle"  />
+    <label for="section-3b4fedfe13cb3a0b79e49b4087294cb6" class="flex justify-between">
+      <a role="button" class="">3、结构型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.1-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" class="">3.1 代理模式</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/3%E7%BB%93%E6%9E%84%E5%9E%8B%E6%A8%A1%E5%BC%8F/3.2-%E8%A3%85%E9%A5%B0%E5%99%A8%E6%A8%A1%E5%BC%8F/" class="">3.2 装饰器模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0f94fb8c7e53c880650621fdcc596283" class="toggle"  />
+    <label for="section-0f94fb8c7e53c880650621fdcc596283" class="flex justify-between">
+      <a role="button" class="">4、行为型模式</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/design-pattern/4%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/4.1-%E7%AD%96%E7%95%A5%E6%A8%A1%E5%BC%8F/" class="">4.1 策略模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-eca69da21de5b0cd25d8421dec09a327" class="toggle"  />
+    <label for="section-eca69da21de5b0cd25d8421dec09a327" class="flex justify-between">
+      <a role="button" class="">第五章 Java</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a64d861c08691e8f06f1178d4d28cf04" class="toggle"  />
+    <label for="section-a64d861c08691e8f06f1178d4d28cf04" class="flex justify-between">
+      <a role="button" class="">1、 Java基础</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.1-StringStringBuffer%E5%92%8CStringBuilder%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">1.1 String、 String Buffer和 String Builder的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.2-HashMap%E5%92%8CConcurrentHashMap%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">1.2 Hash Map和 Concurrent Hash Map实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.3-ArrayList%E5%92%8CLinkedList%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">1.3 Array List和 Linked List实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.4-%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="">1.4 深拷贝与浅拷贝</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/1Java%E5%9F%BA%E7%A1%80/1.5-%E6%8A%BD%E8%B1%A1%E7%B1%BB%E4%B8%8E%E6%8E%A5%E5%8F%A3/" class="">1.5 抽象类与接口</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-21d6c85d1bc3cd657a462ac4b09f9d02" class="toggle"  />
+    <label for="section-21d6c85d1bc3cd657a462ac4b09f9d02" class="flex justify-between">
+      <a role="button" class="">2、 Java多线程</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.1-%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E4%B8%89%E5%A4%A7%E7%89%B9%E6%80%A7/" class="">2.1 并发编程的三大特性</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.2-%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92/" class="">2.2 指令重排</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.3-Volatile%E5%8E%9F%E7%90%86/" class="">2.3 Volatile原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.4-CAS%E5%8E%9F%E7%90%86/" class="">2.4 Cas原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.5-Java%E7%9A%844%E7%A7%8D%E5%BC%95%E7%94%A8%E7%BA%A7%E5%88%AB/" class="">2.5 Java的4种引用级别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.6-Java%E4%B8%AD%E7%9A%84%E9%94%81/" class="">2.6 Java中的锁</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.7-Synchronized%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.7 Synchronized实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.8-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" class="">2.8 线程池实现原理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/2Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/2.9-AQS/" class="">2.9 Aqs</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-65e183c484720f91ba3d1676e1ed5a16" class="toggle"  />
+    <label for="section-65e183c484720f91ba3d1676e1ed5a16" class="flex justify-between">
+      <a role="button" class="">3、 Jvm</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.1-%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F/" class="">3.1 运行时数据区域</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.2-%E5%88%A4%E6%96%AD%E5%AF%B9%E8%B1%A1%E6%98%AF%E5%90%A6%E5%AD%98%E6%B4%BB%E7%9A%84%E6%96%B9%E6%B3%95/" class="">3.2 判断对象是否存活的方法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.3-%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95/" class="">3.3 垃圾收集算法</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.4-%E7%B1%BB%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%92%8C%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B/" class="">3.4 类的生命周期和加载过程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.5-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%97%B6%E6%9C%BA/" class="">3.5 类加载时机</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.6-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E7%9A%84%E7%A7%8D%E7%B1%BB/" class="">3.6 类加载器的种类</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.7-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6%E7%9A%84%E7%89%B9%E7%82%B9/" class="">3.7 类加载机制的特点</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.8-JVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84/" class="">3.8 Jvm内存结构</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.9-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95%E6%9C%89%E5%93%AA%E4%BA%9B/" class="">3.9 常见的垃圾收集算法有哪些</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.10-%E6%8C%87%E9%92%88%E7%A2%B0%E6%92%9E%E5%92%8C%E7%A9%BA%E9%97%B2%E5%88%97%E8%A1%A8/" class="">3.10 指针碰撞和空闲列表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.11-%E5%B8%B8%E8%A7%81%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E6%9C%89%E5%93%AA%E4%BA%9B/" class="">3.11 常见的垃圾收集器有哪些</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.12-%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E4%B8%8E%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F%E7%9A%84%E5%8C%BA%E5%88%AB/" class="">3.12 内存溢出与内存泄漏的区别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.13-%E5%B8%B8%E7%94%A8%E7%9A%84JVM%E5%90%AF%E5%8A%A8%E5%8F%82%E6%95%B0%E6%9C%89%E5%93%AA%E4%BA%9B/" class="">3.13 常用的 Jvm启动参数有哪些</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/3JVM/3.14-%E5%8F%8D%E5%B0%84%E6%9C%BA%E5%88%B6/" class="">3.14 反射机制</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-78e3fdb9e302e0ddb1abf0723557c671" class="toggle"  />
+    <label for="section-78e3fdb9e302e0ddb1abf0723557c671" class="flex justify-between">
+      <a role="button" class="">4、 Nio</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/java/4NIO/4.1-%E6%A6%82%E8%BF%B0/" class="">4.1 概述</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="toggle"  />
+    <label for="section-0dcecbd4b31fcc19e26278b6dbaa0d33" class="flex justify-between">
+      <a role="button" class="">第六章 Spring全家桶</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-afe35ec73fb23fd24d05388dd4f6d178" class="toggle"  />
+    <label for="section-afe35ec73fb23fd24d05388dd4f6d178" class="flex justify-between">
+      <a role="button" class="">1、 Spring</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.1-%E6%A6%82%E8%BF%B0/" class="">1.1 概述</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.2-Spring-IOC/" class="">1.2 Spring Ioc</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/1Spring/1.3-Spring-AOP/" class="">1.3 Spring Aop</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-b63cda05fe80f821d31813480ebd8acb" class="toggle"  />
+    <label for="section-b63cda05fe80f821d31813480ebd8acb" class="flex justify-between">
+      <a role="button" class="">2、 Spring Boot</a>
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="https://books.grayson.top/school-recruitment/docs/spring-family/2SpringBoot/2.1-SpringSpringBootSpringCloud%E7%9A%84%E8%81%94%E7%B3%BB%E4%B8%8E%E5%8C%BA%E5%88%AB/" class="">2.1 Spring、 Spring Boot、 Spring Cloud的联系与区别</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+ 
+      </div>
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/school-recruitment/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>3.5.3 集群模式</strong>
+
+  <label for="toc-control">
+    
+    <img src="/school-recruitment/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML"> </script>
+  <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })</script>
+</div>
+
+
+  
+  <aside class="hidden clearfix">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#集群模式">集群模式</a>
+      <ul>
+        <li><a href="#1-节点">1 节点</a>
+          <ul>
+            <li><a href="#11-启动节点">1.1 启动节点</a></li>
+            <li><a href="#12-集群数据结构">1.2 集群数据结构</a></li>
+            <li><a href="#13-cluster-meet-命令的实现">1.3 CLUSTER MEET 命令的实现</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-槽指派">2 槽指派</a>
+          <ul>
+            <li><a href="#21-记录节点的槽指派信息">2.1 记录节点的槽指派信息</a></li>
+            <li><a href="#22-传播节点的槽指派信息">2.2 传播节点的槽指派信息</a></li>
+            <li><a href="#23-记录集群所有槽的指派信息">2.3 记录集群所有槽的指派信息</a></li>
+            <li><a href="#24-cluster-addslots-命令的实现">2.4 CLUSTER ADDSLOTS 命令的实现</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-在集群中执行命令">3 在集群中执行命令</a>
+          <ul>
+            <li><a href="#31-计算键属于哪个槽">3.1 计算键属于哪个槽</a></li>
+            <li><a href="#32-判断槽是否由当前节点负责处理">3.2 判断槽是否由当前节点负责处理</a></li>
+            <li><a href="#33-moved-错误">3.3 MOVED 错误</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-重新分片">4 重新分片</a>
+          <ul>
+            <li><a href="#41-含义">4.1 含义</a></li>
+            <li><a href="#42-实现原理">4.2 实现原理</a></li>
+          </ul>
+        </li>
+        <li><a href="#5-ask-错误">5 ASK 错误</a></li>
+        <li><a href="#6-复制与故障转移">6 复制与故障转移</a>
+          <ul>
+            <li><a href="#61-设置从节点">6.1 设置从节点</a></li>
+            <li><a href="#62-故障检测">6.2 故障检测</a></li>
+            <li><a href="#63-故障转移">6.3 故障转移</a></li>
+            <li><a href="#64-选举新的主节点">6.4 选举新的主节点</a></li>
+          </ul>
+        </li>
+        <li><a href="#参考文献">参考文献</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="集群模式">
+  集群模式
+  <a class="anchor" href="#%e9%9b%86%e7%be%a4%e6%a8%a1%e5%bc%8f">#</a>
+</h1>
+<ol>
+<li><strong>Redis 集群是 Redis 提供的分布式数据库方案</strong>，<strong>集群通过分片来进行数据共享</strong>，<strong>并提供复制和故障转移功能</strong>。</li>
+<li>下面将对集群的节点、槽指派、命令执行、转向、故障转移、消息等各个方面进行介绍。</li>
+</ol>
+<h2 id="1-节点">
+  1 节点
+  <a class="anchor" href="#1-%e8%8a%82%e7%82%b9">#</a>
+</h2>
+<ol>
+<li>
+<p><strong>一个 Redis 集群通常由多个节点组成</strong>，<strong>在刚开始的时候</strong>，<strong>每个节点都是相互独立的</strong>，<strong>他们都处于一个只包含自己的集群当中</strong>，<strong>要组建一个真正可工作的集群</strong>，我们<strong>必须将各个独立的节点连接起来</strong>，<strong>构成一个包含多个节点的集群</strong>。</p>
+</li>
+<li>
+<p><strong>连接各个节点的工作可以使用 <code>CLUSTER MEET</code> 命令来完成</strong>，该命令的格式如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">CLUSTER MEET &lt;ip&gt; &lt;port&gt;
+</code></pre></div><p><strong>向一个节点 <code>node</code> 发送 <code>CLUSTER MEET</code> 命令</strong>，<strong>可以让 <code>node</code> 节点与 <code>ip</code> 和 <code>port</code> 所指定的节点进行握手</strong>，<strong>当握手成功时</strong>，<code>node</code><strong>节点就会将 <code>ip</code> 和 <code>port</code> 所指定的节点添加到 <code>node</code> 节点所在的集群中</strong>。</p>
+</li>
+<li>
+<p>具体实例如下：</p>
+<p>
+  <img src="../../../media/202111/2021-11-20_154940_112605.png" alt="" /></p>
+</li>
+</ol>
+<h3 id="11-启动节点">
+  1.1 启动节点
+  <a class="anchor" href="#11-%e5%90%af%e5%8a%a8%e8%8a%82%e7%82%b9">#</a>
+</h3>
+<ol>
+<li>
+<p><strong>一个节点就是一个运行在集群模式下的 Redis 服务器</strong>，<strong>Redis 服务器在启动时会根据 <code>cluster_enabled</code> 配置选项是否为 <code>yes</code> 来决定是否开启服务器的集群模式</strong>，如下图所示：</p>
+<p>
+  <img src="../../../media/202111/2021-11-20_155316_501643.png" alt="" /></p>
+</li>
+<li>
+<p><strong>节点</strong>（运行在集群模式下的 Redis 服务器）<strong>会继续使用所有在单机模式中使用的服务器组件</strong>，比如说：</p>
+<ol>
+<li>节点会继续使用
+  <a href="https://notebook.grayson.top/project-37/doc-807/#2-1-2-%E6%96%87%E4%BB%B6%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%99%A8">文件事件处理器</a>来处理命令请求和返回命令回复。</li>
+<li>节点会继续使用
+  <a href="https://notebook.grayson.top/project-37/doc-807/#2-2-2-%E5%AE%9E%E7%8E%B0">时间事件处理器</a>来执行<code>serverCron</code> 函数，而<code>serverCron</code> 函数又会调用集群模式特有的<code>clusterCron</code> 函数，<code>clusterCron</code> 函数负责执行在集群模式下需要执行的常规操作，例如向集群中的其他节点发送 Gossip 消息，检查节点是否断线，或者检查是否需要对下线节点进行自动故障转移等。</li>
+<li>节点会继续使用数据库来保存键值对数据，键值对依然会是各种不同类型的对象。</li>
+<li>节点会继续使用
+  <a href="https://notebook.grayson.top/project-37/doc-806/#2-1-RDB">RDB 持久化模块</a>和 AOF 持久化模块来执行持久化工作。</li>
+<li>节点会继续使用发布于订阅模块来执行<code>PUBLISH</code>、<code>SUBSCRIBE</code> 等命令。</li>
+<li>节点会继续使用<code>Lua</code> 脚本环境来执行客户端输入的<code>Lua</code> 脚本。</li>
+</ol>
+</li>
+<li>
+<p>除此之外，<strong>节点会继续使用 <code>redisServer</code> 结构来保存服务器的状态</strong>，<strong>使用 <code>redisClient</code> 结构来保存客户端的状态</strong>，<strong>至于那些只有在集群模式下才会用到的数据</strong>，<strong>节点将他们保存到了 <code>cluster.h/clusterNode</code> 结构</strong>、<code>cluster.h/clusterLink</code><strong>结构</strong>，<strong>以及 <code>cluster.h/clusterState</code> 结构里面</strong>。</p>
+</li>
+</ol>
+<h3 id="12-集群数据结构">
+  1.2 集群数据结构
+  <a class="anchor" href="#12-%e9%9b%86%e7%be%a4%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84">#</a>
+</h3>
+<ol>
+<li>
+<p><code>clusterNode</code><strong>结构保存了一个节点的当前状态</strong>，比如节点的创建时间、节点的名字、节点当前的配置纪元、节点的 IP 地址和端口号等等。</p>
+</li>
+<li>
+<p><strong>每个节点都会使用一个 <code>clusterNode</code> 结构来记录自己的状态</strong>，<strong>并为集群中的所有其他节点</strong>（包括主节点和从节点）<strong>都创建一个相应的 <code>clusterNode</code> 结构</strong>，<strong>以此来记录其他节点的状态</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">clusterNode</span> {
+    <span style="color:#75715e">//  创建节点的时间
+</span><span style="color:#75715e"></span>    mstime_t ctime;
+    <span style="color:#75715e">//  节点的名字，由 40 个十六进制字符组成
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span> name[REDIS_CLUSTER_NAMELEN];
+    <span style="color:#75715e">//  节点标识，使用各种不同的标识值记录节点的角色（比如主节点或者从节点），以及节点目前所处的状态（比如在线或者下线）
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> flags;
+    <span style="color:#75715e">//  获取当前的配置纪元，用于实现故障转移
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint64_t</span> configEpoch;
+    <span style="color:#75715e">//  节点的 IP 地址
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span> ip[REDIS_IP_STR_LEN];
+    <span style="color:#75715e">//  节点的端口号
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> port;
+    <span style="color:#75715e">//  保存连接节点所需的相关信息
+</span><span style="color:#75715e"></span>    clusterLink <span style="color:#f92672">*</span>link;
+} clusterNode;
+</code></pre></div></li>
+<li>
+<p><strong><code>clusterNode</code> 结构的 <code>link</code> 属性是一个 <code>clusterLink</code> 结构</strong>，该结构<strong>保存了连接节点所需的相关信息</strong>，比如套接字描述符、输入缓冲区和输出缓冲区：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">clusterLink</span> {
+    <span style="color:#75715e">//  连接的创建时间
+</span><span style="color:#75715e"></span>    mstime_t ctime;
+    <span style="color:#75715e">//  TCP 套接字描述符
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> fd;
+    <span style="color:#75715e">//  输出缓冲区，保存着等待发送给其他节点的消息
+</span><span style="color:#75715e"></span>    sds sndbuf;
+    <span style="color:#75715e">//  输入缓冲区，保存着从其他节点接收到的消息
+</span><span style="color:#75715e"></span>    sds rcvbuf;
+    <span style="color:#75715e">//  与这个连接相关联的节点，如果没有的话就为 NULL
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">clusterNode</span> <span style="color:#f92672">*</span>node;
+} clusterLink;
+</code></pre></div></li>
+<li>
+<p>最后，<strong>每个节点都保存着一个 <code>clusterState</code> 结构</strong>，这个结构<strong>记录了在当前节点的视角下</strong>，<strong>集群目前所处的状态</strong>，例如集群是在线还是下线、集群包含多少个节点、集群当前的配置纪元等：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">clusterState</span> {
+    <span style="color:#75715e">//  指向当前节点的指针
+</span><span style="color:#75715e"></span>    clusterNode <span style="color:#f92672">*</span>myself;
+    <span style="color:#75715e">//  集群当前的配置纪元，用于实现故障转移
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">uint64_t</span> currentEpoch;
+    <span style="color:#75715e">//  集群当前的状态（在线还是下线）
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> state;
+    <span style="color:#75715e">//  集群中至少处理着一个槽的节点的数量
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> size;
+    <span style="color:#75715e">//  集群节点名单（包括 myself 节点），字典的键为节点的名字，字典的值为节点对应的 clusterNode 结构
+</span><span style="color:#75715e"></span>    dict <span style="color:#f92672">*</span>nodes;
+} clusterState;
+</code></pre></div></li>
+<li>
+<p>具体的实例如下：</p>
+<ol>
+<li>
+<p>以前面介绍的 7000、7001、7002 三个节点为例，下图展示了节点 7000 创建的 <code>clusterState</code> 结构，这个结构从节点 7000 的角度记录了集群以及集群包含的额三个节点的当前状态（为了空间考虑，图中省略了 <code>clusterNode</code> 结构的一部分属性）：</p>
+<ol>
+<li>
+<p>结构的 <code>currentEpoch</code> 属性的值为 0，表示集群当前的配置纪元为 0。</p>
+</li>
+<li>
+<p>结构的 <code>size</code> 属性的值为 0，表示集群目前没有任何节点在处理槽，因此结构的 <code>state</code> 属性的值为 <code>REDIS_CLUSTER_FAIL</code>，这表示集群目前处于下线状态。</p>
+</li>
+<li>
+<p>结构的 <code>nodes</code> 字典记录了集群目前包含的三个节点，这三个节点分别由三个 <code>clusterNode</code> 结构表示，其中 <code>myself</code> 指针指向代表节点 7000 的 <code>clusterNode</code> 结构，而字典中的另外两个指针则分别指向代表结点 7001 和代表节点 7002 的 <code>clusterNode</code> 结构，这两个节点是节点 7000 已知的在集群中的其他节点。</p>
+</li>
+<li>
+<p>三个节点的 <code>clusterNode</code> 结构的 <code>flags</code> 属性都是 <code>REDIS_NODE_MASTER</code>，说明三个节点都是主节点。</p>
+<p>
+  <img src="../../../media/202111/2021-11-20_173425_700201.png" alt="" /></p>
+</li>
+</ol>
+</li>
+<li>
+<p>节点 7001 和节点 7002 也会创建类似的 <code>clusterState</code> 结构：</p>
+<ol>
+<li>不过在节点 7001 创建的<code>clusterState</code> 结构中，<code>myself</code> 指针将指向代表结点 7001 的<code>clusterNode</code> 结构，而节点 7000 和节点 7002 则是集群中的其他节点。</li>
+<li>而在节点 7002 创建的<code>clusterState</code> 结构中，<code>myself</code> 指针将指向代表结点 7002 的<code>clusterNode</code> 结构，而节点 7000 和节点 7001 则是集群中的其他节点。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="13-cluster-meet-命令的实现">
+  1.3 CLUSTER MEET 命令的实现
+  <a class="anchor" href="#13-cluster-meet-%e5%91%bd%e4%bb%a4%e7%9a%84%e5%ae%9e%e7%8e%b0">#</a>
+</h3>
+<ol>
+<li>通过<strong>向节点 A 发送 <code>CLUSTER MEET</code> 命令</strong>，<strong>客户端可以让接收命令的节点 A 将另一个节点 B 添加到节点 A 当前所在的集群里面</strong>。</li>
+<li><strong>收到命令的节点 A 将与节点 B 进行握手</strong>，<strong>以此来确认彼此的存在</strong>，<strong>并未将来的进一步通信打好基础</strong>：
+<ol>
+<li>
+<p><strong>节点 A 会为节点 B 创建一个 <code>clusterNode</code> 结构</strong>，<strong>并将该结构添加到自己的 <code>clusterState.nodes</code> 字典里面</strong>。</p>
+</li>
+<li>
+<p>之后，<strong>节点 A 将根据 <code>CLUSTER MEET</code> 命令给定的 IP 地址和端口号</strong>，<strong>向节点 B 发送一条 <code>MEET</code> 消息</strong>。</p>
+</li>
+<li>
+<p><strong>如果一切顺利</strong>，<strong>节点 B 将接收到节点 A 发送的 <code>MEET</code> 消息</strong>，<strong>并为节点 A 创建一个 <code>clusterNode</code> 结构</strong>，<strong>并将该结构添加到自己的 <code>clusterState.nodes</code> 字典里面</strong>。</p>
+</li>
+<li>
+<p>之后，<strong>节点 B 将向节点 A 返回一条 <code>PONG</code> 消息</strong>。</p>
+</li>
+<li>
+<p><strong>如果一切顺利</strong>，<strong>节点 B 将接收到节点 A 返回的 <code>PING</code> 消息</strong>，<strong>通过这条 <code>PING</code> 消息</strong>，<strong>节点 B 就可以知道节点 A 已经成功地接收到了自己返回的 <code>PONG</code> 消息</strong>，<strong>握手完成</strong>。</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_103555_468133.png" alt="" /></p>
+</li>
+</ol>
+</li>
+<li>之后，<strong>节点 A 会将节点 B 的信息通过 Gossip 协议传播给集群中的其他节点</strong>，<strong>让其他节点也与节点 B 进行握手</strong>，最终，<strong>经过一段时间之后</strong>，<strong>节点 B 会被集群中的所有节点认识</strong>。</li>
+</ol>
+<h2 id="2-槽指派">
+  2 槽指派
+  <a class="anchor" href="#2-%e6%a7%bd%e6%8c%87%e6%b4%be">#</a>
+</h2>
+<ol>
+<li><strong>Redis 集群通过分片的方式来保存数据库中的键值对</strong>，<strong>集群的整个数据库被分为 16384 个槽</strong>，<strong>数据库中的每个键都属于这 16384 个槽的其中一个</strong>，<strong>集群中的每个节点可以处理 0 个或最多 16384 个槽</strong>。</li>
+<li><strong>当数据库中的 16384 个槽都有节点在处理时</strong>，<strong>集群处于上线状态</strong>，相反地，<strong>如果数据库中有任何一个槽没有得到处理</strong>，<strong>那么集群处于下线状态</strong>。</li>
+<li>具体实例如下：
+<ol>
+<li>
+<p>上面我们使用 <code>CLUSTER MEET</code> 命令将 7000、7001、7002 三个节点连接到了同一个集群里面，不过这个集群目前仍处于下线状态，因为集群中的三个节点都没有在处理任何槽：</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_104643_711649.png" alt="" /></p>
+</li>
+<li>
+<p>通过向节点发送 <code>CLUSTER ADDSLOTS</code> 命令，我们可以将一个或多个槽指派给节点负责：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">CLUSTER ADDSLOTS &lt;slot&gt; <span style="color:#f92672">[</span>slot ...<span style="color:#f92672">]</span>
+</code></pre></div></li>
+<li>
+<p>例如，我们可以执行以下命令将槽 0 至 500 指派给节点 7000 负责：</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_104928_715190.png" alt="" /></p>
+</li>
+<li>
+<p>为了让 7000、7001、7002 三个节点所在的集群进入上线状态，我们继续执行以下命令，将槽 5001 至槽 10000 指派给节点 7001 负责：</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_105048_249269.png" alt="" /></p>
+</li>
+<li>
+<p>然后将槽 10001 至槽 16383 指派给 7002 负责：</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_105129_127181.png" alt="" /></p>
+</li>
+<li>
+<p>当以上三个 <code>CLUSTER ADDSLOTS</code> 命令都执行完毕之后，数据库中的 16384 个槽都已经被指派给了相应的节点，集群进入上线状态：</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_121953_691437.png" alt="" /></p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="21-记录节点的槽指派信息">
+  2.1 记录节点的槽指派信息
+  <a class="anchor" href="#21-%e8%ae%b0%e5%bd%95%e8%8a%82%e7%82%b9%e7%9a%84%e6%a7%bd%e6%8c%87%e6%b4%be%e4%bf%a1%e6%81%af">#</a>
+</h3>
+<ol>
+<li>
+<p><code>clusterNode</code> 结构的 <code>slots</code> 属性和 <code>numslot</code> 属性记录了节点负责处理哪些槽：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">clusterNode</span> {
+
+    <span style="color:#75715e">//  ...
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> slots[REDIS_CLUSTER_SLOTS<span style="color:#f92672">/</span><span style="color:#ae81ff">8</span>]; <span style="color:#75715e">/* slots handled by this node */</span>
+
+    <span style="color:#66d9ef">int</span> numslots;   <span style="color:#75715e">/* Number of slots handled by this node */</span>
+
+    <span style="color:#75715e">//  ...
+</span><span style="color:#75715e"></span>} clusterNode;
+</code></pre></div></li>
+<li>
+<p><code>slots</code> 属性是一个二进制位数组，这个数组的长度为 16384 / 8 = 2048 个字节，共包含 16384 个二进制位。</p>
+</li>
+<li>
+<p>Redis<strong>以 0 为起始索引</strong>，<strong>16383 为终止索引</strong>，<strong>对 <code>slots</code> 数组中的 16384 个二进制位进行编号</strong>，<strong>并根据索引 <code>i</code> 上的二进制位的值来判断节点是否负责处理槽 <code>i</code></strong>：</p>
+<ol>
+<li><strong>如果 <code>slots</code> 数组在索引 <code>i</code> 上的二进制位的值为 1</strong>，<strong>那么表示节点负责处理槽 <code>i</code></strong>。</li>
+<li><strong>如果 <code>slots</code> 数组在索引 <code>i</code> 上的二进制位的值为 0</strong>，<strong>那么表示节点不负责处理槽 <code>i</code></strong>。</li>
+</ol>
+</li>
+<li>
+<p>因为<strong>取出和设置 <code>slots</code> 数组中的任意一个二进制位的值的复杂度仅为 $O(1)$</strong>，所以<strong>对于一个给定节点的 <code>slots</code> 数组来说</strong>，<strong>程序检查节点是否负责处理某个槽</strong>，<strong>又或者将某个槽指派给节点负责</strong>，<strong>这两个动作的复杂度都是 $O(1)$</strong>。</p>
+</li>
+<li>
+<p>至于 <code>numslots</code><strong>属性</strong>则<strong>记录节点负责处理的槽的数量</strong>，也即是 <code>slots</code><strong>数组中值为 1 的二进制位的数量</strong>。</p>
+</li>
+<li>
+<p>具体实例如下：</p>
+<ol>
+<li>
+<p>下图展示了一个 <code>slots</code> 数组示例，这个数组索引 0 至索引 7 上的二进制位的值都为 1，其余所有二进制位的值都为 0，这表示节点负责处理槽 0 至槽 7，节点处理的槽数量为 8：</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_155207_777294.png" alt="" /></p>
+</li>
+<li>
+<p>下图展示了另一个 <code>slots</code> 数组示例，这个数组索引 1、3、5、8、9、10 上的二进制位的值都为 1，而其余所有二进制位的值都为 0，这表示节点负责处理 1、3、5、8、9、10，节点处理的槽数量为 6：</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_155416_457092.png" alt="" /></p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="22-传播节点的槽指派信息">
+  2.2 传播节点的槽指派信息
+  <a class="anchor" href="#22-%e4%bc%a0%e6%92%ad%e8%8a%82%e7%82%b9%e7%9a%84%e6%a7%bd%e6%8c%87%e6%b4%be%e4%bf%a1%e6%81%af">#</a>
+</h3>
+<ol>
+<li><strong>一个节点除了会将自己负责处理的槽记录在 <code>clusterNode</code> 结构的 <code>slots</code> 属性和 <code>numslots</code> 属性之外</strong>，他<strong>还会将自己的 <code>slots</code> 数组通过消息发送给集群中的其他节点</strong>，以此来<strong>告知其他节点自己目前负责处理哪些槽</strong>。</li>
+<li>因为<strong>集群中的每个节点都会将自己的 <code>slots</code> 数组通过消息发送给集群中的其他节点</strong>，并且<strong>每个接收到 <code>slots</code> 数组的节点都会将数组保存到相应节点的 <code>clusterNode</code> 结构里面</strong>，因此，<strong>集群中的每个节点都会知道数据库中的 16384 个槽分别被指派给了集群中的哪些节点</strong>。</li>
+<li>具体实例如下：
+<ol>
+<li>对于前面展示的包含 7000、7001、7002 三个节点的集群来说：
+<ol>
+<li>
+<p>节点 7000 会通过消息向节点 7001 和节点 7002 发送自己的 <code>slots</code> 数组，以此来告知这两个节点，自己负责处理槽 0 至槽 5000。</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_160412_748507.png" alt="" /></p>
+</li>
+<li>
+<p>节点 7001 会通过消息向节点 7000 和节点 7002 发送自己的 <code>slots</code> 数组，以此来告知这两个节点，自己负责处理槽 5001 至槽 10000。</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_160559_325952.png" alt="" /></p>
+</li>
+<li>
+<p>节点 7002 会通过消息向节点 7000 和节点 7001 发送自己的 <code>slots</code> 数组，以此来告知这两个节点，自己负责处理槽 10001 至槽 16383。</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_160744_603525.png" alt="" /></p>
+</li>
+<li>
+<p>当节点 A 通过消息从节点 B 那里接收到节点 B 的 <code>slots</code> 数组时，节点 A 会在自己的 <code>clusterState.nodes</code> 字典中查找节点 B 对应的 <code>clusterNode</code> 结构，并对结构中的 <code>slots</code> 数组进行保存或者更新。</p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="23-记录集群所有槽的指派信息">
+  2.3 记录集群所有槽的指派信息
+  <a class="anchor" href="#23-%e8%ae%b0%e5%bd%95%e9%9b%86%e7%be%a4%e6%89%80%e6%9c%89%e6%a7%bd%e7%9a%84%e6%8c%87%e6%b4%be%e4%bf%a1%e6%81%af">#</a>
+</h3>
+<ol>
+<li>
+<p><code>clusterState</code><strong>结构中的 <code>slots</code> 数组记录了集群中所有 16384 个槽的指派信息</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">clusterState</span> {
+
+    <span style="color:#75715e">//  ...
+</span><span style="color:#75715e"></span>
+    clusterNode <span style="color:#f92672">*</span>slots[REDIS_CLUSTER_SLOTS];
+
+    <span style="color:#75715e">//  ...
+</span><span style="color:#75715e"></span>
+} clusterState;
+</code></pre></div></li>
+<li>
+<p><strong><code>slots</code> 数组包含 16384 个项</strong>，<strong>每个数组项都是一个指向 <code>clusterNode</code> 结构的指针</strong>：</p>
+<ol>
+<li>如果<code>slots[i]</code> 指针<strong>指向 <code>NULL</code></strong>，那么表示槽<code>i</code> 尚<strong>未指派给任何节点</strong>。</li>
+<li>如果<code>slots[i]</code> 指针<strong>指向一个 <code>clusterNode</code> 结构</strong>，那么表示槽<code>i</code><strong>已经指派给了 <code>clusterNode</code> 结构所代表的节点</strong>。</li>
+</ol>
+</li>
+<li>
+<p><strong>如果只将槽指派信息保存在各个节点的 <code>clusterNode.slots</code> 数组里</strong>，<strong>会出现一些无法高效解决的问题</strong>，而 <code>clusterState.slots</code><strong>数组的存在解决了这些问题</strong>：</p>
+<ol>
+<li><strong>如果节点只使用 <code>clusterNode.slots</code> 数组来记录槽的指派信息</strong>，<strong>那么为了知道槽 <code>i</code> 是否已经被指派</strong>，<strong>或者槽 <code>i</code> 被指派给了哪个节点</strong>，<strong>程序需要遍历 <code>clusterState.nodes</code> 字典中的所有 <code>clusterNode</code> 结构</strong>，<strong>检查这些结构的 <code>slots</code> 数组</strong>，<strong>直到找到负责处理槽 <code>i</code> 的节点为止</strong>，<strong>这个过程的复杂度为 $O(N)$</strong>，其中 $N$<strong>为 <code>clusterState.nodes</code> 字典保存的 <code>clusterNode</code> 结构的数量</strong>。</li>
+<li><strong>而通过将所有槽的指派信息保存在 <code>clusterState.slots</code> 数组里面</strong>，<strong>程序要检查槽 <code>i</code> 是否已经被指派</strong>，<strong>又或者取得负责处理槽 <code>i</code> 的节点</strong>，<strong>只需要访问 <code>clusterState.slots[i]</code> 的值即可</strong>，<strong>这个操作的复杂度仅为 $O(1)$</strong>。</li>
+</ol>
+</li>
+<li>
+<p>要说明的一点是，<strong>虽然 <code>clusterState.slots</code> 数组记录了集群中所有槽的指派信息</strong>，<strong>但使用 <code>clusterNode</code> 结构的 <code>slots</code> 数组来记录单个节点的槽指派信息仍然是必要的</strong>：</p>
+<ol>
+<li><strong>因为当程序需要将某个节点的槽指派信息通过消息发送给其他节点时</strong>，<strong>程序只需要将相应节点的 <code>clusterNode.slots</code> 数组整个发送出去就可以了</strong>。</li>
+<li>另一方面，<strong>如果 Redis 不使用 <code>clusterNode.slots</code> 数组</strong>，<strong>而单独使用 <code>clusterState.slots</code> 数组的话</strong>，<strong>那么每次要将节点 A 的槽指派信息传播给其他节点时</strong>，<strong>程序必须先遍历整个 <code>clusterState.slots</code> 数组</strong>，<strong>记录节点 A 负责处理哪些槽</strong>，<strong>然后才能发送节点 A 的槽指派信息</strong>，<strong>这比直接发送 <code>clusterNode.slots</code> 数组要麻烦和低效得多</strong>。</li>
+</ol>
+</li>
+<li>
+<p><strong><code>clusterState.slots</code> 数组记录了集群中所有槽的指派信息</strong>，<strong>而 <code>clusterNode.slots</code> 数组只记录了 <code>clusterNode</code> 结构所代表的的节点的槽指派信息</strong>，<strong>这是两个 <code>slots</code> 数组的关键区别所在</strong>。</p>
+</li>
+<li>
+<p>具体实例如下：</p>
+<ol>
+<li>
+<p>例如，对于上面提到的 7000、7001、7002 三个节点来说，他们的 <code>clusterState</code> 结构的 <code>slots</code> 数组将会是下图所示的样子：</p>
+<ol>
+<li>
+<p>数组项 <code>slots[0]</code> 至 <code>slots[5000]</code> 的指针都指向代表节点 7001 的 <code>clusterNode</code> 结构，表示槽 0 至 5000 都指派给了节点 7000。</p>
+</li>
+<li>
+<p>数组项 <code>slots[5001]</code> 至 <code>slots[10000]</code> 的指针都指向代表节点 7001 的 <code>clusterNode</code> 结构，表示槽 5001 至 10000 都指派给了节点 7001。</p>
+</li>
+<li>
+<p>数组项 <code>slots[10001]</code> 至 <code>slots[16383]</code> 的指针都指向代表结点 7002 的 <code>clusterNode</code> 结构，表示槽 10001 至 16383 都指派给了节点 7002。</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_165235_906558.png" alt="" /></p>
+</li>
+</ol>
+</li>
+<li>
+<p>对于下图所示的 <code>slots</code> 数组来说，如果程序需要知道槽 10002 被指派给了哪个节点，那么只要访问数组项 <code>slots[10002]</code>，就可以马上知道槽 10002 被指派给了节点 7002：</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_165503_187144.png" alt="" /></p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="24-cluster-addslots-命令的实现">
+  2.4 CLUSTER ADDSLOTS 命令的实现
+  <a class="anchor" href="#24-cluster-addslots-%e5%91%bd%e4%bb%a4%e7%9a%84%e5%ae%9e%e7%8e%b0">#</a>
+</h3>
+<ol>
+<li>
+<p><strong><code>CLUSTER ADDSLOTS</code> 命令接受一个或多个槽作为参数</strong>，<strong>并将所有输入的槽指派给接收该命令的节点负责</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">CLUSTER ADDSLOTS <span style="color:#f92672">&lt;</span>slot<span style="color:#f92672">&gt;</span> [slot ...]
+</code></pre></div></li>
+<li>
+<p><code>CLUSTER ADDSLOTS</code> 命令的实现可以用以下伪代码来表示：</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_170106_918674.png" alt="" /></p>
+</li>
+<li>
+<p>具体实例如下：</p>
+<ol>
+<li>下图展示了一个节点的<code>clusterState</code> 结构，<code>clusterState.slots</code> 数组中的所有指针都指向<code>NULL</code>，并且<code>clusterState.slots</code> 数组中的所有二进制位的值都是 0，这说明当前节点没有被指派任何槽，并且集群中的所有槽都是未指派的：</li>
+</ol>
+<p>
+  <img src="../../../media/202111/2021-11-21_170733_849788.png" alt="" />
+2. 当客户端对上图所示的节点执行 <code>CLUSTER ADDSLOT 1 2</code>，将槽 1 和槽 2 指派给节点之后，节点的 <code>clusterState</code> 结构将被更新成下图所示的样子：</p>
+<ol>
+<li>
+<p><code>clusterState.slots</code> 数组在索引 1 和索引 2 上的指针指向了代表当前节点的 <code>clusterNode</code> 结构。</p>
+</li>
+<li>
+<p>并且 <code>clusterNode.slots</code> 数组在索引 1 和索引 2 上的位被设置成了 1。</p>
+<p>
+  <img src="../../../media/202111/2021-11-21_171205_682996.png" alt="" /></p>
+</li>
+<li>
+<p>最后，<strong>在 <code>CLUSTER ADDSLOTS</code> 命令执行完毕之后</strong>，<strong>节点会通过发送消息告知集群中的其他节点</strong>，<strong>自己目前正在负责处理哪些槽</strong>。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="3-在集群中执行命令">
+  3 在集群中执行命令
+  <a class="anchor" href="#3-%e5%9c%a8%e9%9b%86%e7%be%a4%e4%b8%ad%e6%89%a7%e8%a1%8c%e5%91%bd%e4%bb%a4">#</a>
+</h2>
+<ol>
+<li>在<strong>对数据库中的 16384 个槽都进行了指派之后</strong>，<strong>集群就会进入上线状态</strong>，这时<strong>客户端就可以向集群中的节点发送数据命令了</strong>。</li>
+<li>当<strong>客户端向节点发送与数据库键有关的命令时</strong>，<strong>接收命令的节点会计算出命令要处理的数据库键属于哪个槽</strong>，<strong>并检查这个槽是否指派给了自己</strong>：
+<ol>
+<li>
+<p>如果<strong>键所在的槽正好就指派给了当前节点</strong>，那么<strong>节点直接执行这个命令</strong>。</p>
+</li>
+<li>
+<p>如果<strong>键所在的槽并没有指派给当前节点</strong>，那么<strong>节点会向客户端返回一个 <code>MOVED</code> 错误</strong>，<strong>指引客户端转向至正确的节点</strong>，<strong>并再次发送之前想要执行的命令</strong>。</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_110540_233546.png" alt="" /></p>
+</li>
+</ol>
+</li>
+<li>具体实例如下：
+<ol>
+<li>
+<p>我们在之前提到的，由 7000、7001、7002 三个节点组成的集群中，用客户端连上节点 7000，并发送以下命令，那么命令会直接被节点 7000 执行：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_111154_830220.png" alt="" /></p>
+</li>
+<li>
+<p>因为键 <code>date</code> 所在的槽 2022 正是由节点 7000 负责处理的，但是，如果我们执行以下命令，那么客户端会被转向至节点 7001，然后再执行命令：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_111413_543487.png" alt="" /></p>
+</li>
+<li>
+<p>因为键 <code>msg</code> 所在的槽 <code>6257</code> 是由节点 7001 负责处理的，而不是由最初接收命令的节点 7000 负责处理：</p>
+<ol>
+<li>当客户端第一次向节点 7000 发送<code>SET</code> 命令的时候，节点 7000 会向客户端返回<code>MOVED</code> 错误，指引客户端转向节点 7001。</li>
+<li>当客户端转向节点 7001 之后，客户端重新向节点 7001 发送<code>SET</code> 命令，这个命令会被节点 7001 成功执行。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="31-计算键属于哪个槽">
+  3.1 计算键属于哪个槽
+  <a class="anchor" href="#31-%e8%ae%a1%e7%ae%97%e9%94%ae%e5%b1%9e%e4%ba%8e%e5%93%aa%e4%b8%aa%e6%a7%bd">#</a>
+</h3>
+<ol>
+<li>
+<p>节点使用以下算法来计算给定键 <code>key</code> 属于哪个槽：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_112107_404362.png" alt="" /></p>
+<p>其中 <code>CRC16(key)</code> 语句用于计算键 <code>key</code> 的 <code>CRC-16</code> 校验和，而 <code>&amp; 16383</code> 语句则用于计算出一个介于 0 至 16383 之间的整数作为键 <code>key</code> 的槽号。</p>
+</li>
+<li>
+<p>使用 <code>CLUSTER KEYSLOT &lt;key&gt;</code> 命令可以查看一个给定键属于哪个槽：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_112452_412864.png" alt="" /></p>
+</li>
+<li>
+<p><code>CLUSTER KEYSLOT</code> 命令就是通过调用上面给出的槽分配算法来实现的，以下是该命令的伪代码实现：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_112703_818816.png" alt="" /></p>
+</li>
+</ol>
+<h3 id="32-判断槽是否由当前节点负责处理">
+  3.2 判断槽是否由当前节点负责处理
+  <a class="anchor" href="#32-%e5%88%a4%e6%96%ad%e6%a7%bd%e6%98%af%e5%90%a6%e7%94%b1%e5%bd%93%e5%89%8d%e8%8a%82%e7%82%b9%e8%b4%9f%e8%b4%a3%e5%a4%84%e7%90%86">#</a>
+</h3>
+<ol>
+<li>当<strong>节点计算出键所属的槽 <code>i</code> 之后</strong>，<strong>节点就会检查自己在 <code>clusterState.slots</code> 数组中的项 <code>i</code></strong>，<strong>判断键所属的槽是否由自己负责</strong>：
+<ol>
+<li>如果<code>clusterState.slots[i]</code><strong>等于</strong><code>clusterState.myself</code>，那么说明<strong>槽 <code>i</code> 由当前节点负责</strong>，<strong>节点可以执行客户端发送的命令</strong>。</li>
+<li><strong>如果 <code>clusterState.slots[i]</code> 不等于 <code>clusterState.myself</code></strong>，那么说明<strong>槽 <code>i</code> 并非由当前节点负责</strong>，<strong>节点会根据 <code>clusterState.slots[i]</code> 指向的 <code>clusterNode</code> 结构所记录的节点 IP 和端口号</strong>，<strong>向客户端返回 <code>MOVED</code> 错误</strong>，<strong>指引客户端转向正在处理槽 <code>i</code> 的节点</strong>。</li>
+</ol>
+</li>
+<li>具体实例如下：
+<ol>
+<li>假设下图为节点 7000 的<code>clusterState</code> 结构：
+<ol>
+<li>
+<p>当客户端向节点 7000 发送命令 <code>SET date &quot;2013-12-31&quot;</code> 的时候，节点首先计算出键 <code>date</code> 属于槽 2022，然后检查得出 <code>clusterState.slots[2022]</code> 等于 <code>clusterState.myself</code>，这说明槽 2022 正是由节点 7000 负责，于是节点 7000 直接执行这个 <code>SET</code> 命令，并将结果返回给发送命令的客户端。</p>
+</li>
+<li>
+<p>当客户端向节点 7000 发送命令 <code>SET msg &quot;happy new year&quot;</code> 的时候，节点首先计算出键 <code>msg</code> 属于槽 6257，然后检查 <code>clusterState.slots[6257]</code> 是否等于 <code>clusterState.myself</code>，结果发现两者并不相等，这说明槽 6257 并非由节点 7000 负责处理，于是节点 7000 访问 <code>clusterState.slots[6257]</code> 所指向的 <code>clusterNode</code> 结构，并根据结构中记录的 IP 地址 <code>127.0.0.1</code> 和端口号 7001，向客户端返回错误 <code>MOVED 6257 127.0.0.1:70001</code>，指引节点转向正在负责处理槽 6257 的节点 7001。</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_145211_821474.png" alt="" /></p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="33-moved-错误">
+  3.3 MOVED 错误
+  <a class="anchor" href="#33-moved-%e9%94%99%e8%af%af">#</a>
+</h3>
+<ol>
+<li>
+<p>当<strong>节点发现键所在的槽并非由自己负责处理的时候</strong>，节点就<strong>会向客户端返回一个 <code>MOVED</code> 错误</strong>，<strong>指引客户端转向正在负责槽的节点</strong>。</p>
+</li>
+<li>
+<p>当<strong>客户端接收到节点返回的 <code>MOVED</code> 错误时</strong>，<strong>客户端会根据 <code>MOVED</code> 错误中提供的 IP 地址和端口号</strong>，<strong>转向至负责处理槽 <code>slot</code> 的节点</strong>，<strong>并向该节点重新发送之前想要执行的命令</strong>。</p>
+</li>
+<li>
+<p><strong>一个集群客户端通常会与集群中的多个节点创建套接字连接</strong>，<strong>而所谓的套接字转向实际上就是换一个套接字来发送命令</strong>。</p>
+</li>
+<li>
+<p><strong>如果客户端尚未与想要转向的节点创建套接字连接</strong>，<strong>那么客户端会先根据 <code>MOVED</code> 错误提供的 IP 地址和端口号来连接节点</strong>，<strong>然后再进行转向</strong>。</p>
+</li>
+<li>
+<p>具体实例如下：</p>
+<ol>
+<li>
+<p><code>MOVED</code> 错误的格式如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">MOVED &lt;slot&gt; &lt;ip&gt;:&lt;port&gt;
+</code></pre></div><p>其中 <code>slot</code> 为键所在的槽，而 <code>ip</code> 和 <code>port</code> 则是负责处理槽 <code>slot</code> 的节点的 IP 地址和端口号，例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">MOVED <span style="color:#ae81ff">10086</span> 127.0.0.1:7002
+</code></pre></div><p>表示槽 10086 正由 IP 地址为 127.0.0.1，端口号为 7002 的节点负责。</p>
+</li>
+<li>
+<p>以客户端从节点 7000 转向至 7001 的情况作为例子：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_155054_445839.png" alt="" /></p>
+<p>下图展示了客户端向节点 7000 发送 <code>SET</code> 命令，并获得 <code>MOVED</code> 错误的过程：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_155158_098423.png" alt="" /></p>
+<p>下图则展示了客户端根据 <code>MOVED</code> 错误，转向至节点 7001，并重新发送 <code>SET</code> 命令的过程：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_155328_630858.png" alt="" /></p>
+<blockquote>
+<p>需要注意的是：</p>
+<ol>
+<li>
+<p>被隐藏的 <code>MOVED</code> 错误：</p>
+<ol>
+<li>
+<p><strong>集群模式的 <code>redis-cli</code> 客户端在接收到 <code>MOVED</code> 错误时</strong>，<strong>并不会打印出 <code>MOVED</code> 错误</strong>，<strong>而是根据 <code>MOVED</code> 错误自动进行节点转向</strong>，<strong>并打印出转向信息</strong>，<strong>所以我们是看不见节点返回的 <code>MOVED</code> 错误的</strong>：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_160817_175490.png" alt="" /></p>
+</li>
+<li>
+<p>但是，如果我们<strong>使用单机模式的 <code>redis-cli</code> 客户端</strong>，<strong>再次向节点 7000 发送相同的命令</strong>，那么 <strong>错误就会被客户端打印出来</strong>：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_161016_536566.png" alt="" /></p>
+<p>这是因为<strong>单机模式的 <code>redis-cli</code> 客户端不清楚 <code>MOVED</code> 错误的作用</strong>，所以他<strong>只会直接将 <code>MOVED</code> 错误直接打印出来</strong>，而<strong>不会进行自动转向</strong>。</p>
+</li>
+</ol>
+</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="4-重新分片">
+  4 重新分片
+  <a class="anchor" href="#4-%e9%87%8d%e6%96%b0%e5%88%86%e7%89%87">#</a>
+</h2>
+<h3 id="41-含义">
+  4.1 含义
+  <a class="anchor" href="#41-%e5%90%ab%e4%b9%89">#</a>
+</h3>
+<ol>
+<li><strong>Redis 集群的重新分片操作可以将任意数量已经指派给某个节点的槽改为指派给另一个节点</strong>，<strong>并且相关槽所属的键值对也会从源节点被移动到目标节点</strong>。</li>
+<li><strong>重新分片操作可以在线进行</strong>，<strong>在重新分片的过程中</strong>，<strong>集群不需要下线</strong>，<strong>并且源节点和目标节点都可以继续处理命令请求</strong>。</li>
+<li>具体实例如下：
+<ol>
+<li>
+<p>对于之前提到的包含 7000、7001、7002 三个节点的集群来说，我们可以向这个集群添加一个 IP 为 127.0.0.1，端口号为 7003 的节点：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_164606_234345.png" alt="" /></p>
+</li>
+<li>
+<p>然后通过重新分片操作，将原本指派给节点 7002 的槽 15001 至 16383 改为指派给节点 7003，以下是重新分片操作执行之后，节点的槽分配状态：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_203041_280933.png" alt="" /></p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="42-实现原理">
+  4.2 实现原理
+  <a class="anchor" href="#42-%e5%ae%9e%e7%8e%b0%e5%8e%9f%e7%90%86">#</a>
+</h3>
+<ol>
+<li><strong>Redis 集群的重新分片操作是由 Redis 的集群管理软件 <code>redis-trib</code> 负责执行的</strong>，<strong>Redis 提供了进行重新分片所需的所有命令</strong>，<strong>而 <code>redis-trib</code> 则通过向源节点和目标节点发送命令来进行重新分片操作</strong>。</li>
+<li><code>redis-trib</code> 对集群的单个槽<code>slot</code> 进行重新分片的步骤如下：
+<ol>
+<li>
+<p><strong><code>redis-trib</code> 对目标节点发送 <code>CLUSTER SETSLOT &lt;slot&gt; IMPORTING &lt;source_id&gt;</code> 命令</strong>，<strong>让目标节点准备好从源节点导入属于 <code>slot</code> 的键值对</strong>。</p>
+</li>
+<li>
+<p><code>redis-trib</code><strong>对源节点发送 <code>CLUSTER SETSLOT &lt;slot&gt; MIGRATING &lt;target_id&gt;</code> 命令</strong>，<strong>让源节点准备好将属于槽 <code>slot</code> 的键值对迁移至目标节点</strong>。</p>
+</li>
+<li>
+<p><code>redis-trib</code><strong>向源节点发送 <code>CLUSTER GETKEYSINSLOT &lt;slot&gt; &lt;count&gt;</code> 命令</strong>，<strong>获得最多 <code>count</code> 个属于槽 <code>slot</code> 的键值对的键名</strong>。</p>
+</li>
+<li>
+<p><strong>对于步骤 3 获得的每个键名</strong>，<code>redis-trib</code><strong>都会向源节点发送一个 <code>MIGRATE &lt;target_ip&gt; &lt;target_port&gt; &lt;key_name&gt; 0 &lt;time_out&gt;</code> 命令</strong>，<strong>将被选中的键原子地从源节点迁移至目标节点</strong>。</p>
+</li>
+<li>
+<p><strong>重复执行步骤 3 和步骤 4</strong>，<strong>直到源节点保存的所有属于槽 <code>slot</code> 的键值对都被迁移至目标节点为止</strong>，每次迁移键的过程如下图所示：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_221231_171901.png" alt="" /></p>
+</li>
+<li>
+<p><code>redis-trib</code><strong>向集群中的任意一个节点发送 <code>CLUSTER SETSLOT &lt;slot&gt; NODE &lt;target_id&gt;</code> 命令</strong>，<strong>将槽 <code>slot</code> 指派给了目标节点</strong>。</p>
+</li>
+<li>
+<p><strong>如果重新分片涉及多个槽</strong>，<strong>那么 <code>redis-trib</code> 将对每个给定的槽分别执行上面给出的步骤</strong>。</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_221543_373621.png" alt="" /></p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="5-ask-错误">
+  5 ASK 错误
+  <a class="anchor" href="#5-ask-%e9%94%99%e8%af%af">#</a>
+</h2>
+<ol>
+<li>
+<p>在进行
+  <a href="https://notebook.grayson.top/project-37/doc-884/#4-%E9%87%8D%E6%96%B0%E5%88%86%E7%89%87">重新分片</a>期间，<strong>源节点向目标节点迁移一个槽的过程中</strong>，可能会出现这样一种情况，<strong>属于被迁移槽的一部分键值对保存在源节点里面</strong>，<strong>而另一部分键值对则保存在目标节点里面</strong>。</p>
+</li>
+<li>
+<p>当<strong>客户端向源节点发送一个与数据库键有关的命令</strong>时，并且<strong>命令要处理的数据库键恰好就属于正在被迁移的槽</strong>时：</p>
+<ol>
+<li>
+<p><strong>源节点会先在自己的数据库里面查找指定的键</strong>，<strong>如果找到的话</strong>，<strong>就直接执行客户端发送的命令</strong>。</p>
+</li>
+<li>
+<p>相反地，<strong>如果源节点没能在自己的数据库里面找到指定的键</strong>，那么<strong>这个键有可能已经被前移到了目标节点</strong>，<strong>源节点将向客户端发送一个 ASK 错误</strong>，<strong>指引客户端转向正在导入槽的目标节点</strong>，<strong>并再次发送想要执行的命令</strong>。</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_222656_435446.png" alt="" /></p>
+</li>
+</ol>
+</li>
+<li>
+<p>具体实例如下：</p>
+<ol>
+<li>
+<p>假设节点 7002 正在向节点 7003 迁移槽 16198，这个槽包含 <code>is</code> 和 <code>love</code> 两个键，其中键 <code>is</code> 还留在节点 7002，而键 <code>love</code> 已经被迁移到了节点 7003。</p>
+</li>
+<li>
+<p>如果我们向节点发送关于键 <code>is</code> 的命令，那么这个命令会直接被节点 7002 执行：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_223027_491269.png" alt="" /></p>
+</li>
+<li>
+<p>而如果我们向节点 7002 发送关于键 <code>love</code> 的命令，那么客户端会先被转向至节点 7003，然后再次执行命令：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_223237_604074.png" alt="" /></p>
+<blockquote>
+<p>需要注意的是：</p>
+<ol>
+<li>被隐藏的<code>ASK</code> 错误：
+<ol>
+<li>
+<p><strong>和接到 <code>MOVED</code> 错误时的情况类似</strong>，<strong>集群模式的 <code>redis-cli</code> 在接到 <code>ASK</code> 错误时也不会打印错误</strong>，<strong>而是自动根据错误提供的 IP 地址和端口进行转向动作</strong>，<strong>如果想看到节点发送的 <code>ASK</code> 错误的话</strong>，<strong>可以使用单机模式的 <code>redis-cli</code> 客户端</strong>：</p>
+<p>
+  <img src="../../../media/202111/2021-11-27_223618_823817.png" alt="" /></p>
+</li>
+</ol>
+</li>
+<li><code>ASK</code> 错误和<code>MOVED</code> 错误的区别：
+<ol>
+<li><code>ASK</code><strong>错误和 <code>MOVED</code> 错误都会导致客户端转向</strong>，他们的区别在于：
+<ol>
+<li><strong><code>MOVED</code> 错误代表槽的负债权已经从一个节点转移到了另一个节点</strong>，<strong>在客户端收到关于槽 <code>i</code> 的 <code>MOVED</code> 错误之后</strong>，<strong>客户端每次遇到关于槽 <code>i</code> 的命令请求时</strong>，<strong>都可以直接将命令请求发送至 <code>MOVED</code> 错误所指向的节点</strong>，<strong>因为该节点就是目前负责槽 <code>i</code> 的节点</strong>。</li>
+<li>与此相反，<code>ASK</code><strong>错误只是两个节点在迁移槽的过程中使用的一种临时措施</strong>，<strong>在客户端收到关于槽 <code>i</code> 的 <code>ASK</code> 错误之后</strong>，<strong>客户端只会在接下来的一次命令请求中将关于槽 <code>i</code> 的命令请求发送至 <code>ASK</code> 错误指示的节点</strong>，<strong>但这种转向不会对客户端今后发送关于槽 <code>i</code> 的命令请求产生任何影响</strong>，<strong>客户端仍然会将关于槽 <code>i</code> 的命令请求发送至目前负责处理槽 <code>i</code> 的节点</strong>，<strong>除非 <code>ASK</code> 错误再次出现</strong>。</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="6-复制与故障转移">
+  6 复制与故障转移
+  <a class="anchor" href="#6-%e5%a4%8d%e5%88%b6%e4%b8%8e%e6%95%85%e9%9a%9c%e8%bd%ac%e7%a7%bb">#</a>
+</h2>
+<ol>
+<li><strong>Redis 集群中的节点分为主节点和从节点</strong>，<strong>其中主节点用于处理槽</strong>，<strong>而从节点则用于复制某个主节点</strong>，<strong>并在被复制的主节点下线时</strong>，<strong>代替下线主节点继续处理命令请求</strong>。</li>
+<li>具体实例如下：
+<ol>
+<li>
+<p>例如，对于包含 7000、7001、7002、7003 四个主节点的集群来说，我们可以将 7004、7005 两个节点添加到集群里面，并将这两个节点设定为节点 7000 的从节点，如下图所示，其中双圆形表示主节点，单圆形表示从节点：</p>
+<p>
+  <img src="../../../media/202111/2021-11-28_094150_265177.png" alt="" /></p>
+</li>
+<li>
+<p>下表记录了集群各个节点的当前状态，以及他们正在做的工作：</p>
+<p>
+  <img src="../../../media/202111/2021-11-28_094312_948755.png" alt="" /></p>
+</li>
+<li>
+<p>如果这时节点 7000 进入下线状态，那么集群中仍在正常运作的几个主节点将在节点 7000 的两个从节点（节点 7004 和节点 7005）中选出一个节点作为新的主节点，这个新的主节点将接管原来节点 7000 负责处理的槽，并继续处理客户端发送的命令请求。</p>
+</li>
+<li>
+<p>例如，如果节点 7004 被选中为新的主节点，那么节点 7004 将接管原来由节点 7000 负责处理的槽 0 至槽 5000，节点 7005 也会从原来的复制节点 7000，改为复制节点 7004，如下图所示，其中用虚线包围的节点为已下线节点：</p>
+<p>
+  <img src="../../../media/202111/2021-11-28_094933_121734.png" alt="" /></p>
+</li>
+<li>
+<p>下表记录了在对节点 7000 进行故障转移之后，集群各个节点的当前状态，以及他们正在做的工作：</p>
+<p>
+  <img src="../../../media/202111/2021-11-28_095134_309740.png" alt="" /></p>
+</li>
+<li>
+<p>如果在故障转移完成之后，下线的节点 7000 重新上线，那么他将成为节点 7004 的从节点，如下图所示：</p>
+<p>
+  <img src="../../../media/202111/2021-11-28_095354_224729.png" alt="" /></p>
+</li>
+<li>
+<p>下表展示了节点 7000 复制节点 7004 之后，集群中各个节点的状态：</p>
+<p>
+  <img src="../../../media/202111/2021-11-28_095623_240528.png" alt="" /></p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="61-设置从节点">
+  6.1 设置从节点
+  <a class="anchor" href="#61-%e8%ae%be%e7%bd%ae%e4%bb%8e%e8%8a%82%e7%82%b9">#</a>
+</h3>
+<ol>
+<li><strong>向一个节点发送 <code>CLUSTER REPLICATE &lt;node_id&gt;</code></strong>，<strong>可以让接收命令的节点成为 <code>node_id</code> 所指定节点的从节点</strong>，<strong>并开始对主节点进行复制</strong>：
+<ol>
+<li>
+<p><strong>接收到该命令的节点首先会在自己的 <code>clusterState.nodes</code> 字典中找到 <code>node_id</code> 所对应节点的 <code>clusterNode</code> 结构</strong>，<strong>并将自己的 <code>clusterState.myself.slaveof</code> 指针指向这个结构</strong>，<strong>以此来记录这个节点正在复制的主节点</strong>。</p>
+<pre><code>typedef struct clusterNode {
+    //  ...
+
+    //  如果这是一个从节点，那么指向主节点
+    struct clusterNode *slaveof;
+
+    //  ...
+} clusterNode;
+</code></pre></li>
+<li>
+<p><strong>然后节点会修改自己在 <code>clusterState.myself.flags</code> 中的属性</strong>，<strong>关闭原本的 <code>REDIS_NODE_MASTER</code> 标识</strong>，<strong>打开 <code>REDIS_NODE_SLAVE</code> 标识</strong>，<strong>表示这个节点已经由原来的主节点变成了从节点</strong>。</p>
+</li>
+<li>
+<p><strong>最后</strong>，<strong>节点会调用复制代码</strong>，<strong>并根据 <code>clusterState.myself.slaveof</code> 指向的 <code>clusterNode</code> 结构所保存的 IP 地址和端口号</strong>，<strong>对主节点进行复制</strong>，<strong>因为节点的复制功能和单机 Redis 服务器的复制功能使用了相同的代码</strong>，<strong>所以让从节点复制主节点相当于向从节点发送命令 <code>SLAVEOF &lt;master_ip&gt; &lt;master_port&gt;</code>。</strong></p>
+</li>
+<li>
+<p><strong>一个节点成为从节点</strong>，<strong>并开始复制某个主节点这一信息会通过消息发送给集群中的其他节点</strong>，<strong>最终集群中的所有节点都会知道某个从节点正在复制某个主节点</strong>。</p>
+</li>
+<li>
+<p><strong>集群中的所有节点都会在代表主节点的 <code>clusterNode</code> 结构的 <code>slaves</code> 属性和 <code>numslaves</code> 属性中记录正在复制这个主节点的从节点的名单</strong>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">clusterNode</span> {
+    <span style="color:#75715e">//  ...
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">//  正在复制这个主节点的从节点数量
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> numslaves;
+
+    <span style="color:#75715e">//  一个数组，每个数组项指向一个正在复制这个主节点的从节点的 clusterNode 结构
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">clusterNode</span> <span style="color:#f92672">**</span>slaves;
+
+    <span style="color:#75715e">//  ...
+</span><span style="color:#75715e"></span>} clusterNode;
+</code></pre></div></li>
+<li>
+<p>具体实例如下：</p>
+<ol>
+<li>下图展示了节点 7004 在复制节点 7000 时的<code>clusterState</code> 结构：
+<ol>
+<li>
+<p><code>clusterState.myself.flags</code> 属性的值为 <code>REDIS_NODE_SLAVE</code>，表示节点 7004 是一个从节点。</p>
+</li>
+<li>
+<p><code>clusterState.myself.slaveof</code> 指针指向代表结点 7000 的结构，表示节点 7004 正在复制的主节点为节点 7000。</p>
+<p>
+  <img src="../../../media/202111/2021-11-28_102724_799099.png" alt="" /></p>
+</li>
+</ol>
+</li>
+<li>下图记录了节点 7004 和节点 7005 成为节点 7000 的从节点之后，集群中的各个节点为节点 7000 创建的<code>clusterNode</code> 结构的样子：
+<ol>
+<li>
+<p>代表节点 7000 的 <code>clusterNode</code> 结构的 <code>numslaves</code> 属性的值为 2，这说明有两个从节点正在复制节点 7000。</p>
+</li>
+<li>
+<p>代表节点 7000 的 <code>clusterNode</code> 结构的 <code>slaves</code> 数组的两个项分别指向代表节点 7004 和代表节点 7005 的 <code>clusterNode</code> 结构，这说明节点 7000 的两个从节点分别是节点 7004 和节点 7005。</p>
+<p>
+  <img src="../../../media/202111/2021-11-28_103329_842719.png" alt="" /></p>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="62-故障检测">
+  6.2 故障检测
+  <a class="anchor" href="#62-%e6%95%85%e9%9a%9c%e6%a3%80%e6%b5%8b">#</a>
+</h3>
+<ol>
+<li>
+<p><strong>集群中的每个节点都会定期地向集群中的其他节点发送 <code>PING</code> 消息</strong>，<strong>以此来检测对方是否在线</strong>，<strong>如果接收 <code>PING</code> 的节点没有在规定的时间内</strong>，<strong>向发送 <code>PING</code> 消息的节点返回 <code>PONG</code> 消息</strong>，<strong>那么发送 <code>PING</code> 消息的节点就会将接收 <code>PING</code> 消息的节点标记为疑似下线</strong>（<code>probable fail, PFAIL</code>）。</p>
+</li>
+<li>
+<p><strong>集群中的各个节点会通过互相发送消息的方式来交换集群中各个节点的状态信息</strong>，例如某个节点是否处于在线状态、疑似下线状态、还是已下线状态。</p>
+</li>
+<li>
+<p><strong>当一个主节点 <code>A</code> 通过消息得知主节点 <code>B</code> 认为主节点 <code>C</code> 进入了疑似下线状态</strong>，<strong>主节点 <code>A</code> 会在自己的 <code>clusterState.nodes</code> 字典中找到主节点 <code>C</code> 所对应的 <code>clusterNode</code> 结构</strong>，<strong>并将主节点 <code>B</code> 的下线报告添加到 <code>clusterNode</code> 结构的 <code>fail_reports</code> 链表里面</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">clusterNode</span> {
+    <span style="color:#75715e">//  ...
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">//  一个链表，记录了所有其他节点对该节点的下线报告
+</span><span style="color:#75715e"></span>    list <span style="color:#f92672">*</span>fail_reports;
+
+    <span style="color:#75715e">//  ...
+</span><span style="color:#75715e"></span>} clusterNode;
+</code></pre></div></li>
+<li>
+<p><strong>每个下线报告由一个 <code>clusterNodeFailReport</code> 结构表示</strong>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">clusterNodeFailReport</span> {
+    <span style="color:#75715e">//  报告目标节点已经下线的节点
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">clusterNode</span> <span style="color:#f92672">*</span>node;
+    <span style="color:#75715e">//  最后一次从 node 节点收到下线报告的时间，程序使用这个时间戳来检查下线报告是否过期，与当前时间相差太久的下线报告会被删除
+</span><span style="color:#75715e"></span>    mstime_t time;
+} clusterNodeFailReport;
+</code></pre></div></li>
+<li>
+<p><strong>如果在一个集群里面</strong>，<strong>半数以上负责处理槽的主节点都将某个主节点 <code>x</code> 报告为疑似下线</strong>，<strong>那么这个主节点 <code>x</code> 将被标记为已下线</strong>，<strong>将主节点 <code>x</code> 标记为已下线的节点会向集群广播一条关于主节点 <code>x</code> 的 <code>FAIL</code> 消息</strong>，<strong>所有收到这条 <code>FAIL</code> 消息的节点都会立即将主节点 <code>x</code> 标记为已下线</strong>。</p>
+</li>
+<li>
+<p>具体实例如下：</p>
+<ol>
+<li>
+<p>如果主节点 7001 在收到主节点 7002、主节点 7003 发送的消息后得知，主节点 7002 和主节点 7003 都认为主节点 7000 进入了疑似下线状态，那么主节点 7001 将为主节点 7000 创建下图所示的下线报告：</p>
+<p>
+  <img src="../../../media/202111/2021-11-28_110640_657066.png" alt="" /></p>
+</li>
+<li></li>
+<li>
+<p>对于上图所示的下线报告来说，主节点 7002 和主节点 7003 都认为主节点 7000 进入了下线状态，并且主节点 7001 也认为主节点 7000 进入了疑似下线状态，综合起来，在集群四个负责处理槽的主节点里面，有三个都将主节点 7000 标记为下线，数量已经超过了半数，所以主节点 7001 会将主节点 7000 标记为已下线，并向集群广播一条关于主节点 7000 的 <code>FAIL</code> 消息，如下图所示：</p>
+<p>
+  <img src="../../../media/202111/2021-11-28_111120_965630.png" alt="" /></p>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="63-故障转移">
+  6.3 故障转移
+  <a class="anchor" href="#63-%e6%95%85%e9%9a%9c%e8%bd%ac%e7%a7%bb">#</a>
+</h3>
+<ol>
+<li><strong>当一个从节点发现自己正在复制的主节点进入了下线状态时</strong>，<strong>从节点将开始对下线主节点进行故障转移</strong>，具体步骤如下：
+<ol>
+<li><strong>复制下线主节点的所有从节点里面</strong>，<strong>会有一个从节点被选中</strong>。</li>
+<li><strong>被选中的从节点会执行 <code>SLAVEOF no one</code> 命令</strong>，<strong>成为新的主节点</strong>。</li>
+<li><strong>新的主节点会撤销所有对已下线主节点的
+  <a href="https://notebook.grayson.top/project-37/doc-884/#2-%E6%A7%BD%E6%8C%87%E6%B4%BE">槽指派</a></strong>，<strong>并将这些槽全部指派给自己</strong>。</li>
+<li><strong>新的主节点向集群广播一条 <code>PONG</code> 消息</strong>，<strong>这条 <code>PONG</code> 消息可以让集群中的其他节点立即知道这个节点已经由从节点变成了主节点</strong>，<strong>并且这个主节点已经接管了原本由已下线节点负责处理的槽</strong>。</li>
+<li><strong>新的主节点开始接收和自己负责处理的槽有关的命令请求</strong>，<strong>故障转移完成</strong>。</li>
+</ol>
+</li>
+</ol>
+<h3 id="64-选举新的主节点">
+  6.4 选举新的主节点
+  <a class="anchor" href="#64-%e9%80%89%e4%b8%be%e6%96%b0%e7%9a%84%e4%b8%bb%e8%8a%82%e7%82%b9">#</a>
+</h3>
+<ol>
+<li><strong>新的主节点是通过选举产生的</strong>，具体方法如下：
+<ol>
+<li><strong>集群的配置纪元是一个自增计数器</strong>，<strong>初始值为0</strong>。</li>
+<li><strong>当集群里的某个节点开始一次故障转移操作时</strong>，<strong>集群配置纪元的值会被增一</strong>。</li>
+<li><strong>对于每个配置纪元</strong>，<strong>集群里每个负责处理槽的主节点都有一次投票的机会</strong>，<strong>而第一个向主节点要求投票的从节点将获得主节点的投票</strong>。</li>
+<li><strong>当从节点发现自己正在复制的主节点进入已下线状态时</strong>，<strong>从节点会向集群广播一条 <code>CLUSTERMSG_TYPE_FAILOVER_AUTH_REQUEST</code>消息</strong>，<strong>要求所有收到这条消息</strong>、<strong>并且具有投票权的主节点向这个从节点投票</strong>。</li>
+<li><strong>如果一个主节点具有投票权</strong>，<strong>并且这个主节点尚未投票给其他从节点</strong>，<strong>那么主节点将向要求投票的从节点返回一条 <code>CLUSTERMSG_TYPE_FAILOVER_AUTH_ACK</code>消息</strong>，<strong>表示这个主节点支持从节点成为新的主节点</strong>。</li>
+<li><strong>每个参与选举的从节点都会接收 <code>CLUSTERMSG_TYPE_FAILOVER_AUTH_ACK</code>消息</strong>，<strong>并根据自己收到了多少条这种消息来统计自己获得了多少主节点的支持</strong>。</li>
+<li><strong>如果集群里面有$N$个具有投票权的主节点</strong>，<strong>那么当一个从节点收集到大于等于$\frac{N}{2} + 1$张支持票的从节点只会有一个</strong>，<strong>这确保了新的主节点只会有一个</strong>。</li>
+<li><strong>如果在一个配置纪元里面没有从节点能收集到足够多的支持票</strong>，<strong>那么集群进入到一个新的配置纪元</strong>，<strong>并再次进行选举</strong>，<strong>直到选出新的主节点为止</strong>。
+<blockquote>
+<p><strong>这个选举新主节点的方法和
+  <a href="https://notebook.grayson.top/project-37/doc-881">哨兵模式</a>中的
+  <a href="https://notebook.grayson.top/project-37/doc-881/#2-8-%E9%80%89%E4%B8%BE%E9%A2%86%E5%A4%B4%E5%93%A8%E5%85%B5">选举领头哨兵</a>的方法非常相似</strong>，<strong>因为这两者都是基于Raft算法的领头选举方法来实现的</strong>。</p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="参考文献">
+  参考文献
+  <a class="anchor" href="#%e5%8f%82%e8%80%83%e6%96%87%e7%8c%ae">#</a>
+</h2>
+<ol>
+<li>redis 设计与实现（第二版）。</li>
+</ol>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/graysonwp/ComputerCookbook-SchoolRecruitment/edit/main/exampleSite/content/docs/database/3%e3%80%81Redis/3.5%20%e9%ab%98%e5%8f%af%e7%94%a8/3.5.3%20%e9%9b%86%e7%be%a4%e6%a8%a1%e5%bc%8f.md" target="_blank" rel="noopener">
+      <img src="/school-recruitment/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+
+<div id="gitalk-container" style="width : 100%;"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script src="https://rawgit.com/qhh0205/78e9e0b1f3114db6737f3ed8cdd51d3a/raw/3894c5be5aa2378336b1f5ee0f296fa0b22d06e9/md5.min.js"></script>
+<script>
+  const gitalk = new Gitalk({
+    clientID: '94880e59f97ce511eb59',
+    clientSecret: '025de6989c2398fdb4bfc398994541421fe6d32b',
+    repo: 'ComputerCookbook-SchoolRecruitment',
+    owner: 'graysonwp',
+    admin: ['graysonwp'],
+    id: md5(location.pathname), 
+    distractionFreeMode: false, 
+    body: location.href, 
+    proxy: 'https:\/\/shielded-brushlands-08810.herokuapp.com\/https:\/\/github.com\/login\/oauth\/access_token' 
+  });
+  (function() {
+    if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+      document.getElementById('gitalk-container').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+      return;
+    }
+    gitalk.render('gitalk-container');
+  })();
+</script>
+
+
+</div>
+
+
+
+  <script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+
+
+ 
+        
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      <div class="book-toc-content">
+        
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#集群模式">集群模式</a>
+      <ul>
+        <li><a href="#1-节点">1 节点</a>
+          <ul>
+            <li><a href="#11-启动节点">1.1 启动节点</a></li>
+            <li><a href="#12-集群数据结构">1.2 集群数据结构</a></li>
+            <li><a href="#13-cluster-meet-命令的实现">1.3 CLUSTER MEET 命令的实现</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-槽指派">2 槽指派</a>
+          <ul>
+            <li><a href="#21-记录节点的槽指派信息">2.1 记录节点的槽指派信息</a></li>
+            <li><a href="#22-传播节点的槽指派信息">2.2 传播节点的槽指派信息</a></li>
+            <li><a href="#23-记录集群所有槽的指派信息">2.3 记录集群所有槽的指派信息</a></li>
+            <li><a href="#24-cluster-addslots-命令的实现">2.4 CLUSTER ADDSLOTS 命令的实现</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-在集群中执行命令">3 在集群中执行命令</a>
+          <ul>
+            <li><a href="#31-计算键属于哪个槽">3.1 计算键属于哪个槽</a></li>
+            <li><a href="#32-判断槽是否由当前节点负责处理">3.2 判断槽是否由当前节点负责处理</a></li>
+            <li><a href="#33-moved-错误">3.3 MOVED 错误</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-重新分片">4 重新分片</a>
+          <ul>
+            <li><a href="#41-含义">4.1 含义</a></li>
+            <li><a href="#42-实现原理">4.2 实现原理</a></li>
+          </ul>
+        </li>
+        <li><a href="#5-ask-错误">5 ASK 错误</a></li>
+        <li><a href="#6-复制与故障转移">6 复制与故障转移</a>
+          <ul>
+            <li><a href="#61-设置从节点">6.1 设置从节点</a></li>
+            <li><a href="#62-故障检测">6.2 故障检测</a></li>
+            <li><a href="#63-故障转移">6.3 故障转移</a></li>
+            <li><a href="#64-选举新的主节点">6.4 选举新的主节点</a></li>
+          </ul>
+        </li>
+        <li><a href="#参考文献">参考文献</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+ 
+      </div>
+    </aside>
+    
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
