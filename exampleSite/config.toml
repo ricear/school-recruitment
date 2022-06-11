@@ -8,8 +8,6 @@ theme = 'book'
 disablePathToLower = true
 enableGitInfo = false
 
-googleAnalytics = "G-GWNL6K8B7D" # Enable Google Analytics by entering your tracking id
-
 # Needed for mermaid/katex shortcodes
 [markup]
 [markup.goldmark.renderer]
