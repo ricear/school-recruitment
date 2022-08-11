@@ -42,7 +42,7 @@ bookToc: false
 
 <--->
 
-![Book Cover](https://books.grayson.top/school-recruitment/assets/images/book-cover.png)
+![Book Cover](/assets/images/book-cover.png)
 
 {{< /columns >}}
 
