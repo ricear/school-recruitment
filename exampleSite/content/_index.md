@@ -42,7 +42,7 @@ bookToc: false
 
 <--->
 
-![Book Cover](/assets/images/book-cover.png)
+![Book Cover](/school-recruitment/assets/images/book-cover.png)
 
 {{< /columns >}}
 
