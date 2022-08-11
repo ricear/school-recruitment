@@ -1,0 +1,52 @@
+<div class="flex flex-wrap justify-between">
+{{ if .Site.IsMultiLingual }}
+  {{ partial "docs/languages" . }}
+{{ end }}
+
+{{ if and .GitInfo .Site.Params.BookRepo }}
+  <div>
+    {{- $date := partial "docs/date" (dict "Date" .GitInfo.AuthorDate.Local "Format" .Site.Params.BookDateFormat) -}}
+    {{- $commitPath := default "commit" .Site.Params.BookCommitPath -}}
+    <a class="flex align-center" href="{{ .Site.Params.BookRepo }}/{{ $commitPath }}/{{ .GitInfo.Hash }}" title='{{ i18n "Last modified by" }} {{ .GitInfo.AuthorName }} | {{ $date }}' target="_blank" rel="noopener">
+      <img src="{{ "svg/calendar.svg" | relURL }}" class="book-icon" alt="Calendar" />
+      <span>{{ $date }}</span>
+    </a>
+  </div>
+{{ end }}
+
+{{ if and .File .Site.Params.BookRepo .Site.Params.BookEditPath }}
+  <div>
+    <a class="flex align-center" href="{{ .Site.Params.BookRepo }}/{{ .Site.Params.BookEditPath }}/{{ .Site.Params.contentDir | default "content" }}/{{ replace .File.Path "\\" "/" }}" target="_blank" rel="noopener">
+      <img src="{{ "svg/edit.svg" | relURL }}" class="book-icon" alt="Edit" />
+      <span>{{ i18n "Edit this page" }}</span>
+    </a>
+  </div>
+{{ end }}
+{{ partial "docs/gitalk.html" . }}
+</div>
+
+{{ $script := resources.Get "clipboard.js" | resources.Minify }}
+{{ with $script.Content }}
+  <script>{{ . | safeJS }}</script>
+{{ end }}
+
+<!-- 百度统计 -->
+<script>
+  var _hmt = _hmt || [];
+  (function () {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?178c69e004c0e084593ccabbb28390d4";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+  })();
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z5KPLXW2V4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+
+  gtag('config', 'G-Z5KPLXW2V4');
+</script>
