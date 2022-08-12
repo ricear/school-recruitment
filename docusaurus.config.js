@@ -11,7 +11,7 @@ const config = {
   title: '计算机校招之路',
   tagline: 'Computer Cookbook School Recruitment',
   url: 'https://grayson-books-school-recruitment.netlify.app',
-  baseUrl: '/',
+  baseUrl: '/school-recruitment/',
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
