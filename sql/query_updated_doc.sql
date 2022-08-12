@@ -1,1 +1,0 @@
-select project.name as project_name, doc.name as doc_name, doc.modify_time from app_doc_project project join (select top_doc, name, modify_time from app_doc_doc where modify_time >= '2021-08-11 22:16:00' order by modify_time) doc on doc.top_doc = project.id order by project_name, doc_name;
