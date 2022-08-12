@@ -12,7 +12,7 @@ const config = {
   tagline: 'Computer Cookbook School Recruitment',
   url: 'https://grayson-books-school-recruitment.netlify.app',
   baseUrl: '/',
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
 
