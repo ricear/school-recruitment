@@ -1,41 +1,60 @@
-# Website
+<p align='center'>
+<a href="https://github.com/graysonwp/school-recruitment/blob/main/LICENSE"><img alt="GitHub" src="https://img.shields.io/github/license/graysonwp/school-recruitment?label=License"/></a>
+<img src="https://img.shields.io/badge/build-passing-brightgreen.svg"/>
+<img src="https://img.shields.io/badge/platform-%20iOS | Android | Mac | Web%20-ff69b4.svg"/>
+<img src="https://img.shields.io/badge/language-Java-orange.svg"/>
+<img src="https://img.shields.io/badge/made%20with-=1-blue.svg"/>
+<a href="https://github.com/graysonwp/school-recruitment/pulls"><img src="https://img.shields.io/badge/PR-Welcome-brightgreen.svg"/></a>
+<img src="https://img.shields.io/github/stars/graysonwp/school-recruitment?style=social"/>
+<img src="https://img.shields.io/github/forks/graysonwp/school-recruitment?style=social"/>
+<a href="https://github.com/graysonwp/school-recruitment"><img src="https://visitor-badge.laobi.icu/badge?page_id=graysonwp.school-recruitment"/></a>
+<a href="https://github.com/graysonwp/school-recruitment/releases"><img src="https://img.shields.io/github/v/release/graysonwp/school-recruitment"/></a>
+<a href="https://github.com/graysonwp/school-recruitment"><img src="https://img.shields.io/github/repo-size/graysonwp/school-recruitment"/></a>
+</p>
+<p align='center'>
+<a href="https://www.grayson.top"><img src="https://img.shields.io/badge/Blog-Grayson-80d4f9.svg?style=flat"/></a>
+<a href="https://unsplash.com/@graysonwp"><img src="https://img.shields.io/badge/Unsplash-Grayson-success.svg"/></a>
+ <a href="https://twitter.com/GraysonWP1996"><img src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FGraysonWP1996"/></a>
+</p>
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+<p align='center'>
+  <img src="https://books.grayson.top/school-recruitment/img/book-cover.png"/>
+</p>
 
-### Installation
+## 为什么会写这个开源书
 
-```
-$ yarn
-```
+笔者在准备实习的过程中从开源的社区学到了很多东西，比如知道了很多大佬的博客（[Halfrost's Field | 冰霜之地](https://halfrost.com)），构建了自己的知识库（[Grayson's Notebook](https://notebook.grayson.top)）。因此想把这些知识沉淀下来，回馈社区。一方面不仅可以加深自己对这些知识的理解，另一方面也可以和其他小伙伴一起交流学习、共同进步。
 
-### Local Development
+## 关于书的封面
 
-```
-$ yarn start
-```
+[封面图片](https://unsplash.com/photos/Qb7D1xw28Co?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink) 是一只可爱的 🐶，目光淡定，眼神从容。只有我们做好一切准备，才能心中有数，从容不迫。
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+封面标题的寓意为『计算机校招之路』，表示本书主要适用于参加实习校招后端开发相关岗位的同学使用。
 
-### Build
+封面主题的颜色为黄色，这是『收获 🌾』的颜色，希望本书能祝大家一 💪 之力，🎠 到成功。
 
-```
-$ yarn build
-```
+封面底部的文字为『路虽远，行则将至。天道酬勤，厚积薄发』。“[大多数人都高估了他们一天能做的事情，却低估了他们一年能做的事情](https://github.com/wolverinn/Waking-Up)”。只有我们脚踏实地，不断积累，才能在机会到来之时从容应对。
 
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
+## 致谢
 
-### Deployment
+本书内容大部分来源于博客、开源社区以及书籍，然后根据笔者的理解整理而成，在这里把主要的来源列举出来，以表示对作者的感谢：
 
-Using SSH:
+- 本书的灵感以及排版来源于[LeetCode Cookbook](https://books.halfrost.com/leetcode)，电子版基于 [Docusaurus](docusaurus.io)，封面图片来源于 [Karsten Winegeart](https://unsplash.com/@karsten116?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)。
+- 算法部分的题目主要来源于[LeetCode中国](https://leetcode-cn.com)，刷题优先级主要根据[CodeTop企业题库](https://codetop.cc)，题解部分来源于[LeetCode中国](https://leetcode-cn.com)、[📖labuladong 的算法小抄](https://labuladong.gitbook.io/algo)。
+- 计算机基础和数据库中的内容主要来源于[Waking-Up](https://github.com/wolverinn/Waking-Up)、[【面试题】技术面试题汇总 🔥](https://imageslr.com/2020/07/08/tech-interview.html)，综合题目主要来源于[Overseas Rabbit | 海外兔](https://osjobs.net)。
+- 其他的还包括[美团技术团队](https://tech.meituan.com)、[博客园](https://www.cnblogs.com)、[掘金](https://juejin.cn)、[InfoQ](https://www.infoq.cn)、[微信公众号](https://weixin.sogou.com)等。
 
-```
-$ USE_SSH=true yarn deploy
-```
+## 目标读者
 
-Not using SSH:
+准备参加计算机后端开发相关实习或校招的本科生和研究生。
 
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
-```
+## 使用说明
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+- 本电子书的左上角有搜索栏，可以迅速帮你找到你想看的章节和题号。
+- 本电子书适用于想对知识点做深入理解的同学，然后根据自己的理解去归纳总结以应对面试，不太适用于想直接通过背的方式直接去参加面试的同学，因为[面试官很喜欢在一道题上持续深入的追问，这很容易把浅尝辄止的候选人筛出去](https://imageslr.com/2021/autumn-recruit.html)。[我们应当扎实掌握每一个知识点，而不是以覆盖更多面试题为目标。重质不重量，重深度不重广度，逐步构建个人知识体系](https://imageslr.com/2021/autumn-recruit.html)。
+
+## 互动与勘误
+
+- 如果书中文章有所遗漏，或者您有更好的答案或题目，欢迎点击所在页面下边的 edit 按钮进行评论和互动，或者通过[i@grayson.top](mailto:i@grayson.top)与笔者取得联系，感谢您的支持与帮助。
+
+本作品采用[知识署名-非商业性使用-禁止演绎 （BY-NC-ND） 4.0 国际许可协议](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode.zh-Hans)进行许可。
