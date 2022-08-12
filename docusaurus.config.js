@@ -10,7 +10,7 @@ const katex = require('rehype-katex');
 const config = {
   title: '计算机校招之路',
   tagline: 'Computer Cookbook School Recruitment',
-  url: 'https://books.grayson.top/school-recruitment',
+  url: 'https://grayson-books-school-recruitment.netlify.app',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
