@@ -42,6 +42,7 @@ const config = {
             'https://github.com/graysonwp/school-recruitment/edit/dev-guest/',
           remarkPlugins: [math],
           rehypePlugins: [[katex, { strict: false }]],
+          routeBasePath: '/',
         },
         blog: {
           showReadingTime: true,
