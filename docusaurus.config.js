@@ -11,7 +11,8 @@ const config = {
   title: '计算机校招之路',
   tagline: 'Computer Cookbook School Recruitment',
   url: 'https://grayson-books-school-recruitment.netlify.app',
-  baseUrl: '/school-recruitment/',
+  // baseUrl: '/school-recruitment/',
+  baseUrl: '/',
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
@@ -40,7 +41,7 @@ const config = {
           // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/graysonwp/school-recruitment/edit/dev-guest/',
-          remarkPlugins: [math],
+          remarkPlugins: [math,{strict:false}],
           rehypePlugins: [[katex, { strict: false }]],
           routeBasePath: '/',
         },
@@ -53,6 +54,10 @@ const config = {
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
+        },
+        googleAnalytics: {
+          trackingID: 'G-Z5KPLXW2V4',
+          anonymizeIP: false,
         },
       }),
     ],
@@ -139,7 +144,16 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
+        additionalLanguages: ["java", "go", "c", "cpp", "sql", "textile"],
       },
+      plugins: [
+        [
+          '@docusaurus/plugin-baidu-tongji',
+          {
+            token: '178c69e004c0e084593ccabbb28390d4'
+          },
+        ],
+      ],
     }),
 };
 
