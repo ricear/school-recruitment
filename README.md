@@ -18,7 +18,7 @@
 </p>
 
 <p align='center'>
-  <img src="https://books.grayson.top/school-recruitment/img/book-cover.png"/>
+  <img src="https://github.com/graysonwp/school-recruitment/blob/main/static/img/book-cover.png"/>
 </p>
 
 ## 为什么会写这个开源书
