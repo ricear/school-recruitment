@@ -76,7 +76,7 @@ sidebar_position: 11
       ```txt
       https://api.example.com/v1
       ```
-   2. 另一种做法是，**将版本号放在 HTTP 头信息中**，但**不如放入 URL 方便直观**，**[Github](https://developer.github.com/v3https://notebook.grayson.top/media/#request-specific-version)采用这种做法**。
+   2. 另一种做法是，**将版本号放在 HTTP 头信息中**，但**不如放入 URL 方便直观**，**[Github](https://developer.github.com/v3https://ricear.com/media/#request-specific-version)采用这种做法**。
 4. **路径**：
 
    1. **路径又称终点**（Endpoint），**表示 API 的具体网址**。

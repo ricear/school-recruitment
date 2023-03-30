@@ -50,7 +50,7 @@ stop = true;
 ### 3.2 不能保证原子性
 
 ```java
-package top.grayson.juc.myvolatile;
+package top.ricear.juc.myvolatile;
 
 /**
  * @author peng.wei
@@ -104,7 +104,7 @@ public class VolatileAtomTest {
 #### 3.2.1 采用 Synchronized
 
 ```java
-package top.grayson.juc.myvolatile;
+package top.ricear.juc.myvolatile;
 
 /**
  * @author peng.wei
@@ -144,7 +144,7 @@ public class SynchronizedAtomTest {
 #### 3.2.2 采用 Lock
 
 ```java
-package top.grayson.juc.myvolatile;
+package top.ricear.juc.myvolatile;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -195,7 +195,7 @@ public class LockAtomTest {
 #### 3.2.3 采用 AtomInteger
 
 ```java
-package top.grayson.juc.myvolatile;
+package top.ricear.juc.myvolatile;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
@@ -276,7 +276,7 @@ y = -1;       //语句 5
    1. 该条件的限制使 `Volatile` 变量**不能用于约束条件中**，例如下面是一个**非线程安全的数值范围类**，它包含了一个不变式 $\rightarrow$**下界总是小于等于上界**：
       
       ```java
-      package top.grayson.juc.myvolatile;
+      package top.ricear.juc.myvolatile;
       
       /**
        * @author peng.wei

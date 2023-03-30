@@ -2,7 +2,7 @@
 sidebar_position: 7
 ---
 
-TCP的具体介绍可参考[1.1.1 三次握手](https://notebook.grayson.top/project-26/doc-301)和[1.1.2 四次挥手](https://notebook.grayson.top/project-26/doc-302)，下面主要介绍TCP的短连接、长连接及其二者的优缺点。
+TCP的具体介绍可参考[1.1.1 三次握手](https://ricear.com/project-26/doc-301)和[1.1.2 四次挥手](https://ricear.com/project-26/doc-302)，下面主要介绍TCP的短连接、长连接及其二者的优缺点。
 
 ## 1 短连接
 

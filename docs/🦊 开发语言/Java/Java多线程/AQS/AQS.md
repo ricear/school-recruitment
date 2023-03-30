@@ -10,7 +10,7 @@ sidebar_position: 9
       1. **只能有一个线程占有锁资源**，**其他竞争资源的线程**，**在竞争失败后都会进入到等待队列中**，**等待占有锁资源的线程释放锁**，**然后再重新被唤醒竞争资源**，例如 `ReentrantLock` 实现的就是独占式的锁资源。
    2. **共享式**：
       1. **允许多个线程同时获取锁**，**并发访问共享资源**，`ReentrantWriteLock` 和 `CountDownLatch` 等就是实现的这种模式。
-3. AQS 内部维护了一个[volatile](https://notebook.grayson.top/project-34/doc-528)的 `state` 变量和一个 FIFO（先进先出）的队列：
+3. AQS 内部维护了一个[volatile](https://ricear.com/project-34/doc-528)的 `state` 变量和一个 FIFO（先进先出）的队列：
    1. `state`：
       
       1. **代表的是竞争资源的标识**。
@@ -61,7 +61,7 @@ sidebar_position: 9
    2. **这样在线程 $A$ 没有释放锁前**，**其他线程来竞争锁**，**调用 `tryAcquire()` 方法时都会失败**，**然后竞争锁失败的线程就会进入到队列中**。
    3. **当线程 $A$ 调用执行 `unlock()` 方法将 `state = 0` 后**，**其他线程才有机会获取锁**（注意 `ReentrantLock` 是可重入的，同一线程多次获取锁时 `state` 的值会进行累加的，在释放锁的时候也要释放相应的次数才算完全释放了锁）。
 2. `CountDownLatch`：
-   1. **`CountDownLatch` 会将任务分成 $N$ 个子线程去执行**，`state`**的初始值也是 $N$**（`state` 与子线程数量一致），$N$**个子线程是并行执行的**，**每个子线程执行完成后 `countDown()` 一次**，`state`**会通过[CAS](https://notebook.grayson.top/project-34/doc-529)方式减 1**，**直到所有子线程执行完成后**（`state = 0`），**会通过 `unpark()` 方法唤醒主线程**，**然后主线程就会从 `await()` 方法返回**，**继续后续操作**。
+   1. **`CountDownLatch` 会将任务分成 $N$ 个子线程去执行**，`state`**的初始值也是 $N$**（`state` 与子线程数量一致），$N$**个子线程是并行执行的**，**每个子线程执行完成后 `countDown()` 一次**，`state`**会通过[CAS](https://ricear.com/project-34/doc-529)方式减 1**，**直到所有子线程执行完成后**（`state = 0`），**会通过 `unpark()` 方法唤醒主线程**，**然后主线程就会从 `await()` 方法返回**，**继续后续操作**。
 
 ### 2.1 独占模式
 

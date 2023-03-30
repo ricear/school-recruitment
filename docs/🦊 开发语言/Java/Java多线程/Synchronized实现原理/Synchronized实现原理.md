@@ -4,7 +4,7 @@ sidebar_position: 7
 
 ## 1 特性
 
-Synchronized 具有[**原子性**](https://notebook.grayson.top/project-34/doc-526/#1-%E5%8E%9F%E5%AD%90%E6%80%A7)、[**可见性**](https://notebook.grayson.top/project-34/doc-526/#2-%E5%8F%AF%E8%A7%81%E6%80%A7)、[**有序性**](https://notebook.grayson.top/project-34/doc-526/#3-%E6%9C%89%E5%BA%8F%E6%80%A7)、[**可重入性**](https://notebook.grayson.top/project-34/doc-531/#2-1-1-%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81)。
+Synchronized 具有[**原子性**](https://ricear.com/project-34/doc-526/#1-%E5%8E%9F%E5%AD%90%E6%80%A7)、[**可见性**](https://ricear.com/project-34/doc-526/#2-%E5%8F%AF%E8%A7%81%E6%80%A7)、[**有序性**](https://ricear.com/project-34/doc-526/#3-%E6%9C%89%E5%BA%8F%E6%80%A7)、[**可重入性**](https://ricear.com/project-34/doc-531/#2-1-1-%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81)。
 
 ## 2 用法
 
@@ -68,7 +68,7 @@ Synchronized 可以修饰**静态方法**、**成员函数**，同时还可以�
 
 ### 3.1 Java 对象头
 
-1. 在 JVM 中，对象在内存中的布局分为三块区域，分别是**对象头**、**实例数据**和**对齐填充**，如下图所示：![图片](https://notebook.grayson.top/media/202107/2021-07-31_1508100.8334154685442979.png)
+1. 在 JVM 中，对象在内存中的布局分为三块区域，分别是**对象头**、**实例数据**和**对齐填充**，如下图所示：![图片](https://ricear.com/media/202107/2021-07-31_1508100.8334154685442979.png)
    1. **实例数据**：
       1. **存放类的属性数据信息**，**包括父类的属性信息**。
    2. **对齐填充**：
@@ -79,7 +79,7 @@ Synchronized 可以修饰**静态方法**、**成员函数**，同时还可以�
          1. **Mark Word**：
             
             1. Mark Word 主要用于**存储对象自身的运行时数据**，如哈希码（HashCode）、GC 分代年龄、锁状态标志、线程持有的锁、偏向线程 ID、偏向时间戳等，**是实现轻量级锁和偏向锁的关键**。
-            2. **对象头信息是与对象自身定义的数据无关的额外存储成本**，但是**考虑到虚拟机的空间效率**，Mark Word**被设计成一个非固定的数据结构**，**以便在极小的空间内存储尽量多的数据**，他**会根据对象的状态复用自己的存储空间**，也就是说，Mark Word**会随着程序的运行发生变化**，可能变化为存储以下四种数据（32 位虚拟机）：![在这里插入图片描述](https://notebook.grayson.top/media/202108/2021-08-01_1429370.555284820987625.png)
+            2. **对象头信息是与对象自身定义的数据无关的额外存储成本**，但是**考虑到虚拟机的空间效率**，Mark Word**被设计成一个非固定的数据结构**，**以便在极小的空间内存储尽量多的数据**，他**会根据对象的状态复用自己的存储空间**，也就是说，Mark Word**会随着程序的运行发生变化**，可能变化为存储以下四种数据（32 位虚拟机）：![在这里插入图片描述](https://ricear.com/media/202108/2021-08-01_1429370.555284820987625.png)
             3. 对象头的**最后两位存储了锁的标志位**，**01 是初始状态**，**未加锁**，其**对象头里存储的是对象本身的哈希码**，随着锁级别的不同，对象头里会存储不同的内容：
                
                1. 偏向锁存储的是当前占用此对象的线程 ID。
@@ -89,7 +89,7 @@ Synchronized 可以修饰**静态方法**、**成员函数**，同时还可以�
                1. **锁可能是个锁记录 + 对象头里的引用指针**（判断线程是否拥有锁时**将线程的锁记录地址和对象头里的指针地址比较**）。
                2. **锁也可能是对象里头的线程 ID**（判断线程是否拥有锁时**将线程的 ID 和对象里存储的线程 ID 比较**）。
                
-               ![](https://notebook.grayson.top/media/202107/2021-07-31_1540400.9407862051207854.png)
+               ![](https://ricear.com/media/202107/2021-07-31_1540400.9407862051207854.png)
             5. 锁也分为不同的状态，**JDK 1.6 之前只有两个状态**，分别是**无锁**、**有锁**（重量级锁），在 JDK 1.6 之后，对 Synchronized 进行了优化，**新增了两种状态**，**总共就是四个状态**，分别是**无锁**、**偏向锁**、**轻量级锁**、**重量级锁**，**锁的类型和状态在对象头 Mark Word 中都有记录**，**在申请锁**、**锁升级等过程中 JVM 都需要读取对象的 Mark Word 数据**。
          2. **Class Pointer**：
             
@@ -114,7 +114,7 @@ Synchronized 可以修饰**静态方法**、**成员函数**，同时还可以�
    
    1. **MonitorEnter**：**插入在同步代码块的开始位置**，**当代码执行到该指令时**，**将会尝试获取该对象 Monitor 的所有权**，**即尝试获得该对象的锁**。
    2. **MonitorExit**：**插入在方法结束处和异常处**，**JVM 保证每个 MonitorEnter 必须有对应的 MonitorExit**。
-3. 在 Java 虚拟机（HotSpot）中，Monitor 是由[ObjectMonitor](https://notebook.grayson.top/media/attachment/2021/07/jdk8u-hotspot.zip)（`src/share/vm/runtime/objectMonitor.hpp`）实现，其主要数据结构如下：
+3. 在 Java 虚拟机（HotSpot）中，Monitor 是由[ObjectMonitor](https://ricear.com/media/attachment/2021/07/jdk8u-hotspot.zip)（`src/share/vm/runtime/objectMonitor.hpp`）实现，其主要数据结构如下：
    
    ```c++
    ObjectMonitor() {
@@ -145,8 +145,8 @@ Synchronized 可以修饰**静态方法**、**成员函数**，同时还可以�
          
          > **因为 `wait()`**、`notify()`**需要借助 Monitor 对象来实现**，**所以必须要在同步方法或同步代码块中使用**。
          
-         ![在这里插入图片描述](https://notebook.grayson.top/media/202108/2021-08-01_1429370.19590741152196445.png)
-   2. 一个更形象的描述如下：![](https://notebook.grayson.top/media/202108/2021-08-01_0931150.3235706871602445.png)
+         ![在这里插入图片描述](https://ricear.com/media/202108/2021-08-01_1429370.19590741152196445.png)
+   2. 一个更形象的描述如下：![](https://ricear.com/media/202108/2021-08-01_0931150.3235706871602445.png)
       1. 一个线程**通过 1 号门进入 Entry Set**（入口区）：
          1. 如果**入口区没有线程等待**，那么这个线程就会**获取监视器成为监视器的 `Owner`**，然后**执行监视区域的代码**。
          2. 如果在**入口区中有其他线程等待**，那么**新来的线程也会和这些线程一起等待**。
@@ -184,7 +184,7 @@ Synchronized 可以修饰**静态方法**、**成员函数**，同时还可以�
       ```
    2. 然后对该方法进行反编译（`javac SynchronizedTest3.java`），接着查看对应的字节码（`javap -v -c -s -l SynchronizedTest3`）：
       
-      ![](https://notebook.grayson.top/media/202107/2021-07-31_145630.png)
+      ![](https://ricear.com/media/202107/2021-07-31_145630.png)
    3. 从上述字节码中可以看到**同步代码块的实现是由 `monitorenter` 和 `monitorexit` 指令完成的**：
       
       1. **`monitorenter`**：
@@ -212,7 +212,7 @@ Synchronized 可以修饰**静态方法**、**成员函数**，同时还可以�
    ```
 2. 对该方法进行**反编译**（`javac java_file`），然后**查看其字节码**（`javap -v -c -s -l class_file`）：
    
-   ![](https://notebook.grayson.top/media/202107/2021-07-31_143453.png)
+   ![](https://ricear.com/media/202107/2021-07-31_143453.png)
 3. 从反编译的结果来看，**方法的同步并没有通过指令 `monitorenter` 和 `monitorexit` 来完成**，不过**相对于普通方法**，其**常量池中多了 `ACC_SYNCHRONIZED` 标识符**，**JVM 就是根据该标识符来实现方法的同步的**：
    
    1. 当**方法调用时**，**调用指令将会检查方法的 `ACC_SYNCHRONIZED` 访问标志是否被设置**，**如果设置了**，**执行线程将先获取 `monitor`**，**获取成功之后才能执行方法体**，**方法执行完后再释放 `monitor`**，在**方法执行期间**，**其他任何线程都无法再获得同一个 `monitor` 对象**。
@@ -221,21 +221,21 @@ Synchronized 可以修饰**静态方法**、**成员函数**，同时还可以�
 
 ### 5.1 为什么要进行优化
 
-1. **JVM 是通过进入和退出 Monitor 对象来实现代码块同步和方法同步的**，而**Monitor 是依靠底层操作系统的 Mutex Lock 来实现**的，**操作系统实现线程之间的切换需要[从用户态转换到核心态](https://notebook.grayson.top/project-26/doc-336)**，**这个切换成本比较高**，**对性能影响较大**。
+1. **JVM 是通过进入和退出 Monitor 对象来实现代码块同步和方法同步的**，而**Monitor 是依靠底层操作系统的 Mutex Lock 来实现**的，**操作系统实现线程之间的切换需要[从用户态转换到核心态](https://ricear.com/project-26/doc-336)**，**这个切换成本比较高**，**对性能影响较大**。
 
 ### 5.2 做了哪些优化
 
-1. 从**JDK 1.5 引入了**现代操作系统新增加的**[CAS](https://notebook.grayson.top/project-34/doc-529)原子操作**。
+1. 从**JDK 1.5 引入了**现代操作系统新增加的**[CAS](https://ricear.com/project-34/doc-529)原子操作**。
 2. 从**JDK 1.6**开始，就**对 Synchronized 的实现机制进行了较大调整**，**增加了自适应自旋锁**、**锁消除**、**锁粗化**、**偏向锁**、**轻量级锁这些优化策略**，以此来**减少锁的开销**。
 3. 此时**锁主要有四种状态**，依次是**无锁状态**、**偏向锁状态**、**轻量级锁状态**、**重量级锁状态**，**锁可以从偏向锁升级到轻量级锁**，**再升级到重量级锁**，但是**锁的升级是单向的**，**只能从低到高升级**，**不会出现锁的降级**。
 
 #### 5.2.1 自旋锁
 
-自旋锁的相关内容详见[5.1.1 自旋锁](https://notebook.grayson.top/project-34/doc-531/#5-1-1-%E8%87%AA%E6%97%8B%E9%94%81)。
+自旋锁的相关内容详见[5.1.1 自旋锁](https://ricear.com/project-34/doc-531/#5-1-1-%E8%87%AA%E6%97%8B%E9%94%81)。
 
 #### 5.2.2 适应性自旋锁
 
-适应性自旋锁的相关内容详见[5.1.2 适应性自旋锁](https://notebook.grayson.top/project-34/doc-531/#5-1-2-%E9%80%82%E5%BA%94%E6%80%A7%E8%87%AA%E6%97%8B%E9%94%81)。
+适应性自旋锁的相关内容详见[5.1.2 适应性自旋锁](https://ricear.com/project-34/doc-531/#5-1-2-%E9%80%82%E5%BA%94%E6%80%A7%E8%87%AA%E6%97%8B%E9%94%81)。
 
 #### 5.2.3 锁消除
 
@@ -286,15 +286,15 @@ Synchronized 可以修饰**静态方法**、**成员函数**，同时还可以�
 
 #### 5.2.5 偏向锁
 
-偏向锁的相关内容详见[6.2.2 偏向锁](https://notebook.grayson.top/project-34/doc-531/#6-2-2-%E5%81%8F%E5%90%91%E9%94%81)。
+偏向锁的相关内容详见[6.2.2 偏向锁](https://ricear.com/project-34/doc-531/#6-2-2-%E5%81%8F%E5%90%91%E9%94%81)。
 
 #### 5.2.6 轻量级锁
 
-轻量级锁的相关内容详见[6.2.3 轻量级锁](https://notebook.grayson.top/project-34/doc-531/#6-2-3-%E8%BD%BB%E9%87%8F%E7%BA%A7%E9%94%81)。
+轻量级锁的相关内容详见[6.2.3 轻量级锁](https://ricear.com/project-34/doc-531/#6-2-3-%E8%BD%BB%E9%87%8F%E7%BA%A7%E9%94%81)。
 
 #### 5.2.7 重量级锁
 
-重量级锁的相关内容详见[6.2.4 重量级锁](https://notebook.grayson.top/project-34/doc-531/#6-2-4-%E9%87%8D%E9%87%8F%E7%BA%A7%E9%94%81)。
+重量级锁的相关内容详见[6.2.4 重量级锁](https://ricear.com/project-34/doc-531/#6-2-4-%E9%87%8D%E9%87%8F%E7%BA%A7%E9%94%81)。
 
 ## 6 Synchronized 与 Lock 的区别
 
@@ -311,8 +311,8 @@ Synchronized 可以修饰**静态方法**、**成员函数**，同时还可以�
    1. Synchronized**无法得知是否获取锁成功**。
    2. Lock**可以通过 `tryLock` 获得加锁是否成功**。
 5. **功能复杂性**：
-   1. Synchronized 加锁[可重入](https://notebook.grayson.top/project-34/doc-531/#2-1-1-%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81)**、**不可中断**、**[非公平](https://notebook.grayson.top/project-34/doc-531/#1-1-2-%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81)。
-   2. Lock[可重入](https://notebook.grayson.top/project-34/doc-531/#2-1-1-%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81)、**可中断**、[可公平](https://notebook.grayson.top/project-34/doc-531/#1-1-1-%E5%85%AC%E5%B9%B3%E9%94%81)和[非公平](https://notebook.grayson.top/project-34/doc-531/#1-1-2-%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81)，细分[读写锁](https://notebook.grayson.top/project-34/doc-531/#4-%E7%8B%AC%E5%8D%A0%E9%94%81%E4%B8%8E%E5%85%B1%E4%BA%AB%E9%94%81)**提高效率**。
+   1. Synchronized 加锁[可重入](https://ricear.com/project-34/doc-531/#2-1-1-%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81)**、**不可中断**、**[非公平](https://ricear.com/project-34/doc-531/#1-1-2-%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81)。
+   2. Lock[可重入](https://ricear.com/project-34/doc-531/#2-1-1-%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81)、**可中断**、[可公平](https://ricear.com/project-34/doc-531/#1-1-1-%E5%85%AC%E5%B9%B3%E9%94%81)和[非公平](https://ricear.com/project-34/doc-531/#1-1-2-%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81)，细分[读写锁](https://ricear.com/project-34/doc-531/#4-%E7%8B%AC%E5%8D%A0%E9%94%81%E4%B8%8E%E5%85%B1%E4%BA%AB%E9%94%81)**提高效率**。
 
 ## 参考文献
 

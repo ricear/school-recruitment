@@ -10,7 +10,7 @@ const katex = require('rehype-katex');
 const config = {
   title: '计算机校招之路',
   tagline: 'Computer Cookbook School Recruitment',
-  url: 'https://grayson-books-school-recruitment.netlify.app',
+  url: 'https://ricear-books-school-recruitment.netlify.app',
   baseUrl: '/school-recruitment/',
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
@@ -18,7 +18,7 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'graysonwp', // Usually your GitHub org/user name.
+  organizationName: 'ricear', // Usually your GitHub org/user name.
   projectName: 'school-recruitment', // Usually your repo name.
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -39,7 +39,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/graysonwp/school-recruitment/edit/dev-guest/',
+            'https://github.com/ricear/school-recruitment/edit/dev-guest/',
           remarkPlugins: [math,{strict:false}],
           rehypePlugins: [[katex, { strict: false }]],
           routeBasePath: '/',
@@ -49,7 +49,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/graysonwp/school-recruitment/edit/dev-guest/',
+            'https://github.com/ricear/school-recruitment/edit/dev-guest/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -84,12 +84,12 @@ const config = {
         items: [
           // {to: '/blog', label: 'Blog', position: 'left'},
           {
-            href: 'https://www.grayson.top',
+            href: 'https://ricear.com',
             label: 'Blog',
             position: 'right',
           },
           {
-            href: 'https://github.com/graysonwp/school-recruitment',
+            href: 'https://github.com/ricear/school-recruitment',
             label: 'GitHub',
             position: 'right',
           },

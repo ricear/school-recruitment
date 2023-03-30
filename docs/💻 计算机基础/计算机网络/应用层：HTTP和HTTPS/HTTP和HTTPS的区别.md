@@ -5,7 +5,7 @@ sidebar_position: 1
 ## 1 HTTP 和 HTTPS 有什么区别
 
 1. **端口不同**：HTTP 使用 80 端口，HTTPS 使用 443 端口。
-2. **HTTP**（超文本传输协议）信息**是明文传输**，**HTTPS**运行在 SSL（Secure Socket Layer）之上，**添加了[加密和认证机制](https://notebook.grayson.top/project-26/doc-797)，更加安全**。
+2. **HTTP**（超文本传输协议）信息**是明文传输**，**HTTPS**运行在 SSL（Secure Socket Layer）之上，**添加了[加密和认证机制](https://ricear.com/project-26/doc-797)，更加安全**。
 3. HTTPS 由于**加密解密会带来更大的 CPU 和内存开销**。
 4. HTTPS 通信**需要证书**，一般需向证书颁发机构购买。
 

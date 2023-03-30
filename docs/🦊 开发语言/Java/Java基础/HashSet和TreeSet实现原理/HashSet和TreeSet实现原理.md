@@ -7,7 +7,7 @@ sidebar_position: 4
 ### 1.1 简介
 
 1. **HashSet 是 Set 的一个实现类**，其对应的继承关系图如下：
-   ![](https://notebook.grayson.top/media/202201/2022-01-09_205846_463125.png)
+   ![](https://ricear.com/media/202201/2022-01-09_205846_463125.png)
 2. HashSet 是**基于 HashMap 来实现**的，操作很简单，更像是对 HashMap 做了一次“封装”，而且**只使用了 HashMap 的 key 来实现各种特性**，然后**构造了一个不可变的对象作为一个假的 value 来用**：
    
    ```java
@@ -119,7 +119,7 @@ sidebar_position: 4
 
 #### 1.2.1 HashSet 如何保证元素不重复
 
-1. **HashSet 中的 add 方法**，**实际调用的是[HashMap](https://notebook.grayson.top/project-34/doc-813)中的[put](https://notebook.grayson.top/project-34/doc-813/#1-3-2-2-put-%E6%96%B9%E6%B3%95%E7%9A%84%E6%89%A7%E8%A1%8C%E5%8E%9F%E7%90%86)方法**。
+1. **HashSet 中的 add 方法**，**实际调用的是[HashMap](https://ricear.com/project-34/doc-813)中的[put](https://ricear.com/project-34/doc-813/#1-3-2-2-put-%E6%96%B9%E6%B3%95%E7%9A%84%E6%89%A7%E8%A1%8C%E5%8E%9F%E7%90%86)方法**。
 2. **当添加的元素有重复时**，**会判断对应的 value 值是否相同**，**如果相同的话会直接返回 false**，**表示添加元素失败**，**而 HashSet 中的 map 对应的 value 为一个不可变的对象**，**因此 HashSet 中的 map 对应的 value 都相等**，**因此当 HashSet 添加重复的元素时会直接返回 false**，**从而保证元素不重复**。
 
 ## 2 TreeSet
@@ -128,7 +128,7 @@ sidebar_position: 4
 
 1. **TreeSet 在保证元素唯一性的基础上**，**还可以对元素进行排序**，**支持两种排序方式**，分别为**自然排序**和**自定义排序**。
 2. 和 HashSet 不同的是，**TreeSet 中的元素不需要重写 `hashCode()` 和 `equals()` 方法**，**因为 TreeSet 是通过比较器去重的**，**所有元素都必须实现 Comparable 接口**，**然后重写 `compareTo()` 方法**。
-3. TreeSet 是**基于 [TreeMap](https://notebook.grayson.top/project-34/doc-813/#3-TreeMap) 来实现**的，操作很简单，更像是对 TreeMap 做了一次“封装”，而且**只使用了 TreeMap 的 key 来实现各种特性**，然后**构造了一个不可变的对象作为一个假的 value 来用**：
+3. TreeSet 是**基于 [TreeMap](https://ricear.com/project-34/doc-813/#3-TreeMap) 来实现**的，操作很简单，更像是对 TreeMap 做了一次“封装”，而且**只使用了 TreeMap 的 key 来实现各种特性**，然后**构造了一个不可变的对象作为一个假的 value 来用**：
    
    ```java
    public class TreeSet<E> extends AbstractSet<E>
@@ -178,7 +178,7 @@ sidebar_position: 4
 
 #### 2.2.2 TreeSet 如何保证元素有序
 
-1. 因为 TreeSet 是**基于 TreeMap 实现**的，**在向 TreeMap 中[添加元素](https://notebook.grayson.top/project-34/doc-813/#3-2-3-put-%E6%96%B9%E6%B3%95)时会按照相应的排序规则进行排序**，因此**TreeSet 中的元素也是有序的**。
+1. 因为 TreeSet 是**基于 TreeMap 实现**的，**在向 TreeMap 中[添加元素](https://ricear.com/project-34/doc-813/#3-2-3-put-%E6%96%B9%E6%B3%95)时会按照相应的排序规则进行排序**，因此**TreeSet 中的元素也是有序的**。
 
 ## 参考文献
 

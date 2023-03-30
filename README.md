@@ -1,29 +1,29 @@
 <p align='center'>
-<a href="https://github.com/graysonwp/school-recruitment/blob/main/LICENSE"><img alt="GitHub" src="https://img.shields.io/github/license/graysonwp/school-recruitment?label=License"/></a>
+<a href="https://github.com/ricear/school-recruitment/blob/main/LICENSE"><img alt="GitHub" src="https://img.shields.io/github/license/ricear/school-recruitment?label=License"/></a>
 <img src="https://img.shields.io/badge/build-passing-brightgreen.svg"/>
 <img src="https://img.shields.io/badge/platform-%20iOS | Android | Mac | Web%20-ff69b4.svg"/>
 <img src="https://img.shields.io/badge/language-Java-orange.svg"/>
 <img src="https://img.shields.io/badge/made%20with-=1-blue.svg"/>
-<a href="https://github.com/graysonwp/school-recruitment/pulls"><img src="https://img.shields.io/badge/PR-Welcome-brightgreen.svg"/></a>
-<img src="https://img.shields.io/github/stars/graysonwp/school-recruitment?style=social"/>
-<img src="https://img.shields.io/github/forks/graysonwp/school-recruitment?style=social"/>
-<a href="https://github.com/graysonwp/school-recruitment"><img src="https://visitor-badge.laobi.icu/badge?page_id=graysonwp.school-recruitment"/></a>
-<a href="https://github.com/graysonwp/school-recruitment/releases"><img src="https://img.shields.io/github/v/release/graysonwp/school-recruitment"/></a>
-<a href="https://github.com/graysonwp/school-recruitment"><img src="https://img.shields.io/github/repo-size/graysonwp/school-recruitment"/></a>
+<a href="https://github.com/ricear/school-recruitment/pulls"><img src="https://img.shields.io/badge/PR-Welcome-brightgreen.svg"/></a>
+<img src="https://img.shields.io/github/stars/ricear/school-recruitment?style=social"/>
+<img src="https://img.shields.io/github/forks/ricear/school-recruitment?style=social"/>
+<a href="https://github.com/ricear/school-recruitment"><img src="https://visitor-badge.laobi.icu/badge?page_id=ricear.school-recruitment"/></a>
+<a href="https://github.com/ricear/school-recruitment/releases"><img src="https://img.shields.io/github/v/release/ricear/school-recruitment"/></a>
+<a href="https://github.com/ricear/school-recruitment"><img src="https://img.shields.io/github/repo-size/ricear/school-recruitment"/></a>
 </p>
 <p align='center'>
-<a href="https://www.grayson.top"><img src="https://img.shields.io/badge/Blog-Grayson-80d4f9.svg?style=flat"/></a>
-<a href="https://unsplash.com/@graysonwp"><img src="https://img.shields.io/badge/Unsplash-Grayson-success.svg"/></a>
- <a href="https://twitter.com/GraysonWP1996"><img src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FGraysonWP1996"/></a>
+<a href="https://ricear.com"><img src="https://img.shields.io/badge/Blog-Ricear-80d4f9.svg?style=flat"/></a>
+<a href="https://unsplash.com/@ricear"><img src="https://img.shields.io/badge/Unsplash-Ricear-success.svg"/></a>
+ <a href="https://twitter.com/ricear1996"><img src="https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2Fricear1996"/></a>
 </p>
 
 <p align='center'>
-  <img src="https://github.com/graysonwp/school-recruitment/blob/main/static/img/book-cover.png"/>
+  <img src="https://github.com/ricear/school-recruitment/blob/main/static/img/book-cover.png"/>
 </p>
 
 ## 为什么会写这个开源书
 
-笔者在准备实习的过程中从开源的社区学到了很多东西，比如知道了很多大佬的博客（[Halfrost's Field | 冰霜之地](https://halfrost.com)），构建了自己的知识库（[Grayson's Notebook](https://notebook.grayson.top)）。因此想把这些知识沉淀下来，回馈社区。一方面不仅可以加深自己对这些知识的理解，另一方面也可以和其他小伙伴一起交流学习、共同进步。
+笔者在准备实习的过程中从开源的社区学到了很多东西，比如知道了很多大佬的博客（[Halfrost's Field | 冰霜之地](https://halfrost.com)），构建了自己的知识库（[Ricear's Notebook](https://ricear.com)）。因此想把这些知识沉淀下来，回馈社区。一方面不仅可以加深自己对这些知识的理解，另一方面也可以和其他小伙伴一起交流学习、共同进步。
 
 ## 关于书的封面
 
@@ -55,6 +55,6 @@
 
 ## 互动与勘误
 
-- 如果书中文章有所遗漏，或者您有更好的答案或题目，欢迎点击所在页面下边的 edit 按钮进行评论和互动，或者通过[i@grayson.top](mailto:i@grayson.top)与笔者取得联系，感谢您的支持与帮助。
+- 如果书中文章有所遗漏，或者您有更好的答案或题目，欢迎点击所在页面下边的 edit 按钮进行评论和互动，或者通过[i@ricear.com](mailto:i@ricear.com)与笔者取得联系，感谢您的支持与帮助。
 
 本作品采用[知识署名-非商业性使用-禁止演绎 （BY-NC-ND） 4.0 国际许可协议](https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode.zh-Hans)进行许可。

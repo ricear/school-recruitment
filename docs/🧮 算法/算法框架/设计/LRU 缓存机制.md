@@ -44,7 +44,7 @@ lRUCache.get(4);    // 返回 4
 
 ## 2 解题思路
 
-> LRU 缓存机制的原理详见[最近最少使用法](https://notebook.grayson.top/project-26/doc-342/#2-5-%E6%9C%80%E8%BF%91%E6%9C%80%E5%B0%91%E4%BD%BF%E7%94%A8%E6%B3%95-Least-Recently-Used--LRU-)。
+> LRU 缓存机制的原理详见[最近最少使用法](https://ricear.com/project-26/doc-342/#2-5-%E6%9C%80%E8%BF%91%E6%9C%80%E5%B0%91%E4%BD%BF%E7%94%A8%E6%B3%95-Least-Recently-Used--LRU-)。
 
 ### 2.1 双向链表
 
@@ -319,7 +319,7 @@ class LRUCache {
 
 ###### 2.1.3.2.1 问题解析
 
-> LRU 的超时自动删除策略可以参考 Reis 的[过期键删除策略](https://notebook.grayson.top/project-37/doc-812/#1-2-%E8%BF%87%E6%9C%9F%E9%94%AE%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5)。
+> LRU 的超时自动删除策略可以参考 Reis 的[过期键删除策略](https://ricear.com/project-37/doc-812/#1-2-%E8%BF%87%E6%9C%9F%E9%94%AE%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5)。
 
 1. 可以使用一个**定时器线程池**来实现 LRU 的超时自动删除功能，**当添加一个元素时**，**同时将该元素及其对应的超时时间添加到定时器线程池中**，**然后当达到了超时时间时**，**定时器线程自动将该元素从 LRU 缓存中移除**。
 
