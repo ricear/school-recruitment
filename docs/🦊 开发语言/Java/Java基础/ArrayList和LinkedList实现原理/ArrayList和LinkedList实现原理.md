@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 
-> 如无特殊说明，下面内容的叙述基于的 JDK 版本为[JDK 1.8.0_181](https://ricear.com/media/attachment/2021/08/jdk1.8.0_181.zip)。
+> 如无特殊说明，下面内容的叙述基于的 JDK 版本为[JDK 1.8.0_181](https://notebook.ricear.com/media/attachment/2021/08/jdk1.8.0_181.zip)。
 
 ## 1 ArrayList
 
@@ -189,7 +189,7 @@ private void ensureCapacityInternal(int minCapacity) {
          4. 最后是**真正执行扩容的操作**，**调用了 `java.util` 包里的 `Arrays.copyOf()` 方法**。
 6. 数组扩容完成后，就会**将本次添加的元素写入 `elementData` 的末尾**，即 `elementData[size++] = e`。
 
-   ![图片](https://ricear.com/media/202108/2021-08-02_1647200.28581888628803354.png)
+   ![图片](https://notebook.ricear.com/media/202108/2021-08-02_1647200.28581888628803354.png)
 7. `add()` 方法可能会导致线程不安全：
 
    1. **多个线程进行 `add` 操作时可能会导致 `elementData` 数组越界**：
@@ -231,14 +231,14 @@ private void ensureCapacityInternal(int minCapacity) {
 
    1. LinkedList是一个**继承于AbstractSequentialList的双向链表**，**可以被当做堆栈**、**队列或者双端队列进行操作**。
    2. LinkedList**实现了List接口**，**能对他进行列表操作**；**实现了Deque接口**，**能当做双端队列使用**；**实现了Cloneable接口**，**能克隆**；**实现了java.io.Serializable接口**，**支持序列化**，**能通过序列化去传输**。
-   3. LinkedList**不是线程安全的**，**只能在单线程环境下使用**，**多线程环境下可以考虑用 `Collections.synchronizedList(List<T> list)` 返回一个线程安全的 LinkedList 类**，**也可以使用 `concurrent` 并发包下的 `CopyOnWriteArrayList` 类**。![](https://ricear.com/media/202108/2021-08-03_1030400.039698365669505686.png)
+   3. LinkedList**不是线程安全的**，**只能在单线程环境下使用**，**多线程环境下可以考虑用 `Collections.synchronizedList(List<T> list)` 返回一个线程安全的 LinkedList 类**，**也可以使用 `concurrent` 并发包下的 `CopyOnWriteArrayList` 类**。![](https://notebook.ricear.com/media/202108/2021-08-03_1030400.039698365669505686.png)
 2. LinkedList的优缺点如下：
 
    1. **优点**：
       1. **添加和删除元素比较快**，**因为只是移动指针**，**并且不需要判断是否扩容**。
    2. **缺点**：
       1. **查询和遍历效率比较低**。
-3. LinkedList的结构图如下：![](https://ricear.com/media/202108/2021-08-03_1026380.5915336679737497.png)
+3. LinkedList的结构图如下：![](https://notebook.ricear.com/media/202108/2021-08-03_1026380.5915336679737497.png)
 
 ### 2.2 实现原理
 
@@ -319,7 +319,7 @@ private void ensureCapacityInternal(int minCapacity) {
    * 将 `l`的 ` next`指向 `newNode`。
    * 将LinkedList的长度 `size`加1，同时将LinkedList的修改次数 `modCount`加1。
 
-     ![](https://ricear.com/media/202108/2021-08-03_105908.png)
+     ![](https://notebook.ricear.com/media/202108/2021-08-03_105908.png)
 
 ## 参考文献
 

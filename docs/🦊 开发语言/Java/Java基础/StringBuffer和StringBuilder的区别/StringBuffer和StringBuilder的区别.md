@@ -9,14 +9,14 @@ sidebar_position: 1
 1. 在 `Java`中字符串属于对象，`Java`提供了 `String`类来**创建和操作字符串**。
 2. `String`的值是**不可变**的，这就导致每次对 `String`的操作都会**生成新的 `String`对象**，这样不仅效率低下，而且大量浪费有限的内存空间，下图是对 `String`操作时内存变化的图：
 
-   ![](https://ricear.com/media/202105//1621914583.6706944.png)
+   ![](https://notebook.ricear.com/media/202105//1621914583.6706944.png)
 
    1. 我们可以看到，初始`String`值是`hello`，然后在这个字符串后面加上新的字符串`world`，这个过程是需要在**堆内存**中开辟内存空间的，最终得到了`hello world`字符串也需要开辟相应的内存空间。
    2. 这样短短的两个字符串，却要开辟三次内存空间，这是对内存空间的极大浪费。
 
 ### 1.2 StringBuffer和StringBuilder
 
-![StringBuffer Vs StringBuilder](https://ricear.com/media/202105//1621914583.7803657.png)
+![StringBuffer Vs StringBuilder](https://notebook.ricear.com/media/202105//1621914583.7803657.png)
 
 1. `StringBuffer`始于`Java 1.0`，`StringBuilder`始于`Java 1.5`。
 2. `StringBuffer`的所有方法都是**同步**（Synchronized）的，因此它是**线程安全**的，这就导致相比于`StringBuilder`，它在**性能上会差一点**；`StringBuilder`的方法**不是同步的**（Non-Synchronized），因此它是**线程不安全**的，因此相比于`StringBuffer`，他在**性能上会好一点**。

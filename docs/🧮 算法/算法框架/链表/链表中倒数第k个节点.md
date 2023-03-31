@@ -29,7 +29,7 @@ sidebar_position: 4
 2. 让快指针先走 $k$ 步。
 3. 然后快慢指针同时移动，以后快慢指针的距离都为 $k$ 步，直到快指针为空，此时慢指针 $slow$ 即为倒数第 $k$ 个节点。
 
-   ![](https://ricear.com/media/202107/2021-07-13_222646.png)
+   ![](https://notebook.ricear.com/media/202107/2021-07-13_222646.png)
 
 #### 2.1.2 参考代码
 

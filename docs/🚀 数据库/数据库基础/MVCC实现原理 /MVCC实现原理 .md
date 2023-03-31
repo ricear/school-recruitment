@@ -35,7 +35,7 @@ sidebar_position: 5
 我们模拟一次数据修改的过程来了解下事务版本号、隐藏列和 Undo Log 他们之间的关系：
 
 1. 首先准备一张原始数据表 `user_info`：
-   ![](https://ricear.com/media/202107/2021-07-01_121234.png)
+   ![](https://notebook.ricear.com/media/202107/2021-07-01_121234.png)
 
 2. 参考文献开启一个事务 $A$，对 `user_info` 表执行 `update user_info set name = '李四' where id = 1`，这个过程的详细流程如下：
 
@@ -46,7 +46,7 @@ sidebar_position: 5
 
 3. 最后执行完结果如下图所示：
 
-   ![](https://ricear.com/media/202107/2021-07-01_121348.png)
+   ![](https://notebook.ricear.com/media/202107/2021-07-01_121348.png)
 
 ### Read View
 
@@ -87,9 +87,9 @@ sidebar_position: 5
 
 ## InnoDB 实现 MVCC 的原理
 
-![](https://ricear.com/media/202107/2021-07-01_144830.png)
+![](https://notebook.ricear.com/media/202107/2021-07-01_144830.png)
 
-1. 创建`user_info` 表，插入一条初始化数据。![](https://ricear.com/media/202107/2021-07-01_144907.png)
+1. 创建`user_info` 表，插入一条初始化数据。![](https://notebook.ricear.com/media/202107/2021-07-01_144907.png)
 
 2. 事务 $A$ 和事务 $B$ 同时对 `user_info` 进行修改和查询操作：
 
@@ -97,7 +97,7 @@ sidebar_position: 5
    2. 事务 $B$：`select * from user_info where id = 1;`
 
 3. 先开启事务 $A$，在事务 $A$ 修改数据后但未进行 Commit，此时执行事务 B，在这期间产生的具体流程如下：
-   ![](https://ricear.com/media/202107/2021-07-01_151059.png)
+   ![](https://notebook.ricear.com/media/202107/2021-07-01_151059.png)
 
    1. 事务 $A$：**开启事务**，首先**得到一个事务编号**102。
 
@@ -105,15 +105,15 @@ sidebar_position: 5
 
    3. 事务 $A$：**进行修改操作**，首先**把原数据拷贝到 Undo Log**，然后**对数据进行修改**，**标记事务编号和上一个数据版本在 Undo Log 的地址**。
 
-      ![](https://ricear.com/media/202107/2021-07-01_145538.png)
+      ![](https://notebook.ricear.com/media/202107/2021-07-01_145538.png)
 
    4. 事务 $B$：此时**事务 $B$ 获得一个 Read View**，Read View 对应的值如下：
 
-      ![](https://ricear.com/media/202107/2021-07-01_150519.png)
+      ![](https://notebook.ricear.com/media/202107/2021-07-01_150519.png)
 
    5. 事务 $B$：**执行查询语句**，此时**得到的是事务 $A$ 修改后的数据**：
 
-      ![](https://ricear.com/media/202107/2021-07-01_150613.png)
+      ![](https://notebook.ricear.com/media/202107/2021-07-01_150613.png)
 
    6. 事务 $B$：**把数据与 Read View 进行匹配**，事务 ID 为 102：
 
@@ -124,7 +124,7 @@ sidebar_position: 5
 
    7. 发现**不满足 Read View 条件**，所以**从 Undo Log 获取历史版本的数据**，然后再**和 Read View 进行匹配**，最后返回数据如下：
 
-      ![](https://ricear.com/media/202107/2021-07-01_151019.png)
+      ![](https://notebook.ricear.com/media/202107/2021-07-01_151019.png)
 
 ## 各种事务隔离级别下的 Read View 的工作方式
 
@@ -134,13 +134,13 @@ sidebar_position: 5
 
 在**读提交**级别下同一事务里面的**每一次查询都会获得一个新的 Read View 副本**，这样就**可能造成同一个事务里前后读取数据可能不一致的问题**（重复读）。
 
-![](https://ricear.com/media/202107/2021-07-01_152552.png)
+![](https://notebook.ricear.com/media/202107/2021-07-01_152552.png)
 
 ### Repetable Read
 
 在**可重复读**级别下同一事务里面**只会获取一次Read View副本**，从而保证**每次查询的数据都是一样的**，因此在可重复读级别下**不存在幻读问题**。
 
-![](https://ricear.com/media/202107/2021-07-01_153205.png)
+![](https://notebook.ricear.com/media/202107/2021-07-01_153205.png)
 
 ### Read Uncommitted
 

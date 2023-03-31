@@ -6,7 +6,7 @@ sidebar_position: 5
 
 从 `JDK 1.2` 版本开始，对象的引用被划分为 4 中级别，从而**使程序能更加灵活地控制对象的生命周期**，这 4 中级别**从高到低**依次为**强引用（`FinalReference`）、软引用（`SoftReference`）、弱引用（`WeakReference`）和虚引用（`PhantomReference`）。**
 
-![](https://ricear.com/media/202105//1621914616.5661292.png)
+![](https://notebook.ricear.com/media/202105//1621914616.5661292.png)
 
 ## 2 具体划分
 
@@ -106,14 +106,14 @@ sidebar_position: 5
    null
    ```
    
-   ![](https://ricear.com/media/202105//1621914616.5772505.png)
+   ![](https://notebook.ricear.com/media/202105//1621914616.5772505.png)
 2. **虚引用必须与 `ReferenceQueue` 一起使用，当 `GC` 准备回收一个对象，如果发现他还有虚引用，就会在回收之前，把这个虚引用加入到与之关联的 `ReferenceQueue` 中**，此时**他的实例对象还在内存中**。
    
-   ![](https://ricear.com/media/202105//1621914616.5795465.png)
+   ![](https://notebook.ricear.com/media/202105//1621914616.5795465.png)
    
    运行结果：
    
-   ![](https://ricear.com/media/202105//1621914616.5818026.png)
+   ![](https://notebook.ricear.com/media/202105//1621914616.5818026.png)
    
    我们简单分析下代码：
    
@@ -133,11 +133,11 @@ sidebar_position: 5
 1. 虚引用可以用来**代替 `finalize` 方法，保证对象在 `finalize` 时不会复活（`Resurrect`）。**
 2. **这允许对象在一个周期内完成垃圾回收，而不需要等待下一个垃圾回收期以确保他没有复活。**
 
-![](https://ricear.com/media/202105//1621914616.5833793.png)
+![](https://notebook.ricear.com/media/202105//1621914616.5833793.png)
 
 ## 3 总结
 
-![](https://ricear.com/media/202105//1621914616.5863366.png)
+![](https://notebook.ricear.com/media/202105//1621914616.5863366.png)
 
 ## 4 参考文献
 

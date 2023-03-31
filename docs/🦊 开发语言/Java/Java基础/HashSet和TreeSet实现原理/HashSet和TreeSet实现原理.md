@@ -7,7 +7,7 @@ sidebar_position: 4
 ### 1.1 简介
 
 1. **HashSet 是 Set 的一个实现类**，其对应的继承关系图如下：
-   ![](https://ricear.com/media/202201/2022-01-09_205846_463125.png)
+   ![](https://notebook.ricear.com/media/202201/2022-01-09_205846_463125.png)
 2. HashSet 是**基于 HashMap 来实现**的，操作很简单，更像是对 HashMap 做了一次“封装”，而且**只使用了 HashMap 的 key 来实现各种特性**，然后**构造了一个不可变的对象作为一个假的 value 来用**：
    
    ```java

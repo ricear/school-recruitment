@@ -41,7 +41,7 @@ sidebar_position: 7
          3. **若 $s = target$**，**则返回数组 $[nums[i], nums[j]]$**。
       3. **返回空数组**，**代表无和为 $target$ 的数字组合**。
 
-      ![](https://ricear.com/media/202206/2022-06-03_151853_433534.png)
+      ![](https://notebook.ricear.com/media/202206/2022-06-03_151853_433534.png)
 
 ## 3 参考代码
 
@@ -78,7 +78,7 @@ public int[] twoSum(int[] nums, int target) {
       2. **如果 $sum \gt target$**，**滑动窗口的左边界向右移动**，**即 $i++$**，**此时窗口中少了一个数字 $i$**，**窗口的和 $sum$ 也要减去 $i$**。
       3. **如果 $sum = target$**，**我们需要记录此时的结果**，**然后将窗口的右边界向右移动**。
 
-         ![](https://ricear.com/media/202206/2022-06-03_151942_977167.png)
+         ![](https://notebook.ricear.com/media/202206/2022-06-03_151942_977167.png)
 
 #### 4.1.2 参考代码
 

@@ -19,7 +19,7 @@ sidebar_position: 1
 5. **IP 地址**与**子网掩码**相**与**得到**网络号**。
 6. 主机号**全为 0**的是网络号（例如：192.168.2.0），主机号**全为 1**的是广播地址（例如：192.168.2.255）。
 
-![IP address](https://ricear.com/media/202105/2021-05-06_144013.png)
+![IP address](https://notebook.ricear.com/media/202105/2021-05-06_144013.png)
 
 ## 参考文献
 
