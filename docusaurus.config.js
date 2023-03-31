@@ -55,7 +55,7 @@ const config = {
           customCss: require.resolve('./src/css/custom.css'),
         },
         googleAnalytics: {
-          trackingID: 'G-Z5KPLXW2V4',
+          trackingID: 'G-KKGXH7F62M',
           anonymizeIP: false,
         },
       }),
@@ -149,7 +149,7 @@ const config = {
         [
           '@docusaurus/plugin-baidu-tongji',
           {
-            token: '178c69e004c0e084593ccabbb28390d4'
+            token: 'a179c6a987025d8e609450add0a11300'
           },
         ],
       ],
